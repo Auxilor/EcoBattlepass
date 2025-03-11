@@ -1,0 +1,18 @@
+categories:
+  - id: week 1
+    unlock-date: 2025-01-01 00:00
+    duration: 7 # The duration of the category in days, set to -1 to not lock the category
+    display:
+      item: emerald unbreaking:1 hide_enchants
+      display-name: "&aWeek 1"
+      lore:
+        - "&7Week 1 Challenges"
+        - "&a%completed%/%total% Complete"
+      gui:
+        row: 2
+        column: 2     
+    tasks:
+      - id: chickens # The ID of the task
+        xp: 100 # The amount of XP required to complete the task
+        points: 100 # The amount of points the task gives
+    

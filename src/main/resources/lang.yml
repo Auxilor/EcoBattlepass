@@ -1,0 +1,10 @@
+prefix: <gradient:#00ff87>xBattlepass</gradient:#60efff>
+reloaded: "&7xBattlepass has been reloaded."
+give-xp: "&7You have been given &a%xp% &7XP."
+give-levels: "&7You have been given &a%levels% &7levels."
+admin-give-xp: "&7You have given &a%xp% &7XP to &a%player%&7."
+admin-give-levels: "&7You have given &a%levels% &7levels to &a%player%&7."
+tier-up: "&7You have tiered up to &a%tier%&7."
+premium-give: "&7You have unlocked the premium Battlepass."
+premium-broadcast: "&a%player% &7has unlocked the premium Battlepass."
+already-premium: "&7This player already has the premium Battlepass."

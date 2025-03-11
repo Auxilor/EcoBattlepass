@@ -1,0 +1,9 @@
+display:
+  reward-lore: # This is shown on the tier within %rewards%. Color is overriden by the tier color, defined in config.yml
+    - "&7This is a diamond block"
+    - "&7It is very valuable"
+
+effects:
+  - id: give_item
+    args:
+      item: DIAMOND_BLOCK 1

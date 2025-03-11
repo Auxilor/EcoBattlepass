@@ -1,0 +1,111 @@
+open-command: 'battlepass' # The command to open the battle pass GUI
+premium-permission: exanthiax.pass.premium # The permission to access the premium tiers
+battlepass-start: 2025-01-01 00:00 # The date the battle pass starts
+
+battlepass-gui:
+  rows: 3
+  mask:
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+  progression-slots:
+    # To set the order of the pattern,
+    # Use 1-9 and then a-z: a goes after 9.
+    pattern:
+      - "000000000"
+      - "123456789"
+      - "000000000"
+    # The amount of the item as a function of the level
+    item-amount: "%level%"
+    # For example, increasing every 10 levels would be "ceil((%level% + 1) / 10)"
+    # The value is always rounded down.
+    prev-page:
+      material: arrow
+      name: "&fPrevious Page"
+      location:
+        row: 6
+        column: 4
+
+    next-page:
+      material: arrow
+      name: "&fNext Page"
+      location:
+        row: 6
+        column: 6
+
+    close:
+      material: barrier
+      name: "&cClose"
+      location:
+        row: 6
+        column: 5
+
+    free-rewards-format: "&2%free-rewards%"
+    premium-rewards-format: "&9%premium-rewards%"
+
+    unlocked:
+      item: lime_stained_glass_pane
+      name: "&aTier %tier_numeral%"
+      lore:
+        - "&7Rewards:"
+        - "&7%free-rewards%"
+        - "&7%premium-rewards%"
+        - ""
+        - "&aCLAIM"
+
+    in-progress:
+      item: yellow_stained_glass_pane
+      name: "&eTier %tier_numeral%"
+      lore:
+        - "&7Rewards:"
+        - "%free-rewards%"
+        - "%premium-rewards%"
+        - ""
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
+    locked:
+      item: red_stained_glass_pane
+      name: "&cTier %tier_numeral%"
+      lore:
+        - "&cLOCKED"
+
+    claimed:
+      item: green_stained_glass_pane glint
+      name: "&aTier %tier_numeral%"
+      lore:
+        - "&7Rewards:"
+        - "&7%free-rewards%"
+        - "&7%premium-rewards%"
+        - ""
+        - "&aCLAIMED"
+
+  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  custom-slots: [ ]
+
+categories-gui:
+  rows: 3
+  mask:
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111111111"
+      - "101010101"
+      - "111111111"
+
+tasks-gui:
+  rows: 3
+  mask:
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111111111"
+      - "101010101"
+      - "111111111"
