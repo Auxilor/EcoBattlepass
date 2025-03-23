@@ -83,6 +83,7 @@ tiers-gui:
 
     free-rewards-format: "&2%reward%"
     premium-rewards-format: "&9%reward%"
+    empty-rewards-format: "&cNone"
 
     unlocked:
       item: lime_stained_glass_pane

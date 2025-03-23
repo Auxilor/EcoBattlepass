@@ -39,7 +39,19 @@ abstract class ProperLevelComponent : AutofillComponent() {
         )
     }.onLeftClick { player, _, _, _ ->
         getLeftClickAction(player, level, getLevelState(player, level))()
-    }.build()
+    }
+        .setUpdater { player, menu, _ ->
+            getLevelItem(
+                player,
+                menu,
+                level,
+                getLevelState(
+                    player,
+                    level
+                )
+            )
+        }
+        .build()
 
     override fun getSlotAt(row: Int, column: Int, player: Player, menu: Menu): Slot? {
         if (!isBuilt) {

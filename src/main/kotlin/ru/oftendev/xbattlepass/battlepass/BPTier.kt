@@ -8,6 +8,7 @@ import org.bukkit.entity.Bat
 import org.bukkit.entity.Player
 import ru.oftendev.xbattlepass.api.bpPassExp
 import ru.oftendev.xbattlepass.api.bpTier
+import ru.oftendev.xbattlepass.plugin
 import ru.oftendev.xbattlepass.rewards.Rewards
 
 class BPTier(val config: Config) {
@@ -25,6 +26,9 @@ class BPTier(val config: Config) {
         val format = BattlePass.getRewardsFormat(tierType)
         for (reward in rewards) {
             if (reward.tier != tierType) continue
+            result.add(
+                reward.reward.getDisplayName(player)
+            )
             result.addAll(
                 reward.reward.rewardLoreUnformatted.map {
                     format.replace("%reward%", it)
@@ -49,14 +53,24 @@ class BPTier(val config: Config) {
             if (string.contains("%free-rewards%")) {
                 val rwds = getRewardsFormatted(TierType.FREE, player)
 
-                result.addAll(
-                    rwds.map { string.replace("%free-rewards%", it) }
-                )
+                if (rwds.isNotEmpty()) {
+                    result.addAll(
+                        rwds.map { string.replace("%free-rewards%", it) }
+                    )
+                } else {
+                    result.add(string.replace("%free-rewards%", plugin.configYml
+                        .getFormattedString("tiers-gui.buttons.empty-rewards-format")))
+                }
             } else if (string.contains("%premium-rewards%")) {
                 val rwds = getRewardsFormatted(TierType.PREMIUM, player)
-                result.addAll(
-                    rwds.map { string.replace("%premium-rewards%", it) }
-                )
+                if (rwds.isNotEmpty()) {
+                    result.addAll(
+                        rwds.map { string.replace("%premium-rewards%", it) }
+                    )
+                } else {
+                    result.add(string.replace("%premium-rewards%", plugin.configYml
+                        .getFormattedString("tiers-gui.buttons.empty-rewards-format")))
+                }
             } else {
                 result.add(
                     string.replace("%percentage_progress%", BattlePass.getFormattedProgress(player))

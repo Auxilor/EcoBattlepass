@@ -9,12 +9,12 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import ru.oftendev.xbattlepass.categories.Categories
 import ru.oftendev.xbattlepass.categories.Category
 import ru.oftendev.xbattlepass.plugin
 import ru.oftendev.xbattlepass.quests.ActiveBattleQuest
 
-class QuestsGUI(private val player: Player, val category: Category, val page: Int = 1) {
+class QuestsGUI(private val player: Player, val category: Category, val page: Int = 1,
+                val wasBack: Boolean = false) {
     fun open() {
         val pattern = plugin.configYml.getStrings("quests-gui.mask.pattern")
         val menu = Menu.builder(pattern.size)
@@ -89,7 +89,7 @@ class QuestsGUI(private val player: Player, val category: Category, val page: In
         if (nextActive) {
             builder.onLeftClick { _, _ ->
                 run {
-                    QuestsGUI(player, category, page + 1).open()
+                    QuestsGUI(player, category, page + 1, wasBack = wasBack).open()
                 }
             }
         }
@@ -107,9 +107,9 @@ class QuestsGUI(private val player: Player, val category: Category, val page: In
         builder.onLeftClick { _, _ ->
             run {
                 if (page > 1) {
-                    QuestsGUI(player, category, page - 1).open()
+                    QuestsGUI(player, category, page - 1, wasBack = wasBack).open()
                 } else {
-                    CategoriesGUI(player).open()
+                    CategoriesGUI(player, backButton = wasBack).open()
                 }
             }
         }

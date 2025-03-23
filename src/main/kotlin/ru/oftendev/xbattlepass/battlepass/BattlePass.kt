@@ -13,15 +13,17 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import ru.oftendev.xbattlepass.api.bpPassExp
 import ru.oftendev.xbattlepass.api.bpTier
+import ru.oftendev.xbattlepass.api.hasReceivedTier
 import ru.oftendev.xbattlepass.categories.Categories
 import ru.oftendev.xbattlepass.plugin
+import ru.oftendev.xbattlepass.quests.ActiveBattleQuest
 import ru.oftendev.xbattlepass.tasks.ActiveBattleTask
 
 object BattlePass {
     val tiers = mutableListOf<BPTier>()
 
     val maxLevel: Int
-        get() = tiers.maxOf { it.number }
+        get() = plugin.battlePassYml.getInt("battlepass.max-tier")
 
     val activeTasks: List<ActiveBattleTask>
         get() = Categories.values().filter { it.isActive }
@@ -47,6 +49,16 @@ object BattlePass {
         }
 
         return exact ?: tiers.firstOrNull { it.number >= level }
+    }
+
+    fun getActiveQuest(id: String): ActiveBattleQuest? {
+        for (category in Categories.values()) {
+            category.quests.forEach { quest ->
+                if (quest.parent.id.equals(id, true)) return quest
+            }
+        }
+
+        return null
     }
 
     fun update() {
@@ -117,6 +129,12 @@ object BattlePass {
         } else {
             required.toNiceString()
         }
+    }
+
+    fun getClaimable(player: Player): Int {
+        return tiers.filter {
+            player.bpTier >= it.number && !player.hasReceivedTier(it.number)
+        }.size
     }
 
     fun resetAll() {

@@ -16,6 +16,7 @@ import com.willfp.eco.core.map.nestedMap
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.NumberUtils.evaluateExpression
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.openMenu
 import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -189,8 +190,11 @@ class BattleTierComponent(
             {
                 val tier = BattlePass.getTier(level)
                 if (tier != null) {
+                    levelItemCache.invalidate(level)
+                    itemCache[levelState]?.remove(level)
                     player.receiveTier(tier)
-                    player.closeInventory()
+                    player.openMenu?.refresh(player)
+                    // player.closeInventory()
                 }
             }
         } else {

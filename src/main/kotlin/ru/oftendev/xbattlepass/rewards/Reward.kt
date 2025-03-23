@@ -2,6 +2,7 @@ package ru.oftendev.xbattlepass.rewards
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.registry.Registrable
+import com.willfp.eco.util.formatEco
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.toDispatcher
@@ -14,6 +15,10 @@ import ru.oftendev.xbattlepass.plugin
 class Reward(private val _id: String, val config: Config): Registrable {
     override fun getID(): String {
         return this._id
+    }
+
+    fun getDisplayName(player: Player): String {
+        return this.config.getString("display.name").formatEco(player, true)
     }
 
     val rewardEffects = Effects.compileChain(

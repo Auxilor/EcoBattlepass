@@ -66,7 +66,7 @@ object BattlePassListener: Listener {
     fun handleReward(event: PlayerRewardEvent) {
         event.player.sendMessage(
             plugin.langYml.getMessage("reward-claim").replace(
-                "%reward%", event.reward.id
+                "%reward%", event.reward.getDisplayName(event.player)
             )
         )
 

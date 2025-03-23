@@ -85,7 +85,7 @@ class CategoriesGUI(private val player: Player, val page: Int = 1, val backButto
         if (nextActive) {
             builder.onLeftClick { _, _ ->
                 run {
-                    CategoriesGUI(player, page + 1).open()
+                    CategoriesGUI(player, page + 1, backButton).open()
                 }
             }
         }
@@ -105,7 +105,7 @@ class CategoriesGUI(private val player: Player, val page: Int = 1, val backButto
             builder.onLeftClick { _, _ ->
                 run {
                     if (page > 1) {
-                        CategoriesGUI(player, page - 1).open()
+                        CategoriesGUI(player, page - 1, backButton).open()
                     } else if (backButton) {
                         BattlePassGUI.createAndOpen(player)
                     }
@@ -129,7 +129,7 @@ class CategoriesGUI(private val player: Player, val page: Int = 1, val backButto
         )
             .onLeftClick { _, _, _ ->
                 if (pair.isActive) {
-                    QuestsGUI(player, pair).open()
+                    QuestsGUI(player, pair, wasBack = backButton).open()
                 }
             }
             .build()
