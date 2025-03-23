@@ -4,9 +4,11 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
-import ru.oftendev.xbattlepass.rewards.Reward
+import ru.oftendev.xbattlepass.tasks.ActiveBattleTask
 
-class PlayerRewardEvent(player: Player, val reward: Reward): PlayerEvent(player), Cancellable {
+class PlayerTaskExpGainEvent(player: Player,
+                             val task: ActiveBattleTask,
+                             private var _amount: Double): PlayerEvent(player), Cancellable {
     private var cancelled = false
 
     override fun isCancelled(): Boolean {
@@ -15,6 +17,14 @@ class PlayerRewardEvent(player: Player, val reward: Reward): PlayerEvent(player)
 
     override fun setCancelled(p0: Boolean) {
         cancelled = p0
+    }
+
+    fun setAmount(amount: Double) {
+        this._amount = amount
+    }
+
+    fun getAmount(): Double {
+        return this._amount
     }
 
     override fun getHandlers(): HandlerList {

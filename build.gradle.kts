@@ -41,7 +41,8 @@ allprojects {
         compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
         compileOnly (fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
         compileOnly ("com.willfp:eco:6.75.2")
-        implementation("com.github.retrooper:packetevents-spigot:2.7.0")
+        compileOnly("com.github.ben-manes.caffeine:caffeine:3.0.5")
+        implementation("com.willfp:ecomponent:1.4.1")
     }
 
     java {
@@ -50,10 +51,9 @@ allprojects {
 
     tasks {
         shadowJar {
-            relocate("com.github.retrooper.packetevents", "ru.oftendev.coloredarmors.packetevents.api")
-            relocate("io.github.retrooper.packetevents", "ru.oftendev.coloredarmors.packetevents.impl")
             exclude("kotlin/**")
             exclude("kotlinx/**")
+            relocate("com.willfp.ecomponent", "com.willfp.ecoskills.ecomponent")
         }
         compileJava {
             options.isDeprecation = true

@@ -4,9 +4,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
-import ru.oftendev.xbattlepass.rewards.Reward
+import ru.oftendev.xbattlepass.tasks.ActiveBattleTask
 
-class PlayerRewardEvent(player: Player, val reward: Reward): PlayerEvent(player), Cancellable {
+class PlayerTaskCompleteEvent(player: Player,
+                              val task: ActiveBattleTask): PlayerEvent(player), Cancellable {
     private var cancelled = false
 
     override fun isCancelled(): Boolean {

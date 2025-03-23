@@ -1,22 +1,17 @@
-package ru.oftendev.xbattlepass.rewards
+package ru.oftendev.xbattlepass.quests
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.RegistrableCategory
-import ru.oftendev.xbattlepass.battlepass.BattlePass
 
-object Rewards: RegistrableCategory<Reward>("reward", "rewards") {
+object BattleQuests: RegistrableCategory<BattleQuest>("quests", "quests") {
     override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
         registry.register(
-            Reward(id, config)
+            BattleQuest(id, config)
         )
     }
 
     override fun clear(plugin: LibreforgePlugin) {
         registry.clear()
-    }
-
-    override fun afterReload(plugin: LibreforgePlugin) {
-        BattlePass.update()
     }
 }

@@ -4,9 +4,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
-import ru.oftendev.xbattlepass.rewards.Reward
 
-class PlayerRewardEvent(player: Player, val reward: Reward): PlayerEvent(player), Cancellable {
+class PlayerTierLevelUpEvent(player: Player, val level: Int): PlayerEvent(player), Cancellable {
     private var cancelled = false
 
     override fun isCancelled(): Boolean {

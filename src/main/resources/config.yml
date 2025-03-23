@@ -1,9 +1,44 @@
-open-command: 'battlepass' # The command to open the battle pass GUI
 premium-permission: exanthiax.pass.premium # The permission to access the premium tiers
-battlepass-start: 2025-01-01 00:00 # The date the battle pass starts
+gui-cache-ttl: 1000
 
 battlepass-gui:
-  rows: 3
+  title: "XBattlePass"
+  mask:
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111111111"
+      - "111010111"
+      - "111111111"
+  buttons:
+    tiers:
+      item: lime_stained_glass_pane
+      name: "&aTiers"
+      lore:
+        - ""
+        - "&aLeft click &7to see"
+        - "&7your battlepass progression"
+        - "&7and claim rewards"
+        - ""
+      location:
+        row: 2
+        column: 4
+    quests:
+      item: orange_stained_glass_pane
+      name: "&6Quests"
+      lore:
+        - ""
+        - "&6Left click &7to see"
+        - "&7all available quests"
+        - "&7and your progression"
+        - ""
+      location:
+        row: 2
+        column: 6
+
+
+tiers-gui:
+  title: "XBattlePass: Tiers"
   mask:
     materials:
       - black_stained_glass_pane
@@ -14,17 +49,17 @@ battlepass-gui:
       - "111111111"
       - "111111111"
       - "111111111"
-  progression-slots:
-    # To set the order of the pattern,
-    # Use 1-9 and then a-z: a goes after 9.
-    pattern:
-      - "000000000"
-      - "123456789"
-      - "000000000"
-    # The amount of the item as a function of the level
+    progression-pattern:
+      - "109ab0jkl"
+      - "2080c0i0m"
+      - "3070d0h0n"
+      - "4560efg0o"
+      - "00000000p"
+      - "00000000q"
+
+  buttons:
     item-amount: "%level%"
-    # For example, increasing every 10 levels would be "ceil((%level% + 1) / 10)"
-    # The value is always rounded down.
+
     prev-page:
       material: arrow
       name: "&fPrevious Page"
@@ -46,16 +81,18 @@ battlepass-gui:
         row: 6
         column: 5
 
-    free-rewards-format: "&2%free-rewards%"
-    premium-rewards-format: "&9%premium-rewards%"
+    free-rewards-format: "&2%reward%"
+    premium-rewards-format: "&9%reward%"
 
     unlocked:
       item: lime_stained_glass_pane
       name: "&aTier %tier_numeral%"
       lore:
         - "&7Rewards:"
-        - "&7%free-rewards%"
-        - "&7%premium-rewards%"
+        - " &7* Free:"
+        - "   &7%free-rewards%"
+        - " &7* Premium:"
+        - "   &7%premium-rewards%"
         - ""
         - "&aCLAIM"
 
@@ -64,8 +101,10 @@ battlepass-gui:
       name: "&eTier %tier_numeral%"
       lore:
         - "&7Rewards:"
-        - "%free-rewards%"
-        - "%premium-rewards%"
+        - " &7* Free:"
+        - "   &7%free-rewards%"
+        - " &7* Premium:"
+        - "   &7%premium-rewards%"
         - ""
         - "&fProgress:"
         - "&8» &e%percentage_progress%%"
@@ -82,30 +121,113 @@ battlepass-gui:
       name: "&aTier %tier_numeral%"
       lore:
         - "&7Rewards:"
-        - "&7%free-rewards%"
-        - "&7%premium-rewards%"
+        - " &7* Free:"
+        - "   &7%free-rewards%"
+        - " &7* Premium:"
+        - "   &7%premium-rewards%"
         - ""
         - "&aCLAIMED"
 
-  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
-  custom-slots: [ ]
+    # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+    custom-slots: [ ]
 
 categories-gui:
-  rows: 3
+  title: "&8Categories: %page%"
   mask:
     materials:
       - black_stained_glass_pane
     pattern:
       - "111111111"
-      - "101010101"
+      - "1c1c1c1c1"
       - "111111111"
+  next-page:
+    item:
+      active: orange_stained_glass_pane name:"&aNext page"
+      inactive: gray_stained_glass_pane name:"&7Next page"
+    lore:
+      active: [ ]
+      inactive: [ ]
+    row: 3
+    column: 6
+  prev-page:
+    item:
+      active: orange_stained_glass_pane name:"&aPrevious page"
+      inactive: gray_stained_glass_pane name:"&7Previous page"
+    lore:
+      active: [ ]
+      inactive: [ ]
+    row: 3
+    column: 4
 
-tasks-gui:
-  rows: 3
+
+###################### THIS IS NEW ######################
+
+quests-gui:
+  title: "Quests of Category %category%: %page%"
   mask:
     materials:
       - black_stained_glass_pane
     pattern:
       - "111111111"
-      - "101010101"
+      - "1q1q1q1q1"
       - "111111111"
+  next-page:
+    item:
+      active: orange_stained_glass_pane name:"&aNext page"
+      inactive: gray_stained_glass_pane name:"&7Next page"
+    lore:
+      active: [ ]
+      inactive: [ ]
+    row: 3
+    column: 6
+  prev-page:
+    item:
+      active: orange_stained_glass_pane name:"&aPrevious page"
+      inactive: gray_stained_glass_pane name:"&7Previous page"
+    lore:
+      active: [ ]
+      inactive: [ ]
+    row: 3
+    column: 4
+
+quests-icon:
+  timer-format:
+    start: "Starts in %time%"
+    end: "Ends in %time%"
+    reset: "Resets in %time%"
+    none: "One-Time quest (does not end or reset)"
+  tasks-format:
+    - "&a* %task_name%"
+    - "  %task_lore%"
+  tasks-separator: []
+  name: "&6%quest_name%"
+  lore:
+    - "&7%quest_description%" # This shows the description of the quest
+    - ""
+    - "&a%quest_tasks%" # This shows the tasks and their progress
+    - "&7%quest_tier%" # Premium or Both
+    - "&7%quest_timer%" # This shows either: When it unlocks, when it started, or the time until it resets.
+
+time-format:
+  split: " "
+  days: "&6%value%&fd"
+  hours: "&6%value%&fh"
+  minutes: "&6%value%&fm"
+  seconds: "&6%value%&fs"
+
+sound:
+  tier-up:
+    enabled: true
+    sound: block.anvil.use
+    volume: 1
+    pitch: 1
+  reward-claim:
+    enabled: true
+    sound: block.anvil.use
+    volume: 1
+    pitch: 1
+  quest-complete:
+    enabled: true
+    sound: block.anvil.use
+    volume: 1
+    pitch: 1
