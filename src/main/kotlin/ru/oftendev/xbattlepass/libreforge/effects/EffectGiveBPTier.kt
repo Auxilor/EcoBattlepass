@@ -13,9 +13,9 @@ import ru.oftendev.xbattlepass.api.events.PlayerTierLevelUpEvent
 import ru.oftendev.xbattlepass.api.giveBPExperience
 import ru.oftendev.xbattlepass.api.giveExactBPExperience
 
-object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tier") {
+object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
     override val arguments: ConfigArguments = arguments {
-        require("amount", "You must specify the amount of tiers to give!")
+        require("tiers", "You must specify the amount of tiers to give!")
     }
 
     override val parameters: Set<TriggerParameter> = setOf(TriggerParameter.PLAYER)

@@ -10,7 +10,7 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import ru.oftendev.xbattlepass.api.giveBPExperience
 import ru.oftendev.xbattlepass.api.giveExactBPExperience
 
-object EffectGiveBPExp: Effect<NoCompileData>("give_battlepass_exp") {
+object EffectGiveBPExp: Effect<NoCompileData>("give_battlepass_xp") {
     override val arguments: ConfigArguments = arguments {
         require("amount", "You must specify the exp amount!")
     }

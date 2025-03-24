@@ -15,7 +15,7 @@ import ru.oftendev.xbattlepass.api.giveExactBPExperience
 
 object EffectSetBPTier: Effect<NoCompileData>("set_battlepass_tier") {
     override val arguments: ConfigArguments = arguments {
-        require("amount", "You must specify the tier to set!")
+        require("tier", "You must specify the tier to set!")
     }
 
     override val parameters: Set<TriggerParameter> = setOf(TriggerParameter.PLAYER)
