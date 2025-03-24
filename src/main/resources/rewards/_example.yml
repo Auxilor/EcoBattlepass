@@ -1,0 +1,18 @@
+# The ID of the reward is the name of the .yml file,
+# for example diamond_block.yml has the ID of diamond_block
+# You can place rewards anywhere in this folder,
+# including in subfolders if you want to organize your reward configs
+# _example.yml is not loaded.
+
+display:
+  name: "&2$1000" # The display name of the reward
+  reward-lore: # The lore of the reward. This is shown on the tier within %rewards%. Formatting here will override config.yml
+    - "&7Earn $1000"
+
+# Effects to run when the battlepass reward is claimed.
+# %level% is the tier the battlepass levelled up to.
+# You can only use Triggered Effects here.
+effects:
+  - id: give_money
+    args:
+      amount: 1000

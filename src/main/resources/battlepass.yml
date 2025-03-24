@@ -2,19 +2,23 @@ battlepass:
   xp-formula: 1.5 * %level% + 5 # The formula to calculate the XP needed to reach the next tier
   max-tier: 100 # The maximum tier of the battle pass
   command: 'battlepass' # The command to open the battle pass GUI
-  premium-permission: exanthiax.pass.premium # The permission to access the premium tiers
-  battlepass-start: 2025-01-01 00:00 # The date the battle pass starts
+  battlepass-start: 2025-01-01 00:00 # The date the battle pass starts, used for scheduling start. Format: YYYY-MM-DD HH:MM
 
+# Below are the tier rewards for the battlepass.
+# The tier is the level the player needs to reach to unlock the rewards.
+# The rewards are the rewards the player will receive when they reach the tier.
+# You can add as many tiers and rewards as you want.
+# Not every tier needs to have a reward, if you want a tier to have no reward, just don't add that tier.
 tiers:
-  - tier: 1
-    rewards: # The ID of the reward
-      - id: diamond_block
-        tier: free # The tier the reward is in (free/premium/both)
-      - id: money_1000
-        tier: premium
+  - tier: 1 # The tier number
+    rewards:
+      - id: diamond_block # The ID of the reward
+        tier: free # If the reward is locked to a battlepass path. Set to "free" to allow all players to claim it.
+      - id: money_1000 # The ID of the reward
+        tier: premium # The tier the reward is in (free/premium)
   - tier: 15
-    rewards: # The ID of the reward
+    rewards:
       - id: diamond_block
-        tier: free # The tier the reward is in (free/premium/both)
+        tier: free
       - id: money_1000
         tier: premium

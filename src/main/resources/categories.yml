@@ -1,18 +1,12 @@
 categories:
   - id: week_1 # The category ID, must be unique
     name: "Week 1 Challenges" # The name of the category
-    item: emerald unbreaking:1 hide_enchants
-    lore:
+    item: emerald unbreaking:1 hide_enchants # The item to display in the GUI
+    lore: # The lore of the category
       - "&7Week 1 Challenges"
       - "&a%completed%/%total% Complete"
-    gui: # The position of the category in the GUI
-      row: 2
-      column: 2
-    start-date: 2025-03-23 00:00 # (Optional) The date the category starts, set to -1 for no start. Defaults to -1 %xbattlepass_category_<id>_start_date%
+    start-date: 2025-03-23 00:00 # The date the category starts %xbattlepass_category_<id>_start_date%.
     duration: 10080 # (Optional) The duration of the category in minutes, set to -1 for no end. Defaults to -1 %xbattlepass_category_<id>_duration%
     reset-time: 1440 # (Optional) The amount of minutes between resets, set to 1440 for daily resets, set to -1 to not reset. Defaults to -1 %xbattlepass_category_<id>_reset_timer%
     quests: # The quests in the category
-      - id: daily_quest_1
-        gui:
-          row: 1
-          column: 1
+      - id: daily_quest_1 # The ID of the quest

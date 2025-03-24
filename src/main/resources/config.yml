@@ -1,9 +1,27 @@
-premium-permission: exanthiax.pass.premium # The permission to access the premium tiers
+#
+# xBattlepass Configuration
+# by Exanthiax, _OfTeN_
+#
+
+# The amount of time (in milliseconds) that the GUI icons should be cached for
+# Prevents spamming the GUI to cause lag
 gui-cache-ttl: 1000
 
+premium-permission: xbattlepass.premium # The permission to access the premium tiers
+
+# GUI Configuration for the Battlepass GUI (/battlepass)
 battlepass-gui:
-  title: "XBattlePass"
+  title: "xBattlepass"
   mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
     materials:
       - black_stained_glass_pane
     pattern:
@@ -36,10 +54,19 @@ battlepass-gui:
         row: 2
         column: 6
 
-
+# GUI Configuration for the Tiers GUI (/battlepass tiers)
 tiers-gui:
-  title: "XBattlePass: Tiers"
+  title: "xBattlepass: Tiers"
   mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
     materials:
       - black_stained_glass_pane
     pattern:
@@ -50,6 +77,8 @@ tiers-gui:
       - "111111111"
       - "111111111"
     progression-pattern:
+      # To set the order of the pattern,
+      # Use 1-9 and then a-z: a goes after 9.
       - "109ab0jkl"
       - "2080c0i0m"
       - "3070d0h0n"
@@ -58,7 +87,10 @@ tiers-gui:
       - "00000000q"
 
   buttons:
+    # The amount of the item as a function of the level
     item-amount: "%level%"
+    # For example, increasing every 10 levels would be "ceil((%level% + 1) / 10)"
+    # The value is always rounded down.
 
     prev-page:
       material: arrow
@@ -132,19 +164,31 @@ tiers-gui:
     # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
     custom-slots: [ ]
 
+# GUI Configuration for the Categories GUI (/battlepass quests)
 categories-gui:
   title: "&8Categories: %page%"
   mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
     materials:
       - black_stained_glass_pane
     pattern:
+    # For this GUI, "c" represents a slot for a category.
+    # Categories are sorted in the order they are in the categories.yml file.
       - "111111111"
       - "1c1c1c1c1"
       - "111111111"
   next-page:
     item:
       active: orange_stained_glass_pane name:"&aNext page"
-      inactive: gray_stained_glass_pane name:"&7Next page"
+      inactive: gray_stained_glass_pane
     lore:
       active: [ ]
       inactive: [ ]
@@ -153,29 +197,38 @@ categories-gui:
   prev-page:
     item:
       active: orange_stained_glass_pane name:"&aPrevious page"
-      inactive: gray_stained_glass_pane name:"&7Previous page"
+      inactive: gray_stained_glass_pane
     lore:
       active: [ ]
       inactive: [ ]
     row: 3
     column: 4
 
-
-###################### THIS IS NEW ######################
-
+# GUI Configuration for the Quests GUI
 quests-gui:
   title: "Quests of Category %category%: %page%"
   mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
     materials:
       - black_stained_glass_pane
     pattern:
+      # For this GUI, "q" represents a slot for a quest.
+      # Quests are sorted in the order they are in the categories.yml file.
       - "111111111"
       - "1q1q1q1q1"
       - "111111111"
   next-page:
     item:
       active: orange_stained_glass_pane name:"&aNext page"
-      inactive: gray_stained_glass_pane name:"&7Next page"
+      inactive: gray_stained_glass_pane
     lore:
       active: [ ]
       inactive: [ ]
@@ -184,13 +237,14 @@ quests-gui:
   prev-page:
     item:
       active: orange_stained_glass_pane name:"&aPrevious page"
-      inactive: gray_stained_glass_pane name:"&7Previous page"
+      inactive: gray_stained_glass_pane
     lore:
       active: [ ]
       inactive: [ ]
     row: 3
     column: 4
 
+# GUI Configuration for the Quest Icon
 quests-icon:
   timer-format:
     start: "Starts in %time%"
@@ -201,7 +255,7 @@ quests-icon:
     - "&a* %task_name%"
     - "  %task_lore%"
   tasks-separator: []
-  name: "&6%quest_name%"
+  name: "&6%quest_name%" # The name of the quest
   lore:
     - "&7%quest_description%" # This shows the description of the quest
     - ""
@@ -218,10 +272,10 @@ time-format:
 
 sound:
   tier-up:
-    enabled: true
-    sound: block.anvil.use
-    volume: 1
-    pitch: 1
+    enabled: true # Whether the sound is enabled
+    sound: block.anvil.use # The sound to play
+    volume: 1 # The volume of the sound
+    pitch: 1 # The pitch of the sound
   reward-claim:
     enabled: true
     sound: block.anvil.use

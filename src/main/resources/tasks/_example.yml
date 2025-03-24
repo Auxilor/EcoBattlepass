@@ -1,0 +1,21 @@
+# The ID of the task is the name of the .yml file,
+# for example mining.yml has the ID of mining
+# You can place tasks anywhere in this folder,
+# including in subfolders if you want to organize your task configs
+# _example.yml is not loaded.
+
+display:
+  display-name: Chickens # The display name of the task
+  lore: # The lore of the task
+    - "&7Kill chickens"
+    - "&7%current%/%required%"
+
+# An XP gain method takes a trigger, a multiplier, conditions, args and filters.
+# The 'multiplier' takes the value produced by the trigger and multiplies it
+# Alternatively, you can use 'value' to count a specific number and not a multiplier
+xp-gain-methods:
+  - trigger: kill
+    value: 1 # You can also use "multiplier" here (see above comment)
+    filters:
+      entities:
+        - chicken

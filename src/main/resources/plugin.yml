@@ -1,7 +1,7 @@
 name: ${pluginName}
 version: ${version}
 main: ru.oftendev.xbattlepass.XBattlePass
-author: _OfTeN_
+author: Exanthiax, _OfTeN_
 api-version: 1.19
 depend:
   - eco
