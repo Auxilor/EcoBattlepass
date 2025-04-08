@@ -1,9 +1,0 @@
-display:
-  display-name: "Clumsy"
-  lore:
-    - "&8»&7 Take &a%required%&7 fall damage"
-    - "&8»&7 Completed: &a%current%&7/&a%required%"
-
-xp-gain-methods:
-  - trigger: fall_damage
-    multiplier: 1

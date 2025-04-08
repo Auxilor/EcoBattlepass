@@ -1,7 +1,7 @@
 name: "&6Season 1 Battlepass"
 
 battlepass:
-  xp-formula: 1.5 * %level% + 5 # The formula to calculate the XP needed to reach the next tier
+  xp-formula: 1250 # The formula to calculate the XP needed to reach the next tier
   max-tier: 100 # The maximum tier of the battle pass
   command: 'battlepass' # The command to open the battle pass GUI
   premium-permission: "xbattlepass.pass.premium"
@@ -79,7 +79,7 @@ tiers:
     rewards:
       - id: cow_spawner_1
         tier: free
-      - id: cow_spawner_2
+      - id: cow_spawner_1
         tier: premium
 
   - tier: 18
@@ -157,146 +157,3 @@ tiers:
         tier: free
       - id: elytra_u3m_1
         tier: premium
-
-  - tier: 42
-    rewards:
-      - id: totem_1
-        tier: premium
-
-  - tier: 44
-    rewards:
-      - id: coins_50000
-        tier: free
-      - id: coins_100000
-        tier: premium
-
-  - tier: 46
-    rewards:
-      - id: ender_chest_command
-        tier: premium
-
-  - tier: 48
-    rewards:
-      - id: blaze_spawner_1
-        tier: free
-      - id: blaze_spawner_2
-        tier: premium
-
-  - tier: 50
-    rewards:
-      - id: netherite_ingot_1
-        tier: free
-      - id: netherite_ingot_3
-        tier: premium
-
-  - tier: 52
-    rewards:
-      - id: iron_golem_spawner_1
-        tier: premium
-
-  - tier: 54
-    rewards:
-      - id: coins_100000
-        tier: free
-      - id: coins_250000
-        tier: premium
-
-  - tier: 56
-    rewards:
-      - id: hat_command
-        tier: premium
-
-  - tier: 58
-    rewards:
-      - id: protection_4_book
-        tier: free
-      - id: protection_5_book
-        tier: premium
-
-  - tier: 60
-    rewards:
-      - id: looting_3_book
-        tier: premium
-
-  - tier: 62
-    rewards:
-      - id: totem_1
-        tier: free
-      - id: totem_2
-        tier: premium
-
-  - tier: 64
-    rewards:
-      - id: fortune_3_book
-        tier: premium
-      - id: efficiency_5_book
-        tier: premium
-
-  - tier: 66
-    rewards:
-      - id: sharpness_4_book
-        tier: free
-      - id: sharpness_5_book
-        tier: premium
-
-  - tier: 68
-    rewards:
-      - id: iron_golem_spawner_1
-        tier: premium
-
-  - tier: 70
-    rewards:
-      - id: random_enchant_book_2
-        tier: free
-      - id: random_enchant_book_3
-        tier: premium
-
-  - tier: 72
-    rewards:
-      - id: lucky_tools
-        tier: premium
-
-  - tier: 74
-    rewards:
-      - id: random_enchant_book_2
-        tier: free
-      - id: random_enchant_book_3
-        tier: premium
-
-  - tier: 78
-    rewards:
-      - id: random_enchant_book
-        tier: free
-      - id: efficiency_5_book
-        tier: premium
-
-  - tier: 82
-    rewards:
-      - id: iron_golem_spawner_1
-        tier: free
-      - id: iron_golem_spawner_2
-        tier: premium
-
-  - tier: 88
-    rewards:
-      - id: coins_150000
-        tier: free
-      - id: coins_300000
-        tier: premium
-
-  - tier: 90
-    rewards:
-      - id: lucky_sword
-        tier: free
-      - id: lucky_armor
-        tier: premium
-
-  - tier: 95
-    rewards:
-      - id: lucky_mace
-        tier: premium
-
-  - tier: 100
-    rewards:
-      - id: beacon_1
-        tier: free

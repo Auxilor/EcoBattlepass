@@ -1,9 +1,0 @@
-display:
-  display-name: "Chatter"
-  lore:
-    - "&8»&7 Send &a%required%&7 messages"
-    - "&8»&7 Completed: &a%current%&7/&a%required%"
-
-xp-gain-methods:
-  - trigger: send_message
-    multiplier: 1
