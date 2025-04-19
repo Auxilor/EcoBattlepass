@@ -8,12 +8,19 @@ name: "&8»&e Example Category" # The name of the category
 item: nether_star 1 # The item to display in the GUI
 lore: # The lore of the category
   - "&a%completed%/%total% Complete"
+  - "&7%time%"
 
 battlepass: battlepass # The ID of the battlepass this category is assigned to.
 priority: 0 # The priority of the category in the GUI. Categories are sorted by priority, 0 is the highest priority, and will show first.
 start-date: 2025-03-23 00:00 # The date the category starts. Format: YYYY-MM-DD HH:MM
 duration: 100000 # The duration of the category in minutes, set to -1 for no end. This allows you to end/lock categories after a time frame.
 reset-time: 1440 # The amount of minutes between resets. # Set to 1440 for daily resets, set to -1 for no reset.
+
+timer-format: # The format of the timer in the GUI.
+  start: "Starts in %time%"
+  end: "Ends in %time%"
+  reset: "Resets in %time%"
+  none: "One-Time quest (does not end or reset)"
 
 # The list of Quest ID(s) to be completed.
 # The order of this list is what determines the order within the Category GUI.
