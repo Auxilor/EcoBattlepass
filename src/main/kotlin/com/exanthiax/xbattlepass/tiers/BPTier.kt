@@ -47,6 +47,11 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
             .replace("%tier_numeral%", this.number.toNumeral())
     }
 
+    // Check if the string is preformatted
+    fun isFormatted(line: String): Boolean {
+        return line.startsWith("&") || line.startsWith("§")
+    }
+
     fun format(strings: List<String>, player: Player): List<String> {
         val result = mutableListOf<String>()
 
@@ -55,22 +60,54 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
                 val rwds = getRewardsFormatted(TierType.FREE, player)
 
                 if (rwds.isNotEmpty()) {
-                    result.addAll(
-                        rwds.map { string.replace("%free-rewards%", it) }
-                    )
+                    for (rewardLine in rwds) {
+                        if (isFormatted(rewardLine)) {
+                            // If already formatted, don't apply config formatting
+                            result.add(string.replace("%free-rewards%", rewardLine))
+                        } else {
+                            // Apply config formatting for the reward line
+                            result.add(
+                                string.replace(
+                                    "%free-rewards%",
+                                    plugin.configYml.getFormattedString("tiers-gui.buttons.free-rewards-format")
+                                        .replace("%reward%", rewardLine)
+                                )
+                            )
+                        }
+                    }
                 } else {
-                    result.add(string.replace("%free-rewards%", plugin.configYml
-                        .getFormattedString("tiers-gui.buttons.empty-rewards-format")))
+                    result.add(
+                        string.replace(
+                            "%free-rewards%", plugin.configYml
+                                .getFormattedString("tiers-gui.buttons.empty-rewards-format")
+                        )
+                    )
                 }
             } else if (string.contains("%premium-rewards%")) {
                 val rwds = getRewardsFormatted(TierType.PREMIUM, player)
                 if (rwds.isNotEmpty()) {
-                    result.addAll(
-                        rwds.map { string.replace("%premium-rewards%", it) }
-                    )
+                    for (rewardLine in rwds) {
+                        if (isFormatted(rewardLine)) {
+                            // If already formatted, don't apply config formatting
+                            result.add(string.replace("%premium-rewards%", rewardLine))
+                        } else {
+                            // Apply config formatting for the reward line
+                            result.add(
+                                string.replace(
+                                    "%premium-rewards%",
+                                    plugin.configYml.getFormattedString("tiers-gui.buttons.premium-rewards-format")
+                                        .replace("%reward%", rewardLine)
+                                )
+                            )
+                        }
+                    }
                 } else {
-                    result.add(string.replace("%premium-rewards%", plugin.configYml
-                        .getFormattedString("tiers-gui.buttons.empty-rewards-format")))
+                    result.add(
+                        string.replace(
+                            "%premium-rewards%", plugin.configYml
+                                .getFormattedString("tiers-gui.buttons.empty-rewards-format")
+                        )
+                    )
                 }
             } else {
                 result.add(
