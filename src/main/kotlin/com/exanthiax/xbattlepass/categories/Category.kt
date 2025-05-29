@@ -28,22 +28,68 @@ class Category(private val _id: String, val config: Config): Registrable {
             plugin,
             "category_${id}_start_date"
         ) {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val pattern = plugin.configYml.getString("date-format")
+            val formatter = DateTimeFormatter.ofPattern(pattern)
             this.startDate.format(formatter)
         }.register()
 
         PlayerlessPlaceholder(
             plugin,
-            "category_${id}_duration"
+            "category_${id}_start_timer"
         ) {
-            this.config.getInt("duration").toNiceString()
+            val millisLeft = startDate.atZone(java.time.ZoneId.systemDefault()).toInstant()
+                .toEpochMilli() - System.currentTimeMillis()
+            if (millisLeft <= 0) {
+                plugin.langYml.getFormattedString("category-in-progress")
+            } else {
+                msToString(millisLeft)
+            }
         }.register()
 
         PlayerlessPlaceholder(
             plugin,
-            "category_${id}_reset_time"
+            "category_${id}_end_date"
         ) {
-            this.resetTimer.toNiceString()
+            val pattern = plugin.configYml.getString("date-format")
+            val formatter = DateTimeFormatter.ofPattern(pattern)
+            this.endDate?.format(formatter)
+        }.register()
+
+        PlayerlessPlaceholder(
+            plugin,
+            "category_${id}_end_timer"
+        ) {
+            val duration = config.getInt("duration")
+            if (duration == -1) {
+                plugin.langYml.getFormattedString("infinity")
+            } else {
+                val millisLeft = endDate!!.atZone(java.time.ZoneId.systemDefault()).toInstant()
+                    .toEpochMilli() - System.currentTimeMillis()
+                if (millisLeft <= 0) {
+                    plugin.langYml.getFormattedString("category-expired")
+                } else {
+                    msToString(millisLeft)
+                }
+            }
+        }.register()
+
+        PlayerlessPlaceholder(
+            plugin,
+            "category_${id}_reset_timer"
+        ) {
+            val resetTime = config.getInt("reset-time")
+            if (resetTime <= 0) {
+                plugin.langYml.getFormattedString("infinity")
+            } else {
+                val nextReset = this.getNextResetDate()
+                if (nextReset != null) {
+                    val millisLeft = nextReset.atZone(java.time.ZoneId.systemDefault()).toInstant()
+                        .toEpochMilli() - System.currentTimeMillis()
+                    msToString(millisLeft.coerceAtLeast(0))
+                } else {
+                    msToString(0)
+                }
+            }
         }.register()
     }
 
@@ -62,7 +108,8 @@ class Category(private val _id: String, val config: Config): Registrable {
 
     val startDate = run {
         val dateTimeString = config.getString("start-date")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val pattern = plugin.configYml.getString("date-format")
+        val formatter = DateTimeFormatter.ofPattern(pattern)
         LocalDateTime.parse(dateTimeString, formatter)
     }
 

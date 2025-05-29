@@ -5,8 +5,8 @@ battlepass:
   max-tier: 100 # The maximum tier of the battle pass
   command: 'battlepass' # The command to open the battle pass GUI
   premium-permission: "xbattlepass.pass.premium" # The permission required to access the premium path
-  battlepass-start: 2025-01-01 00:00 # The date the battle pass starts, used for scheduling start. Format: YYYY-MM-DD HH:MM
-  battlepass-end: 2025-05-01 00:00 # The date the battle pass starts, used for scheduling start. Format: YYYY-MM-DD HH:MM
+  battlepass-start: 2025-01-01 00:00 # The date the battle pass starts, used for scheduling start. This must match the date format in config.yml, otherise you will get errors.
+  battlepass-end: 2025-05-01 00:00 # The date the battle pass starts, used for scheduling start. This must match the date format in config.yml, otherise you will get errors.
 
 # Below are the tier rewards for the battlepass.
 # The tier is the level the player needs to reach to unlock the rewards.

@@ -280,6 +280,11 @@ time-format:
   minutes: "&6%value%&fm"
   seconds: "&6%value%&fs"
 
+# Date format patterns (case-sensitive):
+# d = day, M = month, y = year, H = hour (0-23), m = minute, s = second
+# Example: "dd/MM/yyyy HH:mm:ss" → 31/05/2025 14:07:30
+date-format: "dd-MM-yyyy HH:mm"
+
 sound:
   tier-up:
     enabled: true # Whether the sound is enabled

@@ -23,7 +23,9 @@ messages:
   reset-player: "&7Successfully reset battlepass &r%pass% &7data for player &6%playername%&7."
   given-experience: "&7Successfully given &b%amount%&7 battlepass &r%pass% &7experience to player &6%playername%&7."
 
-infinity: inf
+infinity: "∞"
 never: "&6never"
 free: "&aFree"
 premium: "&6Premium"
+category-expired: "&cCategory Expired" # This message is used when a category is no longer available
+category-in-progress: "&aCategory Unlocked" # This message is used when a category is unlocked/started

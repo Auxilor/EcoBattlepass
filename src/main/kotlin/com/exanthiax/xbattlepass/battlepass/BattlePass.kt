@@ -102,13 +102,15 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
 
     val startDate = run {
         val dateTimeString = config.getString("battlepass.battlepass-start")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val pattern = plugin.configYml.getString("date-format")
+        val formatter = DateTimeFormatter.ofPattern(pattern)
         LocalDateTime.parse(dateTimeString, formatter)
     }
 
     val endDate = run {
         val dateTimeString = config.getString("battlepass.battlepass-end")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val pattern = plugin.configYml.getString("date-format")
+        val formatter = DateTimeFormatter.ofPattern(pattern)
         LocalDateTime.parse(dateTimeString, formatter)
     }
 

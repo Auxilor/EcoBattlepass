@@ -1,12 +1,13 @@
 battlepass: battlepass
 priority: 4
+
 name: "&8»&e Week 4 Challenges" # The name of the category
 item: emerald_block 4 # The item to display in the GUI
 lore: # The lore of the category
   - "&a%completed%/%total% Complete"
   - "&7%time%"
 
-start-date: 2025-03-23 00:00 # The date the category starts %xbattlepass_category_<id>_start_date%.
+start-date: 23-03-2025 00:00 # The date the category starts %xbattlepass_category_<id>_start_date%. This must match the date format in config.yml, otherise you will get errors.
 duration: -1 # (Optional) The duration of the category in minutes, set to -1 for no end. Defaults to -1 %xbattlepass_category_<id>_duration%
 reset-time: -1 # (Optional) The amount of minutes between resets, set to 1440 for daily resets, set to -1 to not reset. Defaults to -1 %xbattlepass_category_<id>_reset_timer%
 
