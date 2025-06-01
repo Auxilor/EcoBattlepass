@@ -9,11 +9,8 @@ import com.exanthiax.xbattlepass.battlepass.BattlePasses
 
 object ConditionHasBPTier: Condition<NoCompileData>("has_battlepass_tier") {
     override val arguments: ConfigArguments = arguments {
-        require("tier", "You must specify the tier!")
-        require("battlepass",
-            "You must specify a battlepass to check premium in!",
-            {passId -> BattlePasses.getByID(passId)},
-            {battlepass -> battlepass != null}
+        require("tier", "You must specify the battlepass tier!")
+        require("battlepass", "You must specify a battlepass!",
         )
     }
 

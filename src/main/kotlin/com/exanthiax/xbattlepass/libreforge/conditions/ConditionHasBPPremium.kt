@@ -9,7 +9,7 @@ import com.exanthiax.xbattlepass.battlepass.BattlePasses
 
 object ConditionHasBPPremium: Condition<NoCompileData>("has_premium_battlepass") {
     override val arguments: ConfigArguments = arguments {
-        require("battlepass", "You must specify a battlepass to check premium in!")
+        require("battlepass", "You must specify a battlepass!")
     }
 
     override fun isMet(
