@@ -6,6 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
 import com.exanthiax.xbattlepass.api.giveExactBPExperience
+import com.exanthiax.xbattlepass.api.giveExactBPTiers
 import com.exanthiax.xbattlepass.battlepass.BattlePasses
 import com.exanthiax.xbattlepass.plugin
 
@@ -16,14 +17,20 @@ object GiveCommand: PluginCommand(
     false
 ) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
-        val playerString = args.firstOrNull() ?: run {
+        val playerString = args.getOrNull(0) ?: run {
             sender.sendMessage(plugin.langYml.getMessage("player-required"))
             return
         }
 
-        val player = Bukkit.getPlayer(playerString) ?: run {
-            sender.sendMessage(plugin.langYml.getMessage("player-not-found"))
-            return
+        val players = if (playerString.equals("all", ignoreCase = true)) {
+            Bukkit.getOnlinePlayers().toList()
+        } else {
+            val player = Bukkit.getPlayer(playerString)
+            if (player == null) {
+                sender.sendMessage(plugin.langYml.getMessage("player-not-found"))
+                return
+            }
+            listOf(player)
         }
 
         val passString = args.getOrNull(1) ?: run {
@@ -36,7 +43,12 @@ object GiveCommand: PluginCommand(
             return
         }
 
-        val amountString = args.getOrNull(2) ?: run {
+        val mode = args.getOrNull(2)?.lowercase() ?: run {
+            sender.sendMessage(plugin.langYml.getMessage("type-required"))
+            return
+        }
+
+        val amountString = args.getOrNull(3) ?: run {
             sender.sendMessage(plugin.langYml.getMessage("amount-required"))
             return
         }
@@ -46,20 +58,37 @@ object GiveCommand: PluginCommand(
             return
         }
 
-        player.giveExactBPExperience(pass, amount)
+        for (player in players) {
+            when (mode) {
+                "xp", "experience" -> player.giveExactBPExperience(pass, amount)
+                "tier", "tiers" -> player.giveExactBPTiers(pass, amount.toInt())
+                else -> {
+                    sender.sendMessage(plugin.langYml.getMessage("invalid-type"))
+                    return
+                }
+            }
 
-        sender.sendMessage(plugin.langYml.getMessage("given-experience")
-            .replace("%playername%", player.name)
-            .replace("%amount%", amount.toNiceString())
-            .replace("%pass%", pass.name)
-        )
+            val messageKeySender = if (mode == "xp") "given-experience" else "given-tiers"
+            sender.sendMessage(plugin.langYml.getMessage(messageKeySender)
+                .replace("%playername%", player.name)
+                .replace("%amount%", amount.toNiceString())
+                .replace("%pass%", pass.name)
+            )
+
+            val messageKeyReceiver = if (mode == "xp") "received-experience" else "received-tiers"
+            player.sendMessage(plugin.langYml.getMessage(messageKeyReceiver)
+                .replace("%amount%", amount.toNiceString())
+                .replace("%pass%", pass.name)
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
         return when(args.size) {
-            1 -> StringUtil.copyPartialMatches(args.first(), Bukkit.getOnlinePlayers().map { it.name }, mutableListOf())
-            2 -> StringUtil.copyPartialMatches(args.first(), BattlePasses.values().map { it.id }, mutableListOf())
-            3 -> StringUtil.copyPartialMatches(args.first(), listOf("1", "10", "100", "1000"), mutableListOf())
+            1 -> StringUtil.copyPartialMatches(args[0], Bukkit.getOnlinePlayers().map { it.name } + "all", mutableListOf())
+            2 -> StringUtil.copyPartialMatches(args[1], BattlePasses.values().map { it.id }, mutableListOf())
+            3 -> StringUtil.copyPartialMatches(args[2], listOf("xp", "tier"), mutableListOf())
+            4 -> StringUtil.copyPartialMatches(args[3], listOf("1", "10", "100", "1000"), mutableListOf())
             else -> emptyList()
         }
     }

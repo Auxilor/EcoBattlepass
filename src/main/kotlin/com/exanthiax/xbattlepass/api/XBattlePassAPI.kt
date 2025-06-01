@@ -138,6 +138,24 @@ fun Player.giveExactBPExperience(pass: BattlePass, experience: Double) {
     }
 }
 
+fun Player.giveExactBPTiers(pass: BattlePass, amount: Int) {
+    repeat(amount) {
+        val currentTier = this.getTier(pass)
+        val nextTier = currentTier + 1
+        if (pass.getTier(nextTier) == null) {
+            return
+        }
+        this.setTier(pass, nextTier)
+        this.setPassExp(pass, 0.0) // Reset XP when tier goes up
+        val levelUpEvent = PlayerTierLevelUpEvent(this, pass, nextTier)
+        Bukkit.getPluginManager().callEvent(levelUpEvent)
+        if (levelUpEvent.isCancelled) {
+            this.setTier(pass, currentTier)
+            return
+        }
+    }
+}
+
 fun OfflinePlayer.hasReceivedTier(pass: BattlePass, tier: Int) : Boolean {
     val bpTier = pass.getTier(tier) ?: return false
     return bpTier.saveId in this.getReceivedTiers(pass)

@@ -31,7 +31,7 @@ object TiersCommand: PluginCommand(
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
         return when(args.size) {
-            1 -> StringUtil.copyPartialMatches(args.first(), BattlePasses.values().map { it.id }, mutableListOf())
+            1 -> StringUtil.copyPartialMatches(args[0], BattlePasses.values().map { it.id }, mutableListOf())
             else -> emptyList()
         }
     }
