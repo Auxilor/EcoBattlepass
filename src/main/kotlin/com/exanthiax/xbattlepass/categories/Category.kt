@@ -84,6 +84,7 @@ class Category(private val _id: String, val config: Config): Registrable {
         get() = BattlePasses.getByID(config.getString("battlepass"))!!
 
     val name = config.getString("name")
+    val title = config.getString("gui-title")
 
     val item = Items.lookup(config.getString("item"))
 

@@ -21,7 +21,7 @@ class QuestsGUI(private val player: Player, val category: Category, val page: In
         val menu = Menu.builder(pattern.size)
             .setTitle(plugin.configYml.getFormattedString("quests-gui.title")
                 .replace("%page%", page.toString())
-                .replace("%category%", ChatColor.stripColor(category.name) ?: category.id)
+                .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
                 .replace("%pass%", category.battlepass.name)
             )
         var row = 1

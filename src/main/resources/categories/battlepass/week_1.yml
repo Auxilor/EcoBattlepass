@@ -1,5 +1,6 @@
 battlepass: battlepass
 priority: 1
+gui-title: "Week 1 Quests" # The title of the GUI
 
 name: "&8»&e Week 1 Challenges" # The name of the category
 item: emerald_block 1 # The item to display in the GUI

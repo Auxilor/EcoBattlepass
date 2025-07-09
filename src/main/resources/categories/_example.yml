@@ -3,6 +3,9 @@
 # You can place quests anywhere in this folder,
 # including in subfolders if you want to organize your category configs
 # _example.yml is not loaded.
+battlepass: battlepass # The ID of the battlepass this category is assigned to.
+priority: 0 # The priority of the category in the GUI. Categories are sorted by priority, 0 is the highest priority, and will show first.
+gui-title: "Example Category" # The title of the GUI, this is displayed at the top of the GUI.
 
 name: "&8»&e Example Category" # The name of the category
 item: nether_star 1 # The item to display in the GUI
@@ -10,8 +13,6 @@ lore: # The lore of the category
   - "&a%completed%/%total% Complete"
   - "&7%time%"
 
-battlepass: battlepass # The ID of the battlepass this category is assigned to.
-priority: 0 # The priority of the category in the GUI. Categories are sorted by priority, 0 is the highest priority, and will show first.
 start-date: 2025-03-23 00:00 # The date the category starts %xbattlepass_category_<id>_start_date%. This must match the date format in config.yml, otherise you will get errors.
 duration: 100000 # The duration of the category in minutes, set to -1 for no end. This allows you to end/lock categories after a time frame.
 reset-time: 1440 # The amount of minutes between resets. # Set to 1440 for daily resets, set to -1 for no reset.

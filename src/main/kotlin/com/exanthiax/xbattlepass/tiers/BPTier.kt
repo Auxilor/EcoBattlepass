@@ -43,7 +43,7 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
     }
 
     private fun replaceBasicPlaceholders(input: String, player: Player): String {
-        return input
+        var result = input
             .replace("%pass%", battlepass.name)
             .replace("%claimable_tiers%", battlepass.getClaimable(player).toNiceString())
             .replace("%percentage_progress%", battlepass.getFormattedProgress(player))
@@ -55,7 +55,20 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
             .replace("%tier_numeral%", this.number.toNumeral())
             .replace("%next_tier%", (this.number + 1).toNiceString())
             .replace("%next_tier_numeral%", (this.number + 1).toNumeral())
+
+        val regex = Regex("%tier_(-?\\d+)(_numeral)?%")
+
+        result = regex.replace(result) { match ->
+            val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
+            val isNumeral = match.groupValues[2].isNotEmpty()
+            val newTier = this.number + offset
+
+            if (isNumeral) newTier.toNumeral() else newTier.toNiceString()
+        }
+
+        return result
     }
+
 
     fun isFormatted(line: String): Boolean {
         return line.startsWith("&") || line.startsWith("§")

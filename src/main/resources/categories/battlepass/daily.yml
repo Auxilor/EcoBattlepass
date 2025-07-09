@@ -1,5 +1,6 @@
 battlepass: battlepass
 priority: 0
+gui-title: "Daily Quests" # The title of the GUI
 
 name: "&8»&e Daily Challenges" # The name of the category
 item: nether_star 1 # The item to display in the GUI
