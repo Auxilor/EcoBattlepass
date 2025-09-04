@@ -19,7 +19,7 @@ object BattlePassGUI {
     fun createAndOpen(player: Player, pass: BattlePass) {
         val maskPattern = plugin.configYml.getStrings("battlepass-gui.mask.pattern").toTypedArray()
         val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("battlepass-gui.mask.materials"))
-        val level = player.getTier(pass) // assuming you have a method like this to get player's current tier
+        val level = player.getTier(pass)
 
         val menu = menu(maskPattern.size) {
             title = plugin.configYml.getString("battlepass-gui.title")

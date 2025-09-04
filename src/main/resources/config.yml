@@ -33,10 +33,14 @@ battlepass-gui:
       name: "&aTiers"
       lore:
         - ""
-        - "&aLeft click &7to see"
-        - "&7your battlepass progression"
+        - "&aLeft click &7to see your"
+        - "&7battlepass progression"
         - "&7and claim rewards"
         - ""
+        - "&7Tier: &a%tier%"
+        - "&7XP: &a%current_bp_xp%&8/&a%required_bp_xp%"
+        - "&7Progress: &a%percentage_progress%%"
+        - "&7Claimable Tiers: &a%claimable_tiers%"
       location:
         row: 2
         column: 4
@@ -149,6 +153,9 @@ tiers-gui:
     # %claimed-free-rewards% - The claimed free rewards for the tier
     # %claimed-premium-rewards% - The claimed premium rewards for the tier
 
+    # The different states a tier can be in
+
+    # When only the free rewards are claimable.
     unlocked-free:
       item: lime_stained_glass_pane
       name: "&aTier %tier_numeral%"
@@ -161,6 +168,7 @@ tiers-gui:
         - ""
         - "&aCLAIM"
 
+    # When both the free and premium rewards are claimable.
     unlocked:
       item: lime_stained_glass_pane
       name: "&aTier %tier_numeral%"
@@ -173,6 +181,7 @@ tiers-gui:
         - ""
         - "&aCLAIM"
 
+    # When the free rewards have been claimed, but the premium rewards are not claimable due to missing premium.
     premium-required:
       item: orange_stained_glass_pane
       name: "&aTier %tier_numeral%"
@@ -185,6 +194,7 @@ tiers-gui:
         - ""
         - "&6PURCHASE THE BATTLEPASS TO CLAIM PREMIUM REWARDS"
 
+    # When the tier is not claimable yet, but is the next tier to be claimed.
     in-progress:
       item: yellow_stained_glass_pane
       name: "&eTier %tier_numeral%"
@@ -199,6 +209,7 @@ tiers-gui:
         - "&8» &e%percentage_progress%%"
         - "&8» &e%current_bp_xp%&8/&7%required_bp_xp% &fXP"
 
+    # When the tier is not claimable yet, and is not the next tier to be claimed.
     locked:
       item: red_stained_glass_pane
       name: "&cTier %tier_numeral%"
@@ -211,6 +222,7 @@ tiers-gui:
         - ""
         - "&cLOCKED"
 
+    # When all rewards have been claimed.
     claimed:
       item: green_stained_glass_pane glint
       name: "&aTier %tier_numeral%"
