@@ -125,10 +125,12 @@ tiers-gui:
         row: 6
         column: 5
 
+    empty-rewards-format: "&8&oNo rewards for this tier!"
     free-rewards-format: "&8»&r &9%reward%"
     premium-rewards-format: "&8»&r &6%reward%"
-    missing-premium-rewards-format: "&8»&r &6&m%reward%"
-    empty-rewards-format: ""
+    missing-premium-rewards-format: "&c&l✘ &6%reward%"
+    claimed-free-rewards-format: "&a&l✔ &9%reward%"
+    claimed-premium-rewards-format: "&a&l✔ &6%reward%"
 
     # Available Placeholders:
     # %pass% - The name of the battlepass
@@ -144,13 +146,29 @@ tiers-gui:
     # %tier_x_numeral% - The tier number in Roman numerals with an offset (e.g. if %tier_numeral% = V, then %tier_2_numeral% = VII, %tier_-2_numeral% = III)
     # %free-rewards% - The free rewards for the tier
     # %premium-rewards% - The premium rewards for the tier
+    # %claimed-free-rewards% - The claimed free rewards for the tier
+    # %claimed-premium-rewards% - The claimed premium rewards for the tier
 
     unlocked-free:
       item: lime_stained_glass_pane
       name: "&aTier %tier_numeral%"
       lore:
         - "&7Rewards:"
-        - "&a&l✔ &r%free-rewards%"
+        - "&7Free Tier:"
+        - "%free-rewards%"
+        - "&7Premium Tier:"
+        - "%premium-rewards%"
+        - ""
+        - "&aCLAIM"
+
+    unlocked:
+      item: lime_stained_glass_pane
+      name: "&aTier %tier_numeral%"
+      lore:
+        - "&7Rewards:"
+        - "&7Free Tier:"
+        - "%free-rewards%"
+        - "&7Premium Tier:"
         - "%premium-rewards%"
         - ""
         - "&aCLAIM"
@@ -160,26 +178,21 @@ tiers-gui:
       name: "&aTier %tier_numeral%"
       lore:
         - "&7Rewards:"
+        - "&7Free Tier:"
+        - "%claimed-free-rewards%"
+        - "&7Premium Tier:"
         - "%premium-rewards%"
         - ""
         - "&6PURCHASE THE BATTLEPASS TO CLAIM PREMIUM REWARDS"
-
-    unlocked:
-      item: lime_stained_glass_pane
-      name: "&aTier %tier_numeral%"
-      lore:
-        - "&7Rewards:"
-        - "%free-rewards%"
-        - "%premium-rewards%"
-        - ""
-        - "&aCLAIM"
 
     in-progress:
       item: yellow_stained_glass_pane
       name: "&eTier %tier_numeral%"
       lore:
         - "&7Rewards:"
+        - "&7Free Tier:"
         - "%free-rewards%"
+        - "&7Premium Tier:"
         - "%premium-rewards%"
         - ""
         - "&fProgress:"
@@ -191,7 +204,9 @@ tiers-gui:
       name: "&cTier %tier_numeral%"
       lore:
         - "&7Rewards:"
+        - "&7Free Tier:"
         - "%free-rewards%"
+        - "&7Premium Tier:"
         - "%premium-rewards%"
         - ""
         - "&cLOCKED"
@@ -201,8 +216,10 @@ tiers-gui:
       name: "&aTier %tier_numeral%"
       lore:
         - "&7Rewards:"
-        - "%free-rewards%"
-        - "%premium-rewards%"
+        - "&7Free Tier:"
+        - "%claimed-free-rewards%"
+        - "&7Premium Tier:"
+        - "%claimed-premium-rewards%"
         - ""
         - "&aCLAIMED"
 
