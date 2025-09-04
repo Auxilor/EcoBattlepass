@@ -1,5 +1,6 @@
 package com.exanthiax.xbattlepass.battlepass
 
+import com.exanthiax.xbattlepass.XBattlePass
 import com.willfp.eco.core.Eco
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.data.Profile
@@ -24,6 +25,7 @@ import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.placeholder.PlayerDynamicPlaceholder
+import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.util.formatWithCommas
 import com.willfp.eco.util.toNumeral
 import java.time.LocalDateTime
@@ -33,10 +35,24 @@ import java.util.regex.Pattern
 class BattlePass(private val _id: String, val config: Config): Registrable {
     init {
 
+        PlayerlessPlaceholder(plugin, "${_id}_max_tiers") {
+            this.maxLevel.toString()
+        }.register()
+
+        PlayerlessPlaceholder(plugin, "${_id}_max_tiers_numeral") {
+            this.maxLevel.toNumeral()
+        }.register()
+
         PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_state_${_id}_\\d+$")) { string, player ->
             val rTier = string.split("_").last().toIntOrNull()
                 ?: return@PlayerDynamicPlaceholder "Invalid tier ${string.split("_").last()}"
             player.hasReceivedTier(this, rTier).toString()
+        }.register()
+
+        PlayerPlaceholder(plugin, "${_id}_pass_type") { player ->
+            plugin.langYml.getString(
+                if (player.hasPermission(premiumPerm)) "pass-type.premium" else "pass-type.free"
+            )
         }.register()
 
         PlayerPlaceholder(plugin, "tier_${_id}") {

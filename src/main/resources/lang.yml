@@ -24,6 +24,10 @@ messages:
   received-experience: "&7You have received &b%amount%&7 &r%pass% &7experience."
   received-tiers: "&7You have received &b%amount%&7 &r%pass% &7tier(s)."
 
+pass-type:
+  free: "&9Free"
+  premium: "&6Premium"
+
 infinity: "∞"
 never: "&6never"
 free: "&aFree"

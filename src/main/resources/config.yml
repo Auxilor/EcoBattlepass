@@ -139,6 +139,10 @@ tiers-gui:
     # Available Placeholders:
     # %pass% - The name of the battlepass
     # %claimable_tiers% - The amount of tiers that can be claimed
+    # %max_tiers% - The total amount of tiers in the battlepass
+    # %pass_type% - The type of battlepass (Free, Premium)
+    # %start_date% - The start date of the battlepass
+    # %end_date% - The end date of the battlepass
     # %percentage_progress% - The percentage of the tier XP progress
     # %current_bp_xp% - The current battlepass XP
     # %current_bp_xp_formatted% - The current battlepass XP formatted with commas
@@ -154,7 +158,6 @@ tiers-gui:
     # %claimed-premium-rewards% - The claimed premium rewards for the tier
 
     # The different states a tier can be in
-
     # When only the free rewards are claimable.
     unlocked-free:
       item: lime_stained_glass_pane

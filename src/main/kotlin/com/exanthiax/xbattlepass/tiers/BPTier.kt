@@ -12,6 +12,7 @@ import com.willfp.eco.util.formatWithCommas
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.toNumeral
 import org.bukkit.entity.Player
+import java.time.format.DateTimeFormatter
 
 class BPTier(val config: Config, val battlepass: BattlePass) {
     constructor(num: Int, battlepass: BattlePass) : this(
@@ -48,6 +49,10 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
         var result = input
             .replace("%pass%", battlepass.name)
             .replace("%claimable_tiers%", battlepass.getClaimable(player).toNiceString())
+            .replace("%max_tiers%", battlepass.maxLevel.toNiceString())
+            .replace("%pass_type%", plugin.langYml.getString(if (player.hasPermission(battlepass.premiumPerm)) "pass-type.premium" else "pass-type.free"))
+            .replace("%start_date%", battlepass.startDate.format(DateTimeFormatter.ofPattern(plugin.configYml.getString("date-format"))))
+            .replace("%end_date%", battlepass.endDate.format(DateTimeFormatter.ofPattern(plugin.configYml.getString("date-format"))))
             .replace("%percentage_progress%", battlepass.getFormattedProgress(player))
             .replace("%current_bp_xp%", player.getPassExp(battlepass).toNiceString())
             .replace("%current_bp_xp_formatted%", player.getPassExp(battlepass).formatWithCommas())
