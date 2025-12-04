@@ -390,6 +390,11 @@ sound:
     sound: block.anvil.use
     volume: 1
     pitch: 1
+  premium-required:
+    enabled: true
+    sound: entity.villager.no
+    volume: 1
+    pitch: 1
   quest-complete:
     enabled: true
     sound: block.anvil.use

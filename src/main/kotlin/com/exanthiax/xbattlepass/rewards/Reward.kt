@@ -34,29 +34,23 @@ class Reward(private val _id: String, val config: Config): Registrable {
         "display.reward-lore"
     )
 
-    fun grant(player: Player) {
-        val event = PlayerPreRewardEvent(player, this)
+    fun grant(player: Player): Boolean {
+        val preEvent = PlayerPreRewardEvent(player, this)
+        Bukkit.getPluginManager().callEvent(preEvent)
+        if (preEvent.isCancelled) return false
+        
+        rewardEffects?.trigger(
+            player.toDispatcher(),
+            TriggerData(
+                player = player,
+                dispatcher = player.toDispatcher(),
+                value = 1.0,
+                text = _id
+            )
+        )
 
-        Bukkit.getPluginManager().callEvent(event)
+        Bukkit.getPluginManager().callEvent(PlayerPostRewardEvent(player, this))
 
-        if (!event.isCancelled) {
-            val result = rewardEffects?.trigger(
-                player.toDispatcher(),
-                data = TriggerData(
-                    player = player,
-                    dispatcher = player.toDispatcher(),
-                    value = 1.0,
-                    text = this._id
-                )
-            ) ?: run {
-                plugin.logger.warning("Failed to grant reward $_id to ${player.name}, reward chain is null!")
-                false
-            }
-
-            if (result) {
-                val postEvent = PlayerPostRewardEvent(player, this)
-                Bukkit.getPluginManager().callEvent(postEvent)
-            }
-        }
+        return true
     }
 }

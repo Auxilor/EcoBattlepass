@@ -8,6 +8,7 @@ import com.exanthiax.xbattlepass.api.receiveTierPremiumOnly
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.utils.ReceivedTierState
+import com.exanthiax.xbattlepass.utils.SoundUtils
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.gui.menu.Menu
@@ -95,6 +96,19 @@ class BattleTierComponent(
         }
     }
 
+    private fun Player.sendPremiumRequiredMessage(tierLevel: Int, tier: BPTier) {
+        val premiumRewardName = tier.rewards
+            .first { it.tier.name.equals("premium", true) }
+            .reward.getDisplayName(this)
+
+        sendMessage(
+            plugin.langYml.getMessage("premium-required")
+                .replace("%tier%", tierLevel.toString())
+                .replace("%reward%", premiumRewardName)
+        )
+        SoundUtils.playIfEnabled(this, "sound.premium-required")
+    }
+
     override fun getLeftClickAction(player: Player, level: Int, levelState: LevelState): () -> Unit {
         val key: String = run {
             if (levelState == LevelState.UNLOCKED) {
@@ -108,19 +122,23 @@ class BattleTierComponent(
             }
         }
 
-        return if (key == "unlocked" || key == "unlocked-free") {
+        return if (key == "unlocked" || key == "unlocked-free" || key == "premium-required") {
             {
                 val tier = pass.getTier(level)
                 if (tier != null) {
-                    levelItemCache.invalidate(level)
-                    itemCache[levelState]?.remove(level)
-                    if (key == "unlocked") {
-                        player.receiveTier(tier)
-                    } else if (player.hasPremium(pass)) {
-                        player.receiveTierPremiumOnly(tier)
+                    if (key == "premium-required") {
+                        val name = tier.rewards.first { it.tier.name.equals("premium", true) }.reward.getDisplayName(player).formatEco(player, true)
+                        player.sendMessage(plugin.langYml.getMessage("premium-required")
+                            .replace("%tier%", level.toString())
+                            .replace("%reward%", name)
+                            .replace("%pass%", pass.name))
+                        SoundUtils.playIfEnabled(player, "sound.premium-required")
+                    } else {
+                        levelItemCache.invalidate(level)
+                        itemCache[levelState]?.remove(level)
+                        if (key == "unlocked") player.receiveTier(tier) else player.receiveTierPremiumOnly(tier)
+                        player.openMenu?.refresh(player)
                     }
-                    player.openMenu?.refresh(player)
-                    // player.closeInventory()
                 }
             }
         } else {

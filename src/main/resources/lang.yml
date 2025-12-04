@@ -4,6 +4,7 @@ messages:
   tier-up: "&7You have tiered up to &a%tier%&7."
   quest-complete: "&7You have completed quest &a%quest%&7."
   reward-claim: "&7You have received reward &a%reward%&7."
+  premium-required: "&cYou need to have the premium &6%pass% &cto claim &a%reward%&c!"
   premium-give: "&7You have unlocked the premium Battlepass."
   premium-broadcast: "&a%player% &7has unlocked the premium Battlepass."
   already-premium: "&7This player already has the premium Battlepass."
