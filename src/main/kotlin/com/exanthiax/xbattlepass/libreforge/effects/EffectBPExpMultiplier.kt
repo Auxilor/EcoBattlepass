@@ -23,8 +23,6 @@ object EffectBPExpMultiplier : MultiMultiplierEffect<BattlePass>("battlepass_xp_
     fun handle(event: PlayerBPExpGainEvent) {
         val player = event.player
 
-//        if (event.isMultiply) {
-            event.setAmount(event.getAmount() * getMultiplier(player.toDispatcher(), event.battlepass))
-        }
+        event.setAmount(event.getAmount() * getMultiplier(player.toDispatcher(), event.battlepass))
     }
-//}
+}
