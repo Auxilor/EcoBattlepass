@@ -11,17 +11,12 @@ object XBattlePassCommand: PluginCommand(
     false
 ) {
     init {
-        this.addSubcommand(
-            com.exanthiax.xbattlepass.commands.QuestsCommand
-        ).addSubcommand(
-            com.exanthiax.xbattlepass.commands.ReloadCommand
-        ).addSubcommand(
-            com.exanthiax.xbattlepass.commands.ResetCommand
-        ).addSubcommand(
-            com.exanthiax.xbattlepass.commands.GiveCommand
-        ).addSubcommand(
-            com.exanthiax.xbattlepass.commands.TiersCommand
-        )
+        this.addSubcommand(QuestsCommand)
+            .addSubcommand(ReloadCommand)
+            .addSubcommand(ResetCommand)
+            .addSubcommand(GiveCommand)
+            .addSubcommand(TiersCommand)
+            .addSubcommand(SetPremiumCommand)
     }
 
     override fun onExecute(sender: CommandSender, args: MutableList<String>) {

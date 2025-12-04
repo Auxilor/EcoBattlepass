@@ -9,11 +9,14 @@ import com.exanthiax.xbattlepass.api.events.PlayerQuestCompleteEvent
 import com.exanthiax.xbattlepass.api.events.PlayerTaskCompleteEvent
 import com.exanthiax.xbattlepass.api.events.PlayerTierLevelUpEvent
 import com.exanthiax.xbattlepass.battlepass.BattlePass
+import com.exanthiax.xbattlepass.plugin
 import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.tiers.TierType
 import com.exanthiax.xbattlepass.utils.ReceivedTierState
+import org.bukkit.permissions.PermissionAttachment
+import java.util.UUID
 import kotlin.math.abs
 
 fun OfflinePlayer.getTier(pass: BattlePass): Int {
@@ -42,6 +45,15 @@ fun OfflinePlayer.setReceivedTiers(pass: BattlePass, tiers: List<String>) {
 
 fun Player.hasPremium(pass: BattlePass): Boolean {
     return this.hasPermission(pass.premiumPerm)
+}
+
+private val playerAttachments = mutableMapOf<UUID, PermissionAttachment>()
+
+fun Player.setPremium(pass: BattlePass, premium: Boolean) {
+    val perm = pass.premiumPerm
+    val attachment = playerAttachments.getOrPut(this.uniqueId) { this.addAttachment(plugin) }
+    attachment.setPermission(perm, premium)
+    this.recalculatePermissions()
 }
 
 fun Player.receiveTier(tier: BPTier) {
