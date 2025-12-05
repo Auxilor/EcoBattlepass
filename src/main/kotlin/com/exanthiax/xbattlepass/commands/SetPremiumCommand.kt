@@ -38,8 +38,15 @@ object SetPremiumCommand : PluginCommand(
         }
 
         val arg3 = args.getOrNull(2)?.lowercase()
-        val silent = arg3 == "silent"
-        val setPremium = arg3?.let { it !in listOf("false", "no", "0", "silent") } ?: true
+        val arg4 = args.getOrNull(3)?.lowercase()
+
+        val setPremium = when {
+            arg3 == null -> true
+            arg3 == "silent" -> true
+            else -> arg3 !in listOf("false", "no", "0")
+        }
+
+        val silent = arg4 == "silent" || (arg3 == "silent" && arg4 == null)
 
         val hasPremium = player.hasPremium(pass)
         if (setPremium && hasPremium) {
@@ -97,7 +104,12 @@ object SetPremiumCommand : PluginCommand(
             )
             3 -> StringUtil.copyPartialMatches(
                 args[2],
-                listOf("true", "false", "silent"),
+                listOf("true", "false"),
+                ArrayList()
+            )
+            4 -> StringUtil.copyPartialMatches(
+                args[3],
+                listOf("silent"),
                 ArrayList()
             )
             else -> emptyList()
