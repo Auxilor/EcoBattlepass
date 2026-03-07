@@ -1,11 +1,16 @@
 package com.exanthiax.xbattlepass.libreforge.conditions
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.*
-import com.willfp.libreforge.conditions.Condition
-import org.bukkit.entity.Player
 import com.exanthiax.xbattlepass.api.getTier
 import com.exanthiax.xbattlepass.battlepass.BattlePasses
+import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.libreforge.ConfigArguments
+import com.willfp.libreforge.Dispatcher
+import com.willfp.libreforge.NoCompileData
+import com.willfp.libreforge.ProvidedHolder
+import com.willfp.libreforge.arguments
+import com.willfp.libreforge.conditions.Condition
+import com.willfp.libreforge.get
+import org.bukkit.entity.Player
 
 object ConditionHasBPTier: Condition<NoCompileData>("has_battlepass_tier") {
     override val arguments: ConfigArguments = arguments {

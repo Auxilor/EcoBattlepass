@@ -11,7 +11,6 @@ import com.exanthiax.xbattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.xbattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.toNiceString
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil

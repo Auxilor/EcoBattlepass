@@ -1,6 +1,5 @@
 package com.exanthiax.xbattlepass.tiers
 
-import com.exanthiax.xbattlepass.api.getPassExp
 import com.exanthiax.xbattlepass.api.hasPremium
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.battlepass.BattlePasses

@@ -4,7 +4,6 @@ import com.exanthiax.xbattlepass.api.getTier
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.gui.components.BattleTierComponent
 import com.exanthiax.xbattlepass.plugin
-import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer

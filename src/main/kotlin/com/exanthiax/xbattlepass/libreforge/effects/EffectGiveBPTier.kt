@@ -1,5 +1,9 @@
 package com.exanthiax.xbattlepass.libreforge.effects
 
+import com.exanthiax.xbattlepass.api.events.PlayerTierLevelUpEvent
+import com.exanthiax.xbattlepass.api.getTier
+import com.exanthiax.xbattlepass.api.setTier
+import com.exanthiax.xbattlepass.battlepass.BattlePasses
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.ConfigArguments
 import com.willfp.libreforge.NoCompileData
@@ -8,9 +12,6 @@ import com.willfp.libreforge.effects.Effect
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.Bukkit
-import com.exanthiax.xbattlepass.api.*
-import com.exanthiax.xbattlepass.api.events.PlayerTierLevelUpEvent
-import com.exanthiax.xbattlepass.battlepass.BattlePasses
 
 object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
     override val arguments: ConfigArguments = arguments {

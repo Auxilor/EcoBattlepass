@@ -2,7 +2,6 @@ package com.exanthiax.xbattlepass.gui.components
 
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.onLeftClick
-import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.Slot
 import com.willfp.eco.core.map.nestedMap
 import com.willfp.ecomponent.AutofillComponent

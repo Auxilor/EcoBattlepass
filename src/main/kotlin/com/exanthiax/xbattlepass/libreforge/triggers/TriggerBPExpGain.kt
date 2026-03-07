@@ -1,12 +1,11 @@
 package com.exanthiax.xbattlepass.libreforge.triggers
 
+import com.exanthiax.xbattlepass.api.events.PlayerBPExpGainEvent
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.Trigger
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
-import com.exanthiax.xbattlepass.api.events.PlayerBPExpGainEvent
-import com.exanthiax.xbattlepass.api.events.PlayerTierLevelUpEvent
 
 object TriggerBPExpGain: Trigger("gain_battlepass_xp") {
     override val parameters: Set<TriggerParameter> = setOf(

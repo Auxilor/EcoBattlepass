@@ -1,15 +1,15 @@
 package com.exanthiax.xbattlepass.quests
 
+import com.exanthiax.xbattlepass.api.setCompletedQuest
+import com.exanthiax.xbattlepass.categories.Category
+import com.exanthiax.xbattlepass.msToString
+import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.util.formatEco
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
-import com.exanthiax.xbattlepass.api.setCompletedQuest
-import com.exanthiax.xbattlepass.categories.Category
-import com.exanthiax.xbattlepass.msToString
-import com.exanthiax.xbattlepass.plugin
 
 class ActiveBattleQuest(val config: Config, val category: Category) {
     val parent = BattleQuests.getByID(config.getString("id"))!!

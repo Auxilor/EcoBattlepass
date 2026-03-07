@@ -1,12 +1,10 @@
 package com.exanthiax.xbattlepass.gui
 
-import com.exanthiax.xbattlepass.api.getPassExp
 import com.exanthiax.xbattlepass.api.getTier
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.plugin
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.utils.InternalPlaceholders
-import com.exanthiax.xbattlepass.utils.SoundUtils
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
@@ -16,11 +14,7 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.formatWithCommas
-import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.toNumeral
 import org.bukkit.entity.Player
-import java.time.format.DateTimeFormatter
 
 object BattlePassGUI {
     fun createAndOpen(player: Player, pass: BattlePass) {

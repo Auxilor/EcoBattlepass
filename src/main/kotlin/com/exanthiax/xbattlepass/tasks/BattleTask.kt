@@ -1,11 +1,11 @@
 package com.exanthiax.xbattlepass.tasks
 
+import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.counters.Counters
-import com.exanthiax.xbattlepass.plugin
 
 class BattleTask(private val _id: String, val config: Config): Registrable {
     override fun getID(): String {

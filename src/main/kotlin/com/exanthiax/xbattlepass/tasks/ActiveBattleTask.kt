@@ -1,7 +1,11 @@
 package com.exanthiax.xbattlepass.tasks
 
-import com.exanthiax.xbattlepass.api.*
 import com.exanthiax.xbattlepass.api.events.PlayerTaskExpGainEvent
+import com.exanthiax.xbattlepass.api.giveTaskExperience
+import com.exanthiax.xbattlepass.api.hasCompletedQuest
+import com.exanthiax.xbattlepass.api.hasCompletedTask
+import com.exanthiax.xbattlepass.api.setCompletedTask
+import com.exanthiax.xbattlepass.api.setTaskProgress
 import com.exanthiax.xbattlepass.plugin
 import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 import com.exanthiax.xbattlepass.utils.InternalPlaceholders
@@ -10,8 +14,6 @@ import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.formatWithCommas
-import com.willfp.eco.util.toNiceString
 import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer

@@ -1,11 +1,10 @@
 package com.exanthiax.xbattlepass.quests
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.registry.Registrable
+import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
 import com.exanthiax.xbattlepass.tiers.TierType
 import com.exanthiax.xbattlepass.tiers.Tiered
-import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
+import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.registry.Registrable
 
 class BattleQuest(private val _id: String, val config: Config): Registrable, Tiered {
     override fun getID(): String {

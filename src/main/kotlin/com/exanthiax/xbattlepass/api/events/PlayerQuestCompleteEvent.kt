@@ -1,9 +1,9 @@
 package com.exanthiax.xbattlepass.api.events
 
+import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
-import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 
 class PlayerQuestCompleteEvent(player: Player,
                                val quest: ActiveBattleQuest): PlayerEvent(player) {

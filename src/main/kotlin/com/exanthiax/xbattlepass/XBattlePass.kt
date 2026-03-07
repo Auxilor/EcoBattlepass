@@ -1,9 +1,28 @@
 package com.exanthiax.xbattlepass
 
+import com.exanthiax.xbattlepass.battlepass.BattlePasses
+import com.exanthiax.xbattlepass.categories.Categories
+import com.exanthiax.xbattlepass.libreforge.conditions.ConditionHasBPPremium
+import com.exanthiax.xbattlepass.libreforge.conditions.ConditionHasBPTier
+import com.exanthiax.xbattlepass.libreforge.effects.EffectBPExpMultiplier
+import com.exanthiax.xbattlepass.libreforge.effects.EffectGiveBPExp
+import com.exanthiax.xbattlepass.libreforge.effects.EffectGiveBPTier
+import com.exanthiax.xbattlepass.libreforge.effects.EffectGiveTaskExp
+import com.exanthiax.xbattlepass.libreforge.effects.EffectSetBPTier
+import com.exanthiax.xbattlepass.libreforge.effects.EffectTaskExpMultiplier
+import com.exanthiax.xbattlepass.libreforge.filters.FilterReward
+import com.exanthiax.xbattlepass.libreforge.filters.FilterTask
+import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPExpGain
+import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPRewardClaim
+import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPTaskComplete
+import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPTierUp
+import com.exanthiax.xbattlepass.quests.BattleQuests
+import com.exanthiax.xbattlepass.rewards.Rewards
+import com.exanthiax.xbattlepass.tasks.BattleTasks
+import com.exanthiax.xbattlepass.utils.BattlePassListener
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.config.BaseConfig
 import com.willfp.eco.core.config.ConfigType
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.util.toNiceString
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
@@ -11,24 +30,7 @@ import com.willfp.libreforge.filters.Filters
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.triggers.Triggers
-import net.kyori.adventure.key.Key
-import org.bukkit.entity.Player
 import org.bukkit.event.Listener
-import com.exanthiax.xbattlepass.battlepass.BattlePasses
-import com.exanthiax.xbattlepass.categories.Categories
-import com.exanthiax.xbattlepass.libreforge.conditions.ConditionHasBPPremium
-import com.exanthiax.xbattlepass.libreforge.conditions.ConditionHasBPTier
-import com.exanthiax.xbattlepass.libreforge.effects.*
-import com.exanthiax.xbattlepass.libreforge.filters.FilterReward
-import com.exanthiax.xbattlepass.libreforge.filters.FilterTask
-import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPExpGain
-import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPRewardClaim
-import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPTaskComplete
-import com.exanthiax.xbattlepass.libreforge.triggers.TriggerBPTierUp
-import com.exanthiax.xbattlepass.utils.BattlePassListener
-import com.exanthiax.xbattlepass.quests.BattleQuests
-import com.exanthiax.xbattlepass.rewards.Rewards
-import com.exanthiax.xbattlepass.tasks.BattleTasks
 
 lateinit var plugin: XBattlePass
     private set

@@ -8,7 +8,6 @@ import com.exanthiax.xbattlepass.commands.helpers.replacePlaceholders
 import com.exanthiax.xbattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.xbattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.xbattlepass.plugin
-import com.exanthiax.xbattlepass.utils.SoundUtils
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco

@@ -1,9 +1,5 @@
 package com.exanthiax.xbattlepass.api
 
-import com.willfp.eco.core.data.profile
-import org.bukkit.Bukkit
-import org.bukkit.OfflinePlayer
-import org.bukkit.entity.Player
 import com.exanthiax.xbattlepass.api.events.PlayerBPExpGainEvent
 import com.exanthiax.xbattlepass.api.events.PlayerQuestCompleteEvent
 import com.exanthiax.xbattlepass.api.events.PlayerTaskCompleteEvent
@@ -15,6 +11,10 @@ import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.tiers.TierType
 import com.exanthiax.xbattlepass.utils.ReceivedTierState
+import com.willfp.eco.core.data.profile
+import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
+import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionAttachment
 import java.util.UUID
 import kotlin.math.abs

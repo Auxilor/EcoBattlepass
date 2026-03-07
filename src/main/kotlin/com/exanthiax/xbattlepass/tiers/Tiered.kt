@@ -1,9 +1,9 @@
 package com.exanthiax.xbattlepass.tiers
 
-import org.bukkit.entity.Player
 import com.exanthiax.xbattlepass.api.hasPremium
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.plugin
+import org.bukkit.entity.Player
 
 interface Tiered {
     val tier: TierType

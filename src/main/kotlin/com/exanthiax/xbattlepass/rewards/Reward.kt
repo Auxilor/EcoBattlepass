@@ -1,5 +1,8 @@
 package com.exanthiax.xbattlepass.rewards
 
+import com.exanthiax.xbattlepass.api.events.PlayerPostRewardEvent
+import com.exanthiax.xbattlepass.api.events.PlayerPreRewardEvent
+import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.formatEco
@@ -9,9 +12,6 @@ import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import com.exanthiax.xbattlepass.api.events.PlayerPostRewardEvent
-import com.exanthiax.xbattlepass.api.events.PlayerPreRewardEvent
-import com.exanthiax.xbattlepass.plugin
 
 class Reward(private val _id: String, val config: Config): Registrable {
     override fun getID(): String {

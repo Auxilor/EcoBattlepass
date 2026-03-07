@@ -1,5 +1,9 @@
 package com.exanthiax.xbattlepass.gui
 
+import com.exanthiax.xbattlepass.categories.Category
+import com.exanthiax.xbattlepass.plugin
+import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
+import com.exanthiax.xbattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
@@ -9,11 +13,6 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import com.exanthiax.xbattlepass.categories.Category
-import com.exanthiax.xbattlepass.plugin
-import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
-import com.exanthiax.xbattlepass.utils.InternalPlaceholders
-import com.exanthiax.xbattlepass.utils.SoundUtils
 
 class QuestsGUI(private val player: Player, val category: Category, val page: Int = 1,
                 val wasBack: Boolean = false) {

@@ -1,12 +1,12 @@
 package com.exanthiax.xbattlepass.battlepass
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.RegistrableCategory
 import com.exanthiax.xbattlepass.categories.Categories
 import com.exanthiax.xbattlepass.plugin
 import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
 import com.exanthiax.xbattlepass.tiers.TierType
+import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.loader.configs.RegistrableCategory
 
 object BattlePasses: RegistrableCategory<BattlePass>("battlepasses", "battlepasses") {
     val activeTasks: List<ActiveBattleTask>

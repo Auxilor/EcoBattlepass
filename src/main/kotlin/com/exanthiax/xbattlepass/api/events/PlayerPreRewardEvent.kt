@@ -1,10 +1,10 @@
 package com.exanthiax.xbattlepass.api.events
 
+import com.exanthiax.xbattlepass.rewards.Reward
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
-import com.exanthiax.xbattlepass.rewards.Reward
 
 class PlayerPreRewardEvent(player: Player, val reward: Reward): PlayerEvent(player), Cancellable {
     private var cancelled = false

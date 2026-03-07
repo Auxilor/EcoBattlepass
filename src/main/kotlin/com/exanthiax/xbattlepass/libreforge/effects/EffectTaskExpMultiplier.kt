@@ -1,14 +1,11 @@
 package com.exanthiax.xbattlepass.libreforge.effects
 
-import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
-import com.willfp.libreforge.effects.templates.MultiplierEffect
-import com.willfp.libreforge.toDispatcher
-import org.bukkit.entity.Bat
-import org.bukkit.event.EventHandler
-import com.exanthiax.xbattlepass.api.events.PlayerBPExpGainEvent
 import com.exanthiax.xbattlepass.api.events.PlayerTaskExpGainEvent
 import com.exanthiax.xbattlepass.tasks.BattleTask
 import com.exanthiax.xbattlepass.tasks.BattleTasks
+import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
+import com.willfp.libreforge.toDispatcher
+import org.bukkit.event.EventHandler
 
 object EffectTaskExpMultiplier : MultiMultiplierEffect<BattleTask>("battlepass_task_xp_multiplier") {
     override val key = "tasks"

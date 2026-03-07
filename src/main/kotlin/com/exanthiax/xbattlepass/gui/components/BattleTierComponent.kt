@@ -8,7 +8,6 @@ import com.exanthiax.xbattlepass.api.receiveTierPremiumOnly
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.exanthiax.xbattlepass.utils.ReceivedTierState
-import com.exanthiax.xbattlepass.utils.SoundUtils
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.gui.menu.Menu
@@ -24,7 +23,6 @@ import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.concurrent.TimeUnit
-import kotlin.collections.getOrPut
 import kotlin.math.roundToInt
 
 private val levelItemCache = Caffeine.newBuilder()

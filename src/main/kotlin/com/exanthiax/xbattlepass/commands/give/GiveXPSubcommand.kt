@@ -2,7 +2,11 @@ package com.exanthiax.xbattlepass.commands.give
 
 import com.exanthiax.xbattlepass.api.giveExactBPExperience
 import com.exanthiax.xbattlepass.battlepass.BattlePasses
-import com.exanthiax.xbattlepass.commands.helpers.*
+import com.exanthiax.xbattlepass.commands.helpers.COMMON_AMOUNTS
+import com.exanthiax.xbattlepass.commands.helpers.Messages
+import com.exanthiax.xbattlepass.commands.helpers.replacePlaceholders
+import com.exanthiax.xbattlepass.commands.helpers.resolveBattlePass
+import com.exanthiax.xbattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.command.impl.Subcommand
 import org.bukkit.Bukkit

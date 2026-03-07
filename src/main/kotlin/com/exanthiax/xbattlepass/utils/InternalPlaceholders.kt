@@ -7,7 +7,6 @@ import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.categories.Category
 import com.exanthiax.xbattlepass.msToString
 import com.exanthiax.xbattlepass.plugin
-import com.exanthiax.xbattlepass.quests.ActiveBattleQuest
 import com.exanthiax.xbattlepass.tasks.ActiveBattleTask
 import com.exanthiax.xbattlepass.tiers.BPTier
 import com.willfp.eco.util.formatEco

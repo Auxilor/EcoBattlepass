@@ -2,9 +2,9 @@ package com.exanthiax.xbattlepass.commands
 
 import com.exanthiax.xbattlepass.commands.give.GiveCommand
 import com.exanthiax.xbattlepass.commands.reset.ResetCommand
+import com.exanthiax.xbattlepass.plugin
 import com.willfp.eco.core.command.impl.PluginCommand
 import org.bukkit.command.CommandSender
-import com.exanthiax.xbattlepass.plugin
 
 object XBattlePassCommand: PluginCommand(
     plugin,

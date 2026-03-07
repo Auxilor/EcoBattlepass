@@ -1,11 +1,11 @@
 package com.exanthiax.xbattlepass.libreforge.triggers
 
+import com.exanthiax.xbattlepass.api.events.PlayerPostRewardEvent
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.Trigger
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
-import com.exanthiax.xbattlepass.api.events.PlayerPostRewardEvent
 
 object TriggerBPRewardClaim: Trigger("claim_battlepass_reward") {
     override val parameters: Set<TriggerParameter> = setOf(

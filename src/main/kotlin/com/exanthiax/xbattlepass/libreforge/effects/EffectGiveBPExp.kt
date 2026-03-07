@@ -1,5 +1,8 @@
 package com.exanthiax.xbattlepass.libreforge.effects
 
+import com.exanthiax.xbattlepass.api.giveBPExperience
+import com.exanthiax.xbattlepass.api.giveExactBPExperience
+import com.exanthiax.xbattlepass.battlepass.BattlePasses
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.ConfigArguments
 import com.willfp.libreforge.NoCompileData
@@ -7,9 +10,6 @@ import com.willfp.libreforge.arguments
 import com.willfp.libreforge.effects.Effect
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
-import com.exanthiax.xbattlepass.api.giveBPExperience
-import com.exanthiax.xbattlepass.api.giveExactBPExperience
-import com.exanthiax.xbattlepass.battlepass.BattlePasses
 
 object EffectGiveBPExp: Effect<NoCompileData>("give_battlepass_xp") {
     override val arguments: ConfigArguments = arguments {

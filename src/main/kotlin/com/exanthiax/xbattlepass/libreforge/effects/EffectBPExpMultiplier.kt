@@ -1,12 +1,11 @@
 package com.exanthiax.xbattlepass.libreforge.effects
 
-import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
-import com.willfp.libreforge.effects.templates.MultiplierEffect
-import com.willfp.libreforge.toDispatcher
-import org.bukkit.event.EventHandler
 import com.exanthiax.xbattlepass.api.events.PlayerBPExpGainEvent
 import com.exanthiax.xbattlepass.battlepass.BattlePass
 import com.exanthiax.xbattlepass.battlepass.BattlePasses
+import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
+import com.willfp.libreforge.toDispatcher
+import org.bukkit.event.EventHandler
 
 object EffectBPExpMultiplier : MultiMultiplierEffect<BattlePass>("battlepass_xp_multiplier") {
     override val key = "battlepasses"
