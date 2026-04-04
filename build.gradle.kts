@@ -59,6 +59,7 @@ allprojects {
 
     tasks {
         shadowJar {
+            exclude("META-INF/**")
             relocate("com.willfp.ecomponent", "com.exanthiax.ecobattlepass.ecomponent")
             relocate("com.willfp.libreforge.loader", "com.exanthiax.ecobattlepass.libreforge.loader")
             relocate("kotlin", "com.willfp.eco.libs.kotlin")
