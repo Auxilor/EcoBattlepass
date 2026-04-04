@@ -27,7 +27,7 @@ object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
 
     override fun onTrigger(config: Config, data: TriggerData, compileData: NoCompileData): Boolean {
         val player = data.player ?: return false
-        val amount = config.getIntFromExpression("amount", player)
+        val amount = config.getIntFromExpression("tiers", player)
         val pass = BattlePasses.getByID(config.getString("battlepass")) ?: return false
 
         val event = PlayerTierLevelUpEvent(player, pass, player.getTier(pass) + amount)
