@@ -2,6 +2,8 @@ package com.exanthiax.ecobattlepass.battlepass
 
 import com.exanthiax.ecobattlepass.api.getPassExp
 import com.exanthiax.ecobattlepass.api.getTier
+import com.exanthiax.ecobattlepass.utils.msToString  
+import java.time.ZoneId
 import com.exanthiax.ecobattlepass.api.hasReceivedTier
 import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.categories.Category
@@ -33,6 +35,92 @@ import java.util.regex.Pattern
 
 class BattlePass(private val _id: String, val config: Config): Registrable {
     init {
+        PlayerlessPlaceholder(plugin, "${_id}_name") {  
+            this.name  
+        }.register()
+
+        PlayerPlaceholder(plugin, "completed_quests_${_id}") { player ->  
+            categories.sumOf { it.getCompleted(player) }.toString()  
+        }.register()
+
+        PlayerlessPlaceholder(plugin, "quest_amount_${_id}") {  
+            categories.sumOf { it.quests.size }.toString()  
+        }.register()
+
+        PlayerlessPlaceholder(plugin, "week_${_id}") {  
+            val now = LocalDateTime.now()  
+            if (now.isBefore(startDate)) {   
+                plugin.langYml.getFormattedString("season-not-started")  
+            } else if (now.isAfter(endDate)) {  
+                plugin.langYml.getFormattedString("season-finished")  
+            } else {  
+                val weekCategories = categories.filter { it.config.getInt("priority") > 0 }  
+        
+                val activeWeek = weekCategories.filter { it.isActive }  
+                    .maxByOrNull { it.config.getInt("priority") }  
+        
+                if (activeWeek != null) {  
+                    activeWeek.config.getInt("priority").toString()  
+                } else {   
+                    val allWeeksEnded = weekCategories.all { cat ->  
+                        cat.endDate != null && now.isAfter(cat.endDate)  
+                    }  
+                    if (allWeeksEnded) {  
+                        plugin.langYml.getFormattedString("season-finished")  
+                    } else {  
+                        val lastEndedWeek = weekCategories  
+                            .filter { cat -> cat.endDate != null && now.isAfter(cat.endDate) }  
+                            .maxByOrNull { it.config.getInt("priority") }  
+                        lastEndedWeek?.config?.getInt("priority")?.toString() ?: plugin.langYml.getFormattedString("waiting-for-week")  
+                    }  
+                }  
+            }  
+        }.register()
+
+        PlayerlessPlaceholder(plugin, "time_to_next_week_${_id}") {  
+            val now = LocalDateTime.now()  
+            if (now.isBefore(startDate)) {  
+                plugin.langYml.getFormattedString("season-not-started")
+            } else if (now.isAfter(endDate)) {  
+                plugin.langYml.getFormattedString("season-finished")
+            } else {  
+                val weekCategories = categories.filter { it.config.getInt("priority") > 0 }  
+                val nextWeek = weekCategories  
+                    .filter { it.startDate.isAfter(now) }  
+                    .minByOrNull { it.startDate }  
+        
+                if (nextWeek == null) {  
+                    plugin.langYml.getFormattedString("season-finished") 
+                } else {  
+                    val millisLeft = nextWeek.startDate  
+                        .atZone(java.time.ZoneId.systemDefault())  
+                        .toInstant()  
+                        .toEpochMilli() - System.currentTimeMillis()  
+                    msToString(millisLeft.coerceAtLeast(0)) 
+                }  
+            }  
+        }.register()
+
+        PlayerlessPlaceholder(plugin, "time_to_season_end_${_id}") {  
+            val now = LocalDateTime.now()  
+            if (now.isBefore(startDate)) {  
+                plugin.langYml.getFormattedString("season-not-started")  
+            } else if (now.isAfter(endDate)) {  
+                plugin.langYml.getFormattedString("season-finished")  
+            } else {  
+                val millisLeft = endDate.atZone(java.time.ZoneId.systemDefault())  
+                    .toInstant()  
+                    .toEpochMilli() - System.currentTimeMillis()  
+                msToString(millisLeft.coerceAtLeast(0))  
+            }  
+        }.register()
+
+        PlayerPlaceholder(plugin, "has_unclaimed_rewards_${_id}") { player ->  
+            plugin.langYml.getString(
+            if (getClaimable(player) > 0) "boolean.true" else "boolean.false"  
+            )
+        }.register()
+
         PlayerlessPlaceholder(plugin, "${_id}_max_tiers") {
             this.maxLevel.toString()
         }.register()

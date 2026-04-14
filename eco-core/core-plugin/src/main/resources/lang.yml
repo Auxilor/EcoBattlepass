@@ -45,9 +45,16 @@ pass-type:
   free: "&9Free"
   premium: "&6Premium"
 
+boolean:  
+  "true": "&aYes"  
+  "false": "&cNo"
+
 infinity: "∞"
 never: "&6never"
 free: "&aFree"
 premium: "&6Premium"
 category-expired: "&cCategory Expired"
 category-in-progress: "&aCategory Unlocked"
+season-finished: "&cFinished"  
+season-not-started: "&ecoming soon"
+waiting-for-week: "&eWaiting..." 

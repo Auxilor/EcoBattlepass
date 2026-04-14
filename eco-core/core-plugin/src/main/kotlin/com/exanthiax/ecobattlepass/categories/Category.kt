@@ -3,6 +3,7 @@ package com.exanthiax.ecobattlepass.categories
 import com.exanthiax.ecobattlepass.api.hasCompletedQuest
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
+import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
@@ -23,6 +24,14 @@ import kotlin.math.min
 
 class Category(private val _id: String, val config: Config) : Registrable {
     init {
+        PlayerPlaceholder(plugin, "category_completed_quests_${id}") { player ->  
+            this.getCompleted(player).toString()  
+        }.register()
+        
+        PlayerlessPlaceholder(plugin, "category_quest_amount_${id}") {  
+            this.quests.size.toString()  
+        }.register()
+
         PlayerlessPlaceholder(plugin, "category_${id}_start_date") {
             val pattern = plugin.configYml.getString("date-format")
             val formatter = DateTimeFormatter.ofPattern(pattern)
