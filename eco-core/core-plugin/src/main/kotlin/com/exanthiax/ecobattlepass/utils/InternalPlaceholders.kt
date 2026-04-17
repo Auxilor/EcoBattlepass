@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter
 
 object InternalPlaceholders {
 
+    private val regex by lazy { Regex("%tier_(-?\\d+)(_numeral)?%") }
+
     object BattlePassPlaceholders {
         fun replace(input: String, battlepass: BattlePass, player: Player): String {
             var result =  input
@@ -38,7 +40,6 @@ object InternalPlaceholders {
                 .replace("%next_tier_numeral%", (player.getTier(battlepass) + 1).toNumeral())
                 .formatEco(player = player, formatPlaceholders = true)
 
-            val regex = Regex("%tier_(-?\\d+)(_numeral)?%")
             result = regex.replace(result) { match ->
                 val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
                 val isNumeral = match.groupValues[2].isNotEmpty()
@@ -74,7 +75,6 @@ object InternalPlaceholders {
                 .replace("%next_tier_numeral%", (tier.number + 1).toNumeral())
                 .formatEco(player = player, formatPlaceholders = true)
 
-            val regex = Regex("%tier_(-?\\d+)(_numeral)?%")
             result = regex.replace(result) { match ->
                 val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
                 val isNumeral = match.groupValues[2].isNotEmpty()
