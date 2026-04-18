@@ -23,9 +23,9 @@ object BattlePassListener : Listener {
         }
 
         event.player.sendMessage(
-            plugin.langYml.getMessage("tier-up").replace(
-                "%tier%", event.level.toString()
-            )
+            InternalPlaceholders.BattlePassPlaceholders
+                .replace(plugin.langYml.getMessage("tier-up"), event.battlepass, player)
+                .replace("%tier%", event.level.toString())
         )
         PlayableSound.create(plugin.configYml.getSubsection("sound.tier-up"))?.playTo(player)
     }
@@ -41,9 +41,18 @@ object BattlePassListener : Listener {
     fun handleQuest(event: PlayerQuestCompleteEvent) {
         val player = event.player
 
+        val questMessage = plugin.langYml.getMessage("quest-complete")
+            .replace("%quest%", event.quest.getFormattedName(event.player))
+
         event.player.sendMessage(
-            plugin.langYml.getMessage("quest-complete").replace(
-                "%quest%", event.quest.getFormattedName(event.player)
+            InternalPlaceholders.BattlePassPlaceholders.replace(
+                InternalPlaceholders.CategoryPlaceholders.replace(
+                    questMessage,
+                    event.quest.category,
+                    event.player
+                ),
+                event.quest.category.battlepass,
+                event.player
             )
         )
         PlayableSound.create(plugin.configYml.getSubsection("sound.quest-complete"))?.playTo(player)

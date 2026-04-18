@@ -1,7 +1,9 @@
 package com.exanthiax.ecobattlepass.commands.helpers
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
+import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.util.toNiceString
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -112,9 +114,17 @@ fun String.replacePlaceholders(
     player: Player,
     amount: Number,
     pass: BattlePass,
+    task: ActiveBattleTask? = null,
     taskName: String? = null
 ): String {
     var message = this
+    if (task != null) {
+        message = InternalPlaceholders.TaskPlaceholders.replace(message, task, player)
+        message = InternalPlaceholders.CategoryPlaceholders.replace(message, task.quest.category, player)
+    }
+
+    message = InternalPlaceholders.BattlePassPlaceholders.replace(message, pass, player)
+        .replace("%pass_id%", pass.id)
         .replace("%playername%", player.name)
         .replace("%pass%", pass.name)
 
