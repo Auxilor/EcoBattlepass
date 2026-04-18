@@ -13,7 +13,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
 object BattlePassListener : Listener {
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun handleBPLevelUp(event: PlayerTierLevelUpEvent) {
         val player = event.player
 
@@ -30,7 +30,7 @@ object BattlePassListener : Listener {
         PlayableSound.create(plugin.configYml.getSubsection("sound.tier-up"))?.playTo(player)
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun handleBPExp(event: PlayerBPExpGainEvent) {
         if (event.player.getTier(event.battlepass) >= event.battlepass.maxLevel) {
             event.isCancelled = true

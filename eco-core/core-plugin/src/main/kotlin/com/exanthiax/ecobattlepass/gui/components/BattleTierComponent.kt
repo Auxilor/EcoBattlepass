@@ -22,6 +22,7 @@ import com.willfp.eco.util.openMenu
 import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -30,7 +31,7 @@ private val levelItemCache = Caffeine.newBuilder()
         com.exanthiax.ecobattlepass.plugin.configYml.getInt("gui-cache-ttl").toLong(),
         TimeUnit.MILLISECONDS
     )
-    .build<Int, ItemStack>()
+    .build<Pair<UUID, Int>, ItemStack>()
 
 class BattleTierComponent(
     private val plugin: EcoPlugin,
@@ -56,7 +57,7 @@ class BattleTierComponent(
 
         // plugin.logger.info("Level $level, $key item ${Items.lookup(plugin.configYml.getString("tiers-gui.buttons.$key.item"))}")
 
-        fun item() = levelItemCache.get(player.hashCode() xor level.hashCode()) {
+        fun item() = levelItemCache.get(Pair(player.uniqueId, level)) {
             val tier = pass.getTier(level)!!
 
             ItemStackBuilder(Items.lookup(plugin.configYml.getString("tiers-gui.buttons.$key.item")))
@@ -143,7 +144,7 @@ class BattleTierComponent(
                             PlayableSound.create(plugin.configYml.getSubsection("sound.premium-required"))
                                 ?.playTo(player)
                         } else {
-                            levelItemCache.invalidate(level)
+                            levelItemCache.invalidate(Pair(player.uniqueId, level))
                             itemCache[levelState].remove(level)
 
                             if (key == "unlocked") player.receiveTier(tier) else player.receiveTierPremiumOnly(tier)

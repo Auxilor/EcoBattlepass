@@ -33,12 +33,11 @@ object BattlePasses: RegistrableCategory<BattlePass>("battlepasses", "battlepass
     }
 
     fun tickUpdates() {
-        for (category in Categories.values()) {
-            if (category.isActive && !category.consideredActive) {
-                updateTaskBindings()
-            } else if (!category.isActive && category.consideredActive) {
-                updateTaskBindings()
-            }
+        val categories = Categories.values()
+
+        if (categories.any { it.isActive != it.consideredActive }) {
+            updateTaskBindings()
+            categories.forEach { it.consideredActive = it.isActive }
         }
     }
 
