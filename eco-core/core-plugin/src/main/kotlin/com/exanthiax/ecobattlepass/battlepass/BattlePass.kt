@@ -9,6 +9,7 @@ import com.exanthiax.ecobattlepass.commands.dynamic.DynamicPassCommand
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.tiers.BPTier
+import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.Eco
 import com.willfp.eco.core.config.interfaces.Config
@@ -16,74 +17,18 @@ import com.willfp.eco.core.data.Profile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.data.profile
-import com.willfp.eco.core.placeholder.PlayerDynamicPlaceholder
-import com.willfp.eco.core.placeholder.PlayerPlaceholder
-import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.evaluateExpression
-import com.willfp.eco.util.formatWithCommas
 import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.toNumeral
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
 
 class BattlePass(private val _id: String, val config: Config): Registrable {
     init {
-        PlayerlessPlaceholder(plugin, "${_id}_max_tiers") {
-            this.maxLevel.toString()
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "${_id}_max_tiers_numeral") {
-            this.maxLevel.toNumeral()
-        }.register()
-
-        PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_state_${_id}_\\d+$")) { string, player ->
-            val rTier = string.split("_").last().toIntOrNull()
-                ?: return@PlayerDynamicPlaceholder "Invalid tier ${string.split("_").last()}"
-            player.hasReceivedTier(this, rTier).toString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "${_id}_pass_type") { player ->
-            plugin.langYml.getString(
-                if (player.hasPermission(premiumPerm)) "pass-type.premium" else "pass-type.free"
-            )
-        }.register()
-
-        PlayerPlaceholder(plugin, "tier_${_id}") {
-            player -> player.getTier(this).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "tier_${_id}_numeral") {
-            player -> player.getTier(this).toNumeral()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_required_${_id}") {
-            player -> getFormattedRequired(player)
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_required_${_id}_formatted") {
-            player -> getFormattedRequired(player).toDouble().formatWithCommas()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_${_id}") {
-            player -> player.getPassExp(this).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_${_id}_formatted") {
-            player -> player.getPassExp(this).formatWithCommas()
-        }.register()
-
-        PlayerPlaceholder(plugin, "claimable_${_id}") {
-            player -> getClaimable(player).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "${_id}_percentage_progress") {
-            player -> getFormattedProgress(player)
-        }.register()
+        InternalPlaceholders.BattlePassPlaceholders.register(this)
     }
 
     val tierKey = PersistentDataKey(

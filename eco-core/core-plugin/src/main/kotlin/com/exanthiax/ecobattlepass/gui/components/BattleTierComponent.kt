@@ -7,6 +7,7 @@ import com.exanthiax.ecobattlepass.api.receiveTier
 import com.exanthiax.ecobattlepass.api.receiveTierPremiumOnly
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.tiers.BPTier
+import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.willfp.eco.core.EcoPlugin
@@ -105,7 +106,8 @@ class BattleTierComponent(
             .reward.getDisplayName(this)
 
         sendMessage(
-            plugin.langYml.getMessage("premium-required")
+            InternalPlaceholders.TierPlaceholders
+                .replace(plugin.langYml.getMessage("premium-required"), tier, pass, this)
                 .replace("%tier%", tierLevel.toString())
                 .replace("%reward%", premiumRewardName)
         )
@@ -136,10 +138,10 @@ class BattleTierComponent(
                                 .formatEco(player, true)
 
                             player.sendMessage(
-                                plugin.langYml.getMessage("premium-required")
+                                InternalPlaceholders.TierPlaceholders
+                                    .replace(plugin.langYml.getMessage("premium-required"), tier, pass, player)
                                     .replace("%tier%", level.toString())
                                     .replace("%reward%", name)
-                                    .replace("%pass%", pass.name)
                             )
                             PlayableSound.create(plugin.configYml.getSubsection("sound.premium-required"))
                                 ?.playTo(player)

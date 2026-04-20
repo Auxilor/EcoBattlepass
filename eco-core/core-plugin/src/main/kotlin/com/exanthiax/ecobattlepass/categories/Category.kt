@@ -6,75 +6,21 @@ import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.exanthiax.ecobattlepass.utils.msToString
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.registry.Registrable
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
 class Category(private val _id: String, val config: Config) : Registrable {
     init {
-        PlayerlessPlaceholder(plugin, "category_${id}_start_date") {
-            val pattern = plugin.configYml.getString("date-format")
-            val formatter = DateTimeFormatter.ofPattern(pattern)
-            this.startDate.format(formatter)
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "category_${id}_start_timer") {
-            val millisLeft = startDate.atZone(ZoneId.systemDefault()).toInstant()
-                .toEpochMilli() - System.currentTimeMillis()
-            if (millisLeft <= 0) {
-                plugin.langYml.getFormattedString("category-in-progress")
-            } else {
-                msToString(millisLeft)
-            }
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "category_${id}_end_date") {
-            val pattern = plugin.configYml.getString("date-format")
-            val formatter = DateTimeFormatter.ofPattern(pattern)
-            this.endDate?.format(formatter)
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "category_${id}_end_timer") {
-            val duration = config.getInt("duration")
-            if (duration == -1) {
-                plugin.langYml.getFormattedString("infinity")
-            } else {
-                val millisLeft = endDate!!.atZone(ZoneId.systemDefault()).toInstant()
-                    .toEpochMilli() - System.currentTimeMillis()
-                if (millisLeft <= 0) {
-                    plugin.langYml.getFormattedString("category-expired")
-                } else {
-                    msToString(millisLeft)
-                }
-            }
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "category_${id}_reset_timer") {
-            val resetTime = config.getInt("reset-time")
-            if (resetTime <= 0) {
-                plugin.langYml.getFormattedString("infinity")
-            } else {
-                val nextReset = this.getNextResetDate()
-                if (nextReset != null) {
-                    val millisLeft = nextReset.atZone(ZoneId.systemDefault()).toInstant()
-                        .toEpochMilli() - System.currentTimeMillis()
-                    msToString(millisLeft.coerceAtLeast(0))
-                } else {
-                    msToString(0)
-                }
-            }
-        }.register()
+        InternalPlaceholders.CategoryPlaceholders.register(this)
     }
 
     override fun getID(): String = _id
