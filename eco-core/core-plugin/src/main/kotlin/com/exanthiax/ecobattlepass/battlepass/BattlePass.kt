@@ -2,8 +2,6 @@ package com.exanthiax.ecobattlepass.battlepass
 
 import com.exanthiax.ecobattlepass.api.getPassExp
 import com.exanthiax.ecobattlepass.api.getTier
-import com.exanthiax.ecobattlepass.utils.msToString  
-import java.time.ZoneId
 import com.exanthiax.ecobattlepass.api.hasReceivedTier
 import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.categories.Category
@@ -11,6 +9,7 @@ import com.exanthiax.ecobattlepass.commands.dynamic.DynamicPassCommand
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.tiers.BPTier
+import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.Eco
 import com.willfp.eco.core.config.interfaces.Config
@@ -18,104 +17,18 @@ import com.willfp.eco.core.data.Profile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.data.profile
-import com.willfp.eco.core.placeholder.PlayerDynamicPlaceholder
-import com.willfp.eco.core.placeholder.PlayerPlaceholder
-import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.evaluateExpression
-import com.willfp.eco.util.formatWithCommas
 import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.toNumeral
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
 
 class BattlePass(private val _id: String, val config: Config): Registrable {
     init {
-        PlayerlessPlaceholder(plugin, "${_id}_name") {  
-            this.name  
-        }.register()
-
-        PlayerPlaceholder(plugin, "completed_quests_${_id}") { player ->  
-            categories.sumOf { it.getCompleted(player) }.toString()  
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "quest_amount_${_id}") {  
-            categories.sumOf { it.quests.size }.toString()  
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "week_${_id}") {
-            getWeekPlaceholder()
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "time_to_next_week_${_id}") {
-            getTimeToNextWeekPlaceholder()
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "time_to_season_end_${_id}") {
-            getTimeToSeasonEndPlaceholder()
-        }.register()
-
-        PlayerPlaceholder(plugin, "has_unclaimed_rewards_${_id}") { player ->  
-            plugin.langYml.getString(
-            if (getClaimable(player) > 0) "yes" else "no"
-            )
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "${_id}_max_tiers") {
-            this.maxLevel.toString()
-        }.register()
-
-        PlayerlessPlaceholder(plugin, "${_id}_max_tiers_numeral") {
-            this.maxLevel.toNumeral()
-        }.register()
-
-        PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_state_${_id}_\\d+$")) { string, player ->
-            val rTier = string.split("_").last().toIntOrNull()
-                ?: return@PlayerDynamicPlaceholder "Invalid tier ${string.split("_").last()}"
-            player.hasReceivedTier(this, rTier).toString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "${_id}_pass_type") { player ->
-            plugin.langYml.getString(
-                if (player.hasPermission(premiumPerm)) "premium" else "free"
-            )
-        }.register()
-
-        PlayerPlaceholder(plugin, "tier_${_id}") {
-            player -> player.getTier(this).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "tier_${_id}_numeral") {
-            player -> player.getTier(this).toNumeral()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_required_${_id}") {
-            player -> getFormattedRequired(player)
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_required_${_id}_formatted") {
-            player -> getFormattedRequired(player).toDouble().formatWithCommas()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_${_id}") {
-            player -> player.getPassExp(this).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "xp_${_id}_formatted") {
-            player -> player.getPassExp(this).formatWithCommas()
-        }.register()
-
-        PlayerPlaceholder(plugin, "claimable_${_id}") {
-            player -> getClaimable(player).toNiceString()
-        }.register()
-
-        PlayerPlaceholder(plugin, "${_id}_percentage_progress") {
-            player -> getFormattedProgress(player)
-        }.register()
+        InternalPlaceholders.BattlePassPlaceholders.register(this)
     }
 
     val tierKey = PersistentDataKey(
@@ -256,78 +169,4 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
     private fun <T : Any> writeToProfile(profile: Profile, key: PersistentDataKey<T>) {
         profile.write(key, key.defaultValue)
     }
-
-    private fun getWeekPlaceholder(): String {
-        val now = LocalDateTime.now()
-        if (now.isBefore(startDate)) {
-            return plugin.langYml.getFormattedString("season-not-started")
-        }
-        if (now.isAfter(endDate)) {
-            return plugin.langYml.getFormattedString("season-finished")
-        }
-
-        val weekCategories = categories.filter { it.config.getInt("priority") > 0 }
-        val activeWeek = weekCategories.filter { it.isActive }
-            .maxByOrNull { it.config.getInt("priority") }
-
-        if (activeWeek != null) {
-            return activeWeek.config.getInt("priority").toString()
-        }
-
-        val allWeeksEnded = weekCategories.all { cat ->
-            cat.endDate != null && now.isAfter(cat.endDate)
-        }
-
-        return if (allWeeksEnded) {
-            plugin.langYml.getFormattedString("season-finished")
-        } else {
-            val lastEndedWeek = weekCategories
-                .filter { cat -> cat.endDate != null && now.isAfter(cat.endDate) }
-                .maxByOrNull { it.config.getInt("priority") }
-
-            lastEndedWeek?.config?.getInt("priority")?.toString()
-                ?: plugin.langYml.getFormattedString("waiting-for-week")
-        }
-    }
-
-    private fun getTimeToNextWeekPlaceholder(): String {
-        val now = LocalDateTime.now()
-        if (now.isBefore(startDate)) {
-            return plugin.langYml.getFormattedString("season-not-started")
-        }
-        if (now.isAfter(endDate)) {
-            return plugin.langYml.getFormattedString("season-finished")
-        }
-
-        val weekCategories = categories.filter { it.config.getInt("priority") > 0 }
-        val nextWeek = weekCategories
-            .filter { it.startDate.isAfter(now) }
-            .minByOrNull { it.startDate }
-
-        return if (nextWeek == null) {
-            plugin.langYml.getFormattedString("season-finished")
-        } else {
-            val millisLeft = nextWeek.startDate
-                .atZone(java.time.ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli() - System.currentTimeMillis()
-            msToString(millisLeft.coerceAtLeast(0))
-        }
-    }
-
-    private fun getTimeToSeasonEndPlaceholder(): String {
-        val now = LocalDateTime.now()
-        if (now.isBefore(startDate)) {
-            return plugin.langYml.getFormattedString("season-not-started")
-        }
-        if (now.isAfter(endDate)) {
-            return plugin.langYml.getFormattedString("season-finished")
-        }
-
-        val millisLeft = endDate.atZone(java.time.ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli() - System.currentTimeMillis()
-        return msToString(millisLeft.coerceAtLeast(0))
-    }
-
 }

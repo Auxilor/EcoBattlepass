@@ -41,9 +41,12 @@ messages:
   completed-task: "&7Successfully completed task '&e%task%&7' in &r%pass% &7for &6%playername%&7."
   task-already-completed: "&eTask %task% in %pass% is already completed for %playername%."
 
+pass-type:
+  free: "&9Free"
+  premium: "&6Premium"
 
-yes: "&aYes"
-no: "&cNo"
+"yes": "&aYes"
+"no": "&cNo"
 infinity: "∞"
 never: "&6never"
 free: "&aFree"
@@ -52,4 +55,4 @@ category-expired: "&cCategory Expired"
 category-in-progress: "&aCategory Unlocked"
 season-finished: "&cFinished"
 season-not-started: "&ecoming soon"
-waiting-for-week: "&eWaiting..." 
+waiting-for-week: "&eWaiting..."
