@@ -74,11 +74,23 @@ object GiveTaskXPSubcommand : Subcommand(
             val baseReceived = Messages.getReceivedTaskProgress()
 
             sender.sendMessage(
-                baseGiven.replacePlaceholders(player, amount, pass, taskName = activeTask.parent.name)
+                baseGiven.replacePlaceholders(
+                    player = player,
+                    amount = amount,
+                    pass = pass,
+                    task = activeTask,
+                    taskName = activeTask.parent.name
+                )
             )
 
             player.sendMessage(
-                baseReceived.replacePlaceholders(player, amount, pass, taskName = activeTask.parent.name)
+                baseReceived.replacePlaceholders(
+                    player = player,
+                    amount = amount,
+                    pass = pass,
+                    task = activeTask,
+                    taskName = activeTask.parent.name
+                )
             )
         }
     }

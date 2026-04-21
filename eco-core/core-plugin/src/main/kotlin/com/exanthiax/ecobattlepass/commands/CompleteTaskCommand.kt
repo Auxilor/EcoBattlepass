@@ -90,6 +90,7 @@ object CompleteTaskCommand : PluginCommand(
                 player = players.first(),
                 amount = 1,
                 pass = pass,
+                task = activeTask,
                 taskName = activeTask.parent.name
             ).replace("%playername%", displayName)
         )

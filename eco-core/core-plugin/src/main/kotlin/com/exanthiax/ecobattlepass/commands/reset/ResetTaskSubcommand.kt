@@ -70,6 +70,7 @@ object ResetTaskSubcommand : Subcommand(
                 player = players.first(),
                 amount = 0,
                 pass = pass,
+                task = activeTask,
                 taskName = activeTask.parent.name
             ).replace("%playername%", displayName)
         )
