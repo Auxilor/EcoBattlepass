@@ -20,10 +20,7 @@ import org.bukkit.entity.Player
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
-<<<<<<< Feat-New-Placeholders
 import java.time.LocalDateTime
-=======
->>>>>>> master
 
 object InternalPlaceholders {
 
@@ -31,7 +28,6 @@ object InternalPlaceholders {
 
     object BattlePassPlaceholders {
         fun register(battlepass: BattlePass) {
-<<<<<<< Feat-New-Placeholders
             PlayerlessPlaceholder(plugin, "${battlepass.id}_name") {
                 battlepass.name
             }.register()
@@ -60,8 +56,6 @@ object InternalPlaceholders {
                 getBoolean(battlepass, player)
             }.register()
 
-=======
->>>>>>> master
             PlayerlessPlaceholder(plugin, "${battlepass.id}_max_tiers") {
                 battlepass.maxLevel.toString()
             }.register()
@@ -166,7 +160,6 @@ object InternalPlaceholders {
 
     object CategoryPlaceholders {
         fun register(category: Category) {
-<<<<<<< Feat-New-Placeholders
             PlayerPlaceholder(plugin, "category_completed_quests_${category.id}") { player ->
                 category.getCompleted(player).toString()
             }.register()
@@ -175,8 +168,6 @@ object InternalPlaceholders {
                 category.quests.size.toString()
             }.register()
 
-=======
->>>>>>> master
             PlayerlessPlaceholder(plugin, "category_${category.id}_start_date") {
                 category.startDate.format(getDateFormatter())
             }.register()
@@ -265,15 +256,12 @@ object InternalPlaceholders {
         )
     }
 
-<<<<<<< Feat-New-Placeholders
     private fun getBoolean(battlepass: BattlePass, player: Player): String? {
         return plugin.langYml.getString(
             if (battlepass.getClaimable(player) > 0) "yes" else "no"
         )
     }
 
-=======
->>>>>>> master
     private fun applyBattlePassReplacements(
         input: String,
         battlepass: BattlePass,
@@ -284,11 +272,7 @@ object InternalPlaceholders {
         val currentExp = player.getPassExp(battlepass)
         return input
             .replace("%pass%", battlepass.name).toNiceString()
-<<<<<<< Feat-New-Placeholders
-            .replace("%passbattlepass.id%", battlepass.id)
-=======
             .replace("%pass_id%", battlepass.id)
->>>>>>> master
             .replace("%claimable_tiers%", battlepass.getClaimable(player).toNiceString())
             .replace("%max_tiers%", battlepass.maxLevel.toNiceString())
             .replace("%pass_type%", getPassType(battlepass, player))
@@ -317,7 +301,6 @@ object InternalPlaceholders {
             requiredXp.formatWithCommas()
         }
     }
-<<<<<<< Feat-New-Placeholders
 
     private fun getWeekPlaceholder(battlepass: BattlePass): String {
         val now = LocalDateTime.now()
@@ -392,6 +375,4 @@ object InternalPlaceholders {
         return msToString(millisLeft.coerceAtLeast(0))
     }
 
-=======
->>>>>>> master
 }
