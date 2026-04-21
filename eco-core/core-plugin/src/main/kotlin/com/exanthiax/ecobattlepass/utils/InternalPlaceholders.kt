@@ -221,9 +221,9 @@ object InternalPlaceholders {
         fun replace(input: String, category: Category, player: Player): String {
             return input
                 .replace("%category_name%", category.name).toNiceString()
-                .replace("%categorybattlepass.id%", category.id)
+                .replace("%category_id%", category.id)
                 .replace("%pass%", category.battlepass.name).toNiceString()
-                .replace("%passbattlepass.id%", category.battlepass.id)
+                .replace("%pass_id%", category.battlepass.id)
                 .replace("%completed%", category.getCompleted(player).toString())
                 .replace("%total%", category.quests.size.toString())
                 .replace("%time%", msToString(category.getDisplayableMs()))
@@ -238,7 +238,7 @@ object InternalPlaceholders {
         fun replace(input: String, task: ActiveBattleTask, player: Player): String {
             return input
                 .replace("%task%", task.parent.name)
-                .replace("%taskbattlepass.id%", task.parent.id)
+                .replace("%task_id%", task.parent.id)
                 .replace("%current_task_xp%", player.taskProgress(task).toNiceString())
                 .replace("%current_task_xp_formatted%", player.taskProgress(task).formatWithCommas())
                 .replace("%required_task_xp%", task.requiredXP.toNiceString())
