@@ -253,13 +253,13 @@ object InternalPlaceholders {
     private fun getPassType(battlepass: BattlePass, player: Player): String {
         return plugin.langYml.getString(
             if (player.hasPermission(battlepass.premiumPerm)) "pass-type.premium" else "pass-type.free"
-        )
+        ).formatEco(player = player, formatPlaceholders = true)
     }
 
     private fun getBoolean(battlepass: BattlePass, player: Player): String? {
         return plugin.langYml.getString(
             if (battlepass.getClaimable(player) > 0) "yes" else "no"
-        )
+        ).formatEco(player = player, formatPlaceholders = true)
     }
 
     private fun applyBattlePassReplacements(
