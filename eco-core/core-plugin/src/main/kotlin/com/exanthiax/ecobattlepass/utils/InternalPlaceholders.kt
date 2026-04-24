@@ -20,6 +20,7 @@ import org.bukkit.entity.Player
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
+import java.time.LocalDateTime
 
 object InternalPlaceholders {
 
@@ -27,6 +28,34 @@ object InternalPlaceholders {
 
     object BattlePassPlaceholders {
         fun register(battlepass: BattlePass) {
+            PlayerlessPlaceholder(plugin, "${battlepass.id}_name") {
+                battlepass.name
+            }.register()
+
+            PlayerPlaceholder(plugin, "completed_quests_${battlepass.id}") { player ->
+                battlepass.categories.sumOf { it.getCompleted(player) }.toString()
+            }.register()
+
+            PlayerlessPlaceholder(plugin, "quest_amount_${battlepass.id}") {
+                battlepass.categories.sumOf { it.quests.size }.toString()
+            }.register()
+
+            PlayerlessPlaceholder(plugin, "week_${battlepass.id}") {
+                getWeekPlaceholder(battlepass)
+            }.register()
+
+            PlayerlessPlaceholder(plugin, "time_to_next_week_${battlepass.id}") {
+                getTimeToNextWeekPlaceholder(battlepass)
+            }.register()
+
+            PlayerlessPlaceholder(plugin, "time_to_season_end_${battlepass.id}") {
+                getTimeToSeasonEndPlaceholder(battlepass)
+            }.register()
+
+            PlayerPlaceholder(plugin, "has_unclaimed_rewards_${battlepass.id}") { player ->
+                getBoolean(battlepass, player)
+            }.register()
+
             PlayerlessPlaceholder(plugin, "${battlepass.id}_max_tiers") {
                 battlepass.maxLevel.toString()
             }.register()
@@ -131,6 +160,14 @@ object InternalPlaceholders {
 
     object CategoryPlaceholders {
         fun register(category: Category) {
+            PlayerPlaceholder(plugin, "category_completed_quests_${category.id}") { player ->
+                category.getCompleted(player).toString()
+            }.register()
+
+            PlayerlessPlaceholder(plugin, "category_quest_amount_${category.id}") {
+                category.quests.size.toString()
+            }.register()
+
             PlayerlessPlaceholder(plugin, "category_${category.id}_start_date") {
                 category.startDate.format(getDateFormatter())
             }.register()
@@ -216,7 +253,13 @@ object InternalPlaceholders {
     private fun getPassType(battlepass: BattlePass, player: Player): String {
         return plugin.langYml.getString(
             if (player.hasPermission(battlepass.premiumPerm)) "pass-type.premium" else "pass-type.free"
-        )
+        ).formatEco(player = player, formatPlaceholders = true)
+    }
+
+    private fun getBoolean(battlepass: BattlePass, player: Player): String? {
+        return plugin.langYml.getString(
+            if (battlepass.getClaimable(player) > 0) "yes" else "no"
+        ).formatEco(player = player, formatPlaceholders = true)
     }
 
     private fun applyBattlePassReplacements(
@@ -258,4 +301,78 @@ object InternalPlaceholders {
             requiredXp.formatWithCommas()
         }
     }
+
+    private fun getWeekPlaceholder(battlepass: BattlePass): String {
+        val now = LocalDateTime.now()
+        if (now.isBefore(battlepass.startDate)) {
+            return plugin.langYml.getFormattedString("season-not-started")
+        }
+        if (now.isAfter(battlepass.endDate)) {
+            return plugin.langYml.getFormattedString("season-finished")
+        }
+
+        val weekCategories = battlepass.categories.filter { it.config.getInt("priority") > 0 }
+        val activeWeek = weekCategories.filter { it.isActive }
+            .maxByOrNull { it.config.getInt("priority") }
+
+        if (activeWeek != null) {
+            return activeWeek.config.getInt("priority").toString()
+        }
+
+        val allWeeksEnded = weekCategories.all { cat ->
+            cat.endDate != null && now.isAfter(cat.endDate)
+        }
+
+        return if (allWeeksEnded) {
+            plugin.langYml.getFormattedString("season-finished")
+        } else {
+            val lastEndedWeek = weekCategories
+                .filter { cat -> cat.endDate != null && now.isAfter(cat.endDate) }
+                .maxByOrNull { it.config.getInt("priority") }
+
+            lastEndedWeek?.config?.getInt("priority")?.toString()
+                ?: plugin.langYml.getFormattedString("waiting-for-week")
+        }
+    }
+
+    private fun getTimeToNextWeekPlaceholder(battlepass: BattlePass): String {
+        val now = LocalDateTime.now()
+        if (now.isBefore(battlepass.startDate)) {
+            return plugin.langYml.getFormattedString("season-not-started")
+        }
+        if (now.isAfter(battlepass.endDate)) {
+            return plugin.langYml.getFormattedString("season-finished")
+        }
+
+        val weekCategories = battlepass.categories.filter { it.config.getInt("priority") > 0 }
+        val nextWeek = weekCategories
+            .filter { it.startDate.isAfter(now) }
+            .minByOrNull { it.startDate }
+
+        return if (nextWeek == null) {
+            plugin.langYml.getFormattedString("season-finished")
+        } else {
+            val millisLeft = nextWeek.startDate
+                .atZone(java.time.ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli() - System.currentTimeMillis()
+            msToString(millisLeft.coerceAtLeast(0))
+        }
+    }
+
+    private fun getTimeToSeasonEndPlaceholder(battlepass: BattlePass): String {
+        val now = LocalDateTime.now()
+        if (now.isBefore(battlepass.startDate)) {
+            return plugin.langYml.getFormattedString("season-not-started")
+        }
+        if (now.isAfter(battlepass.endDate)) {
+            return plugin.langYml.getFormattedString("season-finished")
+        }
+
+        val millisLeft = battlepass.endDate.atZone(java.time.ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli() - System.currentTimeMillis()
+        return msToString(millisLeft.coerceAtLeast(0))
+    }
+
 }
