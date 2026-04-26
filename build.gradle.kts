@@ -47,7 +47,7 @@ allprojects {
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
         compileOnly("com.github.ben-manes.caffeine:caffeine:3.2.3")
 
-        implementation("com.willfp:ecomponent:1.4.1")
+        implementation("com.willfp:ecomponent:1.5.0")
 
         compileOnly (fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
     }
