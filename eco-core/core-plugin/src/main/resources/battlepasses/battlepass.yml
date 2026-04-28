@@ -157,3 +157,197 @@ tiers:
         tier: free
       - id: elytra_u3m_1
         tier: premium
+
+  - tier: 42
+    rewards:
+      - id: coins_20000
+        tier: free
+      - id: coins_50000
+        tier: premium
+
+  - tier: 44
+    rewards:
+      - id: looting_3_book
+        tier: free
+      - id: sharpness_4_book
+        tier: premium
+
+  - tier: 46
+    rewards:
+      - id: xp_bottles_5
+        tier: free
+      - id: xp_bottles_15
+        tier: premium
+
+  - tier: 48
+    rewards:
+      - id: efficiency_5_book
+        tier: premium
+
+  - tier: 50
+    rewards:
+      - id: netherite_ingot_1
+        tier: free
+      - id: netherite_ingot_3
+        tier: premium
+      - id: random_enchant_book_2
+        tier: premium
+
+  - tier: 52
+    rewards:
+      - id: ender_chest_command
+        tier: premium
+
+  - tier: 54
+    rewards:
+      - id: golden_apple_5
+        tier: free
+      - id: egolden_apple_2
+        tier: premium
+
+  - tier: 56
+    rewards:
+      - id: protection_5_book
+        tier: premium
+
+  - tier: 58
+    rewards:
+      - id: lucky_tools
+        tier: premium
+
+  - tier: 60
+    rewards:
+      - id: coins_50000
+        tier: free
+      - id: coins_100000
+        tier: premium
+
+  - tier: 62
+    rewards:
+      - id: iron_golem_spawner_1
+        tier: premium
+
+  - tier: 64
+    rewards:
+      - id: sharpness_5_book
+        tier: free
+      - id: lucky_sword
+        tier: premium
+
+  - tier: 66
+    rewards:
+      - id: xp_250
+        tier: free
+      - id: random_enchant_book_2
+        tier: premium
+
+  - tier: 68
+    rewards:
+      - id: hat_command
+        tier: premium
+
+  - tier: 70
+    rewards:
+      - id: coins_100000
+        tier: free
+      - id: coins_150000
+        tier: premium
+      - id: lucky_armor
+        tier: premium
+
+  - tier: 72
+    rewards:
+      - id: totem_1
+        tier: premium
+
+  - tier: 74
+    rewards:
+      - id: blaze_spawner_1
+        tier: free
+      - id: iron_golem_spawner_1
+        tier: premium
+
+  - tier: 76
+    rewards:
+      - id: efficiency_5_book
+        tier: free
+      - id: lucky_mace
+        tier: premium
+
+  - tier: 78
+    rewards:
+      - id: random_enchant_book_3
+        tier: premium
+
+  - tier: 80
+    rewards:
+      - id: coins_150000
+        tier: free
+      - id: coins_250000
+        tier: premium
+
+  - tier: 82
+    rewards:
+      - id: netherite_ingot_3
+        tier: premium
+
+  - tier: 84
+    rewards:
+      - id: totem_2
+        tier: premium
+
+  - tier: 86
+    rewards:
+      - id: protection_5_book
+        tier: free
+      - id: lucky_sword
+        tier: premium
+
+  - tier: 88
+    rewards:
+      - id: iron_golem_spawner_1
+        tier: premium
+
+  - tier: 90
+    rewards:
+      - id: totem_1
+        tier: free
+      - id: random_enchant_book_3
+        tier: premium
+
+  - tier: 92
+    rewards:
+      - id: coins_250000
+        tier: free
+      - id: coins_300000
+        tier: premium
+
+  - tier: 94
+    rewards:
+      - id: lucky_tools
+        tier: free
+      - id: lucky_armor
+        tier: premium
+
+  - tier: 96
+    rewards:
+      - id: netherite_ingot_3
+        tier: free
+      - id: lucky_mace
+        tier: premium
+
+  - tier: 98
+    rewards:
+      - id: random_enchant_book_3
+        tier: free
+      - id: lucky_sword
+        tier: premium
+
+  - tier: 100
+    rewards:
+      - id: totem_2
+        tier: free
+      - id: beacon_1
+        tier: premium
+      - id: coins_300000
+        tier: premium
