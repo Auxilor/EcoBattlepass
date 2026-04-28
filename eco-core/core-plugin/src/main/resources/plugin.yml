@@ -3,8 +3,6 @@ version: ${version}
 main: com.exanthiax.ecobattlepass.EcoBattlePass
 author: Exanthiax, _OfTeN_, Auxilor
 api-version: 1.19
-folia-supported: true
-
 depend:
   - eco
 softdepend:
