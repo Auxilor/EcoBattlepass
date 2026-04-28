@@ -58,17 +58,16 @@ abstract class ProperLevelComponent : AutofillComponent() {
         }
 
         val position = GUIPosition(row, column)
+        val offset = progressionSlots[position] ?: return null
+        val page = menu.getPage(player)
+        val level = offset + (page - 1) * levelsPerPage
 
-        return slots[position].getOrPut(menu.getPage(player)) {
-            val offset = progressionSlots[position] ?: return null
-            val base = (menu.getPage(player) - 1) * levelsPerPage
-            val level = offset + base
+        if (level > maxLevel) {
+            return null
+        }
 
-            if (level > maxLevel) {
-                null
-            } else {
-                buildSlot(level)
-            }
+        return slots[position].getOrPut(page) {
+            buildSlot(level)
         }
     }
 
