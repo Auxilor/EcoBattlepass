@@ -72,6 +72,55 @@ object InternalPlaceholders {
                 player.hasReceivedTier(battlepass, requestedTier).toString()
             }.register()
 
+            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_free_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+                val parts = string.split("_")
+                val lineIndex = parts.last().toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder ""
+                val tierNumber = parts[parts.size - 2].toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val tier = battlepass.getTier(tierNumber)
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val lines = tier.format("%free-rewards%", player)
+                lines.getOrElse(lineIndex) { "" }
+            }.register()
+
+            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_premium_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+                val parts = string.split("_")
+                val lineIndex = parts.last().toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder ""
+                val tierNumber = parts[parts.size - 2].toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val tier = battlepass.getTier(tierNumber)
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val lines = tier.format("%premium-rewards%", player)
+                lines.getOrElse(lineIndex) { "" }
+            }.register()
+
+            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_claimed_free_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+                val parts = string.split("_")
+                val lineIndex = parts.last().toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder ""
+                val tierNumber = parts[parts.size - 2].toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val tier = battlepass.getTier(tierNumber)
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val lines = tier.format("%claimed-free-rewards%", player)
+                lines.getOrElse(lineIndex) { "" }
+            }.register()
+
+            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_claimed_premium_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+                val parts = string.split("_")
+                val lineIndex = parts.last().toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder ""
+                val tierNumber = parts[parts.size - 2].toIntOrNull()
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val tier = battlepass.getTier(tierNumber)
+                    ?: return@PlayerDynamicPlaceholder "Invalid tier"
+                val lines = tier.format("%claimed-premium-rewards%", player)
+                lines.getOrElse(lineIndex) { "" }
+            }.register()
+
+
             PlayerPlaceholder(plugin, "${battlepass.id}_pass_type") { player ->
                 getPassType(battlepass, player)
             }.register()

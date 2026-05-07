@@ -20,22 +20,21 @@ class QuestsGUI(
     private val player: Player, val category: Category, val page: Int = 1,
     val wasBack: Boolean = false
 ) {
-    private fun r(s: String) =
-        InternalPlaceholders.CategoryPlaceholders.replace(s, category = category, player = player)
+    private fun String.withCategoryPlaceholders(): String =
+        InternalPlaceholders.CategoryPlaceholders.replace(this, category = category, player = player)
 
-    private fun rAll(list: List<String>) =
-        InternalPlaceholders.CategoryPlaceholders.replaceAll(list, category = category, player = player)
+    private fun List<String>.withCategoryPlaceholders(): List<String> =
+        InternalPlaceholders.CategoryPlaceholders.replaceAll(this, category = category, player = player)
 
     fun open() {
         val pattern = plugin.configYml.getStrings("quests-gui.mask.pattern")
         val menu = Menu.builder(pattern.size)
             .setTitle(
-                r(
-                    plugin.configYml.getString("quests-gui.title")
-                        .replace("%page%", page.toString())
-                        .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
-                        .replace("%pass%", category.battlepass.name)
-                )
+                plugin.configYml.getString("quests-gui.title")
+                    .replace("%page%", page.toString())
+                    .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
+                    .replace("%pass%", category.battlepass.name)
+                    .withCategoryPlaceholders()
             )
         var row = 1
         var num = ((page - 1) * getPerPage())
@@ -74,16 +73,16 @@ class QuestsGUI(
         for (slotConfig in plugin.configYml.getSubsections("quests-gui.buttons.custom-slots")) {
             val resolved = slotConfig.clone().apply {
                 val nameKey = getStringOrNull("name")
-                val itemStr = r(getString("item"))
+                val itemStr = getString("item").withCategoryPlaceholders()
                 if (nameKey != null && !itemStr.contains("name:")) {
-                    set("item", "$itemStr name:\"${r(nameKey)}\"")
+                    set("item", "$itemStr name:\"${nameKey.withCategoryPlaceholders()}\"")
                 } else {
                     set("item", itemStr)
                 }
-                set("lore", getStrings("lore").map(::r))
+                set("lore", getStrings("lore").map { it.withCategoryPlaceholders() })
                 listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                     if (this.has(click)) {
-                        this.set(click, this.getStrings(click).map(::r))
+                        this.set(click, this.getStrings(click).map { it.withCategoryPlaceholders() })
                     }
                 }
             }
@@ -162,18 +161,18 @@ class QuestsGUI(
             ?: plugin.configYml.getStringOrNull("$basePath.item")
             ?: plugin.configYml.getString("$basePath.material")
 
-        val itemBuilder = ItemStackBuilder(Items.lookup(r(itemString)))
+        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withCategoryPlaceholders()))
 
         val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.name")
         if (name != null) {
-            itemBuilder.setDisplayName(r(name))
+            itemBuilder.setDisplayName(name.withCategoryPlaceholders())
         }
 
         val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
-        itemBuilder.addLoreLines(rAll(lore))
+        itemBuilder.addLoreLines(lore.withCategoryPlaceholders())
 
         return itemBuilder.build()
     }
@@ -182,15 +181,15 @@ class QuestsGUI(
         val itemString = plugin.configYml.getStringOrNull("$basePath.item")
             ?: plugin.configYml.getString("$basePath.material")
 
-        val itemBuilder = ItemStackBuilder(Items.lookup(r(itemString)))
+        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withCategoryPlaceholders()))
 
         plugin.configYml.getStringOrNull("$basePath.name")?.let {
-            itemBuilder.setDisplayName(r(it))
+            itemBuilder.setDisplayName(it.withCategoryPlaceholders())
         }
 
         val lore = plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
-        itemBuilder.addLoreLines(rAll(lore))
+        itemBuilder.addLoreLines(lore.withCategoryPlaceholders())
 
         return Slot.builder(itemBuilder.build())
             .onLeftClick { event, _ ->
@@ -200,7 +199,7 @@ class QuestsGUI(
 
     private fun slot(pair: ActiveBattleQuest): Slot {
         val itemBuilder = ItemStackBuilder(
-            Items.lookup(r(pair.parent.itemString.replace("%player%", player.name))).item.clone()
+            Items.lookup(pair.parent.itemString.replace("%player%", player.name)).item.clone()
         ).setDisplayName(
             pair.getFormattedName(player)
         ).addLoreLines(

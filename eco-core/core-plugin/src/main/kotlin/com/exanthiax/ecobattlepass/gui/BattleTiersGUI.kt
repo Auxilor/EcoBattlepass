@@ -69,7 +69,8 @@ object BattleTiersGUI {
         val maskPattern = plugin.configYml.getStrings("tiers-gui.mask.pattern").toTypedArray()
         val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("tiers-gui.mask.materials"))
 
-        fun r(s: String) = InternalPlaceholders.BattlePassPlaceholders.replace(s, battlepass = pass, player = player)
+        fun String.withBattlePassPlaceholders(): String =
+            InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
 
         /**
          * Reads a button item supporting both old and new config formats:
@@ -93,16 +94,16 @@ object BattleTiersGUI {
             if (itemString != null) {
                 val nameString = plugin.configYml.getStringOrNull("$basePath.name.$state")
                     ?: plugin.configYml.getStringOrNull("$basePath.name")
-                val builder = ItemStackBuilder(Items.lookup(r(itemString)))
-                if (nameString != null) builder.setDisplayName(r(nameString))
+                val builder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
+                if (nameString != null) builder.setDisplayName(nameString.withBattlePassPlaceholders())
                 return builder.build()
             }
 
             // Old format: material with optional inline name
             val materialString = plugin.configYml.getStringOrNull("$basePath.material") ?: "stone"
             val nameString = plugin.configYml.getStringOrNull("$basePath.name")
-            val builder = ItemStackBuilder(Items.lookup(r(materialString)))
-            if (nameString != null) builder.setDisplayName(r(nameString))
+            val builder = ItemStackBuilder(Items.lookup(materialString.withBattlePassPlaceholders()))
+            if (nameString != null) builder.setDisplayName(nameString.withBattlePassPlaceholders())
             return builder.build()
         }
 
@@ -156,7 +157,8 @@ object BattleTiersGUI {
         val nextCol = plugin.configYml.getInt("$nextPagePath.location.column")
 
         val menu = menu(maskPattern.size) {
-            title = r(plugin.configYml.getString("tiers-gui.title"))
+            title = plugin.configYml.getString("tiers-gui.title")
+                .withBattlePassPlaceholders()
                 .replace("%pass%", pass.name)
                 .replace("%page%", defaultPageNum.toString())
                 .replace("%max_page%", totalPages.toString())
@@ -178,11 +180,13 @@ object BattleTiersGUI {
             // Update title on page change for %page% / %max_page% (Paper 1.20+ only)
             onEvent<PageChangeEvent> { eventPlayer, _, event ->
                 try {
-                    val newTitle = r(plugin.configYml.getString("tiers-gui.title"))
+                    val newTitle = plugin.configYml.getString("tiers-gui.title")
+                        .withBattlePassPlaceholders()
                         .replace("%pass%", pass.name)
                         .replace("%page%", event.newPage.toString())
                         .replace("%max_page%", totalPages.toString())
                         .formatEco()
+                    @Suppress("DEPRECATION")
                     eventPlayer.openInventory.setTitle(newTitle)
                 } catch (_: Exception) {
                     // setTitle not available on this server version
@@ -195,8 +199,8 @@ object BattleTiersGUI {
             val prevInactiveItem = plugin.configYml.getStringOrNull("$prevPagePath.item.inactive")
             if (prevInactiveItem != null && !backButton) {
                 val inactiveName = plugin.configYml.getStringOrNull("$prevPagePath.name.inactive")
-                val inactiveBuilder = ItemStackBuilder(Items.lookup(r(prevInactiveItem)))
-                if (inactiveName != null) inactiveBuilder.setDisplayName(r(inactiveName))
+                val inactiveBuilder = ItemStackBuilder(Items.lookup(prevInactiveItem.withBattlePassPlaceholders()))
+                if (inactiveName != null) inactiveBuilder.setDisplayName(inactiveName.withBattlePassPlaceholders())
                 addComponent(
                     MenuLayer.LOWER,
                     prevRow, prevCol,
@@ -232,8 +236,8 @@ object BattleTiersGUI {
             val nextInactiveItem = plugin.configYml.getStringOrNull("$nextPagePath.item.inactive")
             if (nextInactiveItem != null) {
                 val inactiveName = plugin.configYml.getStringOrNull("$nextPagePath.name.inactive")
-                val inactiveBuilder = ItemStackBuilder(Items.lookup(r(nextInactiveItem)))
-                if (inactiveName != null) inactiveBuilder.setDisplayName(r(inactiveName))
+                val inactiveBuilder = ItemStackBuilder(Items.lookup(nextInactiveItem.withBattlePassPlaceholders()))
+                if (inactiveName != null) inactiveBuilder.setDisplayName(inactiveName.withBattlePassPlaceholders())
                 addComponent(
                     MenuLayer.LOWER,
                     nextRow, nextCol,
@@ -255,8 +259,8 @@ object BattleTiersGUI {
                 val closePath = "tiers-gui.buttons.close"
                 val closeMaterial = plugin.configYml.getStringOrNull("$closePath.material") ?: "barrier"
                 val closeName = plugin.configYml.getStringOrNull("$closePath.name")
-                val closeBuilder = ItemStackBuilder(Items.lookup(r(closeMaterial)))
-                if (closeName != null) closeBuilder.setDisplayName(r(closeName))
+                val closeBuilder = ItemStackBuilder(Items.lookup(closeMaterial.withBattlePassPlaceholders()))
+                if (closeName != null) closeBuilder.setDisplayName(closeName.withBattlePassPlaceholders())
 
                 setSlot(
                     plugin.configYml.getInt("$closePath.location.row"),
@@ -272,18 +276,17 @@ object BattleTiersGUI {
             // --- Custom slots ---
             for (slotConfig in plugin.configYml.getSubsections("tiers-gui.buttons.custom-slots")) {
                 val resolved = slotConfig.clone().apply {
-                    val itemStr = r(getString("item"))
+                    val itemStr = getString("item").withBattlePassPlaceholders()
                     val nameStr = getStringOrNull("name")
-                    // If name is a separate key and not already inline in the item string, inject it
                     if (nameStr != null && !itemStr.lowercase().contains("name:")) {
-                        set("item", "$itemStr name:\"${r(nameStr)}\"")
+                        set("item", "$itemStr name:\"${nameStr.withBattlePassPlaceholders()}\"")
                     } else {
                         set("item", itemStr)
                     }
-                    set("lore", getStrings("lore").map(::r))
+                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map(::r))
+                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
                         }
                     }
                 }
