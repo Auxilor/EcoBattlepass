@@ -122,11 +122,10 @@ object BattlePassGUI {
                 val resolved = slotConfig.clone().apply {
                     val nameKey = getStringOrNull("name")
                     val itemStr = getString("item").withBattlePassPlaceholders()
-                    if (nameKey != null && !itemStr.contains("name:")) {
-                        set("item", "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\"")
-                    } else {
-                        set("item", itemStr)
-                    }
+                    val formattedName = nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" } ?: ""
+                    val finalItemStr = if (!itemStr.contains("name:")) "$itemStr$formattedName" else itemStr
+
+                    set("item", finalItemStr)
                     set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
@@ -141,8 +140,7 @@ object BattlePassGUI {
                     ConfigSlot(resolved)
                 )
             }
-        }
 
-        menu.open(player)
+            menu.open(player)
+        }
     }
-}

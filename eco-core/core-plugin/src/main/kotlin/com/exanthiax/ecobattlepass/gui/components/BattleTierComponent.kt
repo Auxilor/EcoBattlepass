@@ -13,6 +13,7 @@ import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.willfp.eco.core.EcoPlugin
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
@@ -151,7 +152,7 @@ class BattleTierComponent(
                 .addLoreLines(tier.format(displayLore, player, tierType))
                 .setAmount(amount)
                 .build()
-            if (maxItemAmount > 64) {
+            if (Prerequisite.HAS_PAPER.isMet && maxItemAmount > 64) {
                 val meta = builtItem.itemMeta
                 meta.setMaxStackSize(maxItemAmount)
                 builtItem.itemMeta = meta

@@ -45,11 +45,6 @@ object ClaimHandler {
             return
         }
 
-        if (tier.number != tierNumber) {
-            Messages.sendTierNotFound(player, tierNumber)
-            return
-        }
-
         val playerTier = player.getTier(pass)
         if (tierNumber > playerTier) {
             Messages.sendTierNotUnlocked(player, tierNumber)
