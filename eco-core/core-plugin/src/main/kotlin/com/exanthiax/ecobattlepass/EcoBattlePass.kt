@@ -1,5 +1,6 @@
 package com.exanthiax.ecobattlepass
 
+import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.commands.EcoBattlePassCommand
