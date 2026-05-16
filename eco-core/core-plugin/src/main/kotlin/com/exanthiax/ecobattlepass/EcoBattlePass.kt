@@ -21,6 +21,7 @@ import com.exanthiax.ecobattlepass.quests.BattleQuests
 import com.exanthiax.ecobattlepass.rewards.Rewards
 import com.exanthiax.ecobattlepass.tasks.BattleTasks
 import com.exanthiax.ecobattlepass.utils.BattlePassListener
+import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.config.BaseConfig
 import com.willfp.eco.core.config.ConfigType
@@ -104,4 +105,12 @@ class EcoBattlePass : LibreforgePlugin() {
             BattlePasses.tickUpdates()
         }
     }
+
+    override fun getCustomCharts() = listOf(
+        EcoMetricsChart.SingleLine("total_battlepasses") { BattlePasses.values().size },
+        EcoMetricsChart.SingleLine("total_quests") { BattleQuests.values().size },
+        EcoMetricsChart.SingleLine("total_tasks") { BattleTasks.values().size },
+        EcoMetricsChart.SingleLine("total_rewards") { Rewards.values().size },
+        EcoMetricsChart.SingleLine("total_categories") { Categories.values().size }
+    )
 }
