@@ -3,8 +3,10 @@ package com.exanthiax.ecobattlepass.quests
 import com.exanthiax.ecobattlepass.api.setCompletedQuest
 import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.utils.msToString
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.data.ServerProfile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.util.formatEco
@@ -20,9 +22,60 @@ class ActiveBattleQuest(val config: Config, val category: Category) {
         false
     )
 
+    private val savedTasksKey = PersistentDataKey(
+        plugin.createNamespacedKey("${parent.id}_${category.id}_selected_tasks"),
+        PersistentDataKeyType.STRING_LIST,
+        emptyList()
+    )
+
     private val _tasks = parent.tasks.map { it.toActiveBattleTask(this) }
 
-    val tasks = parent.tasks.map { it.toActiveBattleTask(this) }.shuffled().take(parent.taskAmount)
+    private val preparedById: Map<String, PreparedBattleTask> =
+        parent.tasks.associateBy { it.config.getString("id") }
+
+    private fun pickTasks(): List<ActiveBattleTask> {
+        return parent.tasks.shuffled().take(parent.taskAmount).map { it.toActiveBattleTask(this) }
+    }
+
+    private fun loadSavedTasks(): List<ActiveBattleTask>? {
+        val ids = ServerProfile.load().read(savedTasksKey)
+        if (ids.isEmpty()) return null
+        val matched = ids.mapNotNull { preparedById[it] }
+        if (matched.size != ids.size || matched.size != parent.taskAmount) return null
+        return matched.map { it.toActiveBattleTask(this) }
+    }
+
+    private fun saveTasks(picked: List<ActiveBattleTask>) {
+        ServerProfile.load().write(savedTasksKey, picked.map { it.parent.id })
+    }
+
+    var tasks: List<ActiveBattleTask> = run {
+        val loaded = loadSavedTasks()
+        if (loaded != null) {
+            loaded
+        } else {
+            val picked = pickTasks()
+            saveTasks(picked)
+            picked
+        }
+    }
+        private set
+
+    fun regenerate() {
+        for (task in tasks) {
+            task.unbind()
+        }
+
+        val picked = pickTasks()
+        tasks = picked
+        saveTasks(picked)
+
+        if (category.isActive) {
+            for (task in tasks) {
+                task.bind()
+            }
+        }
+    }
 
     fun getFormattedName(player: Player): String {
         return plugin.configYml.getString("quests-icon.name").replace(
