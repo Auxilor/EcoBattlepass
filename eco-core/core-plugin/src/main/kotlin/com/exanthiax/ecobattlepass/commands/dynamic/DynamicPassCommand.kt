@@ -1,6 +1,7 @@
 package com.exanthiax.ecobattlepass.commands.dynamic
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
+import com.exanthiax.ecobattlepass.commands.helpers.ClaimHandler
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
 import com.exanthiax.ecobattlepass.gui.BattlePassGUI
 import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
@@ -18,7 +19,7 @@ class DynamicPassCommand(
     plugin,
     cmd,
     "ecobattlepass.command.$cmd",
-    true  // player-only
+    true
 ) {
     override fun onExecute(sender: Player, args: MutableList<String>) {
         when (args.getOrNull(0)?.lowercase()) {
@@ -46,6 +47,10 @@ class DynamicPassCommand(
                 QuestsGUI(sender, category, wasBack = false).open()
             }
 
+            "claim" -> {
+                ClaimHandler.handleClaim(sender, pass, args)
+            }
+
             else -> {
                 Messages.sendDynamicPassUsage(sender)
             }
@@ -56,18 +61,36 @@ class DynamicPassCommand(
         return when (args.size) {
             1 -> StringUtil.copyPartialMatches(
                 args[0],
-                listOf("tiers", "quests"),
+                listOf("tiers", "quests", "claim"),
                 mutableListOf()
             )
-            2 -> {
-                if (args[0].equals("quests", ignoreCase = true)) {
+
+            2 -> when (args[0].lowercase()) {
+                "quests" -> StringUtil.copyPartialMatches(
+                    args[1],
+                    pass.categories.map { it.id },
+                    mutableListOf()
+                )
+
+                "claim" -> StringUtil.copyPartialMatches(
+                    args[1],
+                    pass.tiers.map { it.number.toString() } + "all",
+                    mutableListOf()
+                )
+
+                else -> emptyList()
+            }
+
+            3 -> {
+                if (args[0].equals("claim", ignoreCase = true)) {
                     StringUtil.copyPartialMatches(
-                        args[1],
-                        pass.categories.map { it.id },
+                        args[2],
+                        listOf("free", "premium"),
                         mutableListOf()
                     )
                 } else emptyList()
             }
+
             else -> emptyList()
         }
     }

@@ -53,6 +53,37 @@ object Messages {
     fun sendInvalidTask(sender: CommandSender) =
         sender.sendMessage(plugin.langYml.getMessage("invalid-task"))
 
+    // ===== Claim Command Messages =====
+    fun sendTierNotFound(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-not-found")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendTierNotUnlocked(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-not-unlocked")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendTierAlreadyClaimed(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-already-claimed")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendNoRewardsToClaim(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("no-rewards-to-claim"))
+
+    fun sendClaimNoPremium(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("claim-no-premium"))
+
+    fun sendClaimAllSuccess(sender: CommandSender, count: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("claim-all-success")
+                .replace("%count%", count.toString())
+        )
+
     // ===== Give Command Success Messages =====
     fun getGivenExperience(): String = plugin.langYml.getMessage("given-experience")
     fun getReceivedExperience(): String = plugin.langYml.getMessage("received-experience")
@@ -103,7 +134,7 @@ object Messages {
         sender.sendMessage("§cUsage: /ecobattlepass reset <pass|task> <player|all> <pass> [category] [quest] [task]")
 
     fun sendDynamicPassUsage(sender: CommandSender) =
-        sender.sendMessage("§cUsage: /<pass> [tiers|quests <category>]")
+        sender.sendMessage("§cUsage: /<pass> [tiers|quests <category>|claim <tier|all> [free|premium]]")
 }
 
 /**

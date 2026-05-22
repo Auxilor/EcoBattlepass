@@ -30,7 +30,7 @@ class Category(private val _id: String, val config: Config) : Registrable {
 
     val name = config.getString("name")
     val title = config.getString("gui-title")
-    val item = Items.lookup(config.getString("item"))
+    val itemString = config.getString("item")
     val unformattedLore = config.getStrings("lore")
 
     val startDate: LocalDateTime = run {
@@ -65,7 +65,8 @@ class Category(private val _id: String, val config: Config) : Registrable {
         //val key = this.getDisplayableStatusKey()
         //val formattedTime = msToString(this.getDisplayableMs())
 
-        return ItemStackBuilder(item.item.clone())
+        val resolvedItem = InternalPlaceholders.CategoryPlaceholders.replace(itemString, this, player)
+        return ItemStackBuilder(Items.lookup(resolvedItem).item.clone())
             .setDisplayName(InternalPlaceholders.CategoryPlaceholders.replace(name, this, player))
             .addLoreLines(InternalPlaceholders.CategoryPlaceholders.replaceAll(unformattedLore, this, player))
             .build()

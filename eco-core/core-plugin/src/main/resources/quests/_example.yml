@@ -5,7 +5,10 @@
 # _example.yml is not loaded.
 
 display:
-  item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU4ZjNlYTQ2NzM1YWQwYzEwNmM1NDljY2I2Y2Q0ODljOTdhNDFlNzNkMDkyNDk3ZWU0MjRiZWNkOWRmZDI5YyJ9fX0= # The item to display in the GUI
+  # Supports PlaceholderAPI placeholders, resolved per-player at display time. Examples:  
+  # item: player_head name:%player_name%         # Player's own head  
+  # item: diamond_sword                          # A simple item 
+  item:  player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU4ZjNlYTQ2NzM1YWQwYzEwNmM1NDljY2I2Y2Q0ODljOTdhNDFlNzNkMDkyNDk3ZWU0MjRiZWNkOWRmZDI5YyJ9fX0= # The item to display in the GUI
   display-name: Chickens # The display name of the quest
   description: [] # The description of the quest
 

@@ -22,27 +22,41 @@ object BattlePassGUI {
         val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("battlepass-gui.mask.materials"))
         val level = player.getTier(pass)
 
+        fun String.withBattlePassPlaceholders(): String =
+            InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
+
+        fun List<String>.withBattlePassPlaceholders(): List<String> =
+            InternalPlaceholders.BattlePassPlaceholders.replaceAll(this, battlepass = pass, player = player)
+
         val menu = menu(maskPattern.size) {
             title = plugin.configYml.getString("battlepass-gui.title")
+                .withBattlePassPlaceholders()
                 .replace("%pass%", pass.name)
                 .formatEco()
 
             setMask(FillerMask(maskItems, *maskPattern))
 
+            // Tiers button — supports item OR material, + name
             setSlot(
                 plugin.configYml.getInt("battlepass-gui.buttons.tiers.location.row"),
                 plugin.configYml.getInt("battlepass-gui.buttons.tiers.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("battlepass-gui.buttons.tiers.item")))
-                        .setDisplayName(plugin.configYml.getString("battlepass-gui.buttons.tiers.name"))
-                        .addLoreLines(
-                            BPTier(level, pass)
-                                .format(
-                                    plugin.configYml.getStrings("battlepass-gui.buttons.tiers.lore"),
-                                    player
-                                )
+                    run {
+                        val itemString = (plugin.configYml.getStringOrNull("battlepass-gui.buttons.tiers.item")
+                            ?: plugin.configYml.getString("battlepass-gui.buttons.tiers.material"))
+                            .withBattlePassPlaceholders()
+                        val builder = ItemStackBuilder(Items.lookup(itemString))
+                        plugin.configYml.getStringOrNull("battlepass-gui.buttons.tiers.name")?.let {
+                            builder.setDisplayName(it.withBattlePassPlaceholders())
+                        }
+                        builder.addLoreLines(
+                            BPTier(level, pass).format(
+                                plugin.configYml.getStrings("battlepass-gui.buttons.tiers.lore"),
+                                player
+                            )
                         )
-                        .build()
+                        builder.build()
+                    }
                 ) {
                     onLeftClick { _, _ ->
                         PlayableSound.create(plugin.configYml.getSubsection("sound.gui-click-sound"))?.playTo(player)
@@ -51,16 +65,25 @@ object BattlePassGUI {
                 }
             )
 
+            // Quests button — supports item OR material, + name
             setSlot(
                 plugin.configYml.getInt("battlepass-gui.buttons.quests.location.row"),
                 plugin.configYml.getInt("battlepass-gui.buttons.quests.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("battlepass-gui.buttons.quests.item")))
-                        .setDisplayName(plugin.configYml.getString("battlepass-gui.buttons.quests.name"))
-                        .addLoreLines(
+                    run {
+                        val itemString = (plugin.configYml.getStringOrNull("battlepass-gui.buttons.quests.item")
+                            ?: plugin.configYml.getString("battlepass-gui.buttons.quests.material"))
+                            .withBattlePassPlaceholders()
+                        val builder = ItemStackBuilder(Items.lookup(itemString))
+                        plugin.configYml.getStringOrNull("battlepass-gui.buttons.quests.name")?.let {
+                            builder.setDisplayName(it.withBattlePassPlaceholders())
+                        }
+                        builder.addLoreLines(
                             plugin.configYml.getStrings("battlepass-gui.buttons.quests.lore")
+                                .withBattlePassPlaceholders()
                         )
-                        .build()
+                        builder.build()
+                    }
                 ) {
                     onLeftClick { _, _ ->
                         PlayableSound.create(plugin.configYml.getSubsection("sound.gui-click-sound"))?.playTo(player)
@@ -69,17 +92,24 @@ object BattlePassGUI {
                 }
             )
 
+            // Close button — supports item OR material, + name
             if (plugin.configYml.getBool("battlepass-gui.buttons.close.enabled")) {
+                val closePath = "battlepass-gui.buttons.close"
+                val closeItemString = (plugin.configYml.getStringOrNull("$closePath.item")
+                    ?: plugin.configYml.getString("$closePath.material"))
+                    .withBattlePassPlaceholders()
+                val closeBuilder = ItemStackBuilder(Items.lookup(closeItemString))
+                plugin.configYml.getStringOrNull("$closePath.name")?.let {
+                    closeBuilder.setDisplayName(it.withBattlePassPlaceholders())
+                }
+                val closeLore = plugin.configYml.getStringsOrNull("$closePath.lore")
+                    ?: emptyList()
+                closeBuilder.addLoreLines(closeLore.withBattlePassPlaceholders())
+
                 setSlot(
-                    plugin.configYml.getInt("battlepass-gui.buttons.close.location.row"),
-                    plugin.configYml.getInt("battlepass-gui.buttons.close.location.column"),
-                    slot(
-                        ItemStackBuilder(
-                            Items.lookup(plugin.configYml.getString("battlepass-gui.buttons.close.material"))
-                        ).setDisplayName(plugin.configYml.getString("battlepass-gui.buttons.close.name"))
-                            .addLoreLines(plugin.configYml.getFormattedStrings("battlepass-gui.buttons.close.lore"))
-                            .build()
-                    ) {
+                    plugin.configYml.getInt("$closePath.location.row"),
+                    plugin.configYml.getInt("$closePath.location.column"),
+                    slot(closeBuilder.build()) {
                         onLeftClick { event, _ ->
                             event.whoClicked.closeInventory()
                         }
@@ -87,19 +117,19 @@ object BattlePassGUI {
                 )
             }
 
+            // Custom slots — supports name as separate key
             for (slotConfig in plugin.configYml.getSubsections("battlepass-gui.buttons.custom-slots")) {
                 val resolved = slotConfig.clone().apply {
-                    fun r(s: String) = InternalPlaceholders.BattlePassPlaceholders.replace(
-                        s,
-                        player = player,
-                        battlepass = pass
-                    )
+                    val nameKey = getStringOrNull("name")
+                    val itemStr = getString("item").withBattlePassPlaceholders()
+                    val formattedName = nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" } ?: ""
+                    val finalItemStr = if (!itemStr.contains("name:")) "$itemStr$formattedName" else itemStr
 
-                    set("item", r(getString("item")))
-                    set("lore", getStrings("lore").map(::r))
+                    set("item", finalItemStr)
+                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map(::r))
+                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
                         }
                     }
                 }
@@ -112,6 +142,6 @@ object BattlePassGUI {
             }
         }
 
-        menu.open(player)
+            menu.open(player)
+        }
     }
-}

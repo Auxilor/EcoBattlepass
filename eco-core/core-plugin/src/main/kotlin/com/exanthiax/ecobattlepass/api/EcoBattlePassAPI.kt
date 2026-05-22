@@ -57,12 +57,25 @@ fun Player.setPremium(pass: BattlePass, premium: Boolean) {
 }
 
 fun Player.receiveTier(tier: BPTier) {
-    tier.rewards.filter { it.isAllowed(this, tier.battlepass) }.forEach {
+    val current = this.getReceivedTiers(tier.battlepass)
+    val alreadyFree = tier.saveIdFree in current
+    val alreadyPremium = tier.saveIdPremium in current
+
+    // Only grant rewards that haven't been claimed separately
+    tier.rewards.filter { reward ->
+        reward.isAllowed(this, tier.battlepass) &&
+                !(alreadyFree && reward.tier == TierType.FREE) &&
+                !(alreadyPremium && reward.tier == TierType.PREMIUM)
+    }.forEach {
         it.reward.grant(this)
     }
 
-    this.setReceivedTiers(tier.battlepass, this.getReceivedTiers(tier.battlepass)
-            + if (this.hasPremium(tier.battlepass)) tier.saveId else tier.saveIdFree)
+    // Consolidate save IDs
+    val cleaned = current - tier.saveIdFree - tier.saveIdPremium
+    this.setReceivedTiers(
+        tier.battlepass,
+        cleaned + if (this.hasPremium(tier.battlepass)) tier.saveId else tier.saveIdFree
+    )
 }
 
 fun Player.receiveTierPremiumOnly(tier: BPTier) {
@@ -70,8 +83,30 @@ fun Player.receiveTierPremiumOnly(tier: BPTier) {
         it.reward.grant(this)
     }
 
+    val current = this.getReceivedTiers(tier.battlepass)
 
-    this.setReceivedTiers(tier.battlepass, this.getReceivedTiers(tier.battlepass) - tier.saveIdFree + tier.saveId )
+    if (tier.saveIdFree in current) {
+        // Both sides claimed → consolidate to saveId
+        this.setReceivedTiers(tier.battlepass, current - tier.saveIdFree + tier.saveId)
+    } else {
+        // Only premium claimed
+        this.setReceivedTiers(tier.battlepass, current + tier.saveIdPremium)
+    }
+}
+
+fun Player.receiveTierFreeOnly(tier: BPTier) {
+    tier.rewards.filter { it.tier == TierType.FREE }.forEach {
+        it.reward.grant(this)
+    }
+
+    val current = this.getReceivedTiers(tier.battlepass)
+
+    if (tier.saveIdPremium in current) {
+        // Both sides claimed → consolidate to saveId
+        this.setReceivedTiers(tier.battlepass, current - tier.saveIdPremium + tier.saveId)
+    } else {
+        this.setReceivedTiers(tier.battlepass, current + tier.saveIdFree)
+    }
 }
 
 fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean {
@@ -180,14 +215,33 @@ fun Player.giveExactBPTiers(pass: BattlePass, amount: Int) {
     }
 }
 
-fun Player.hasReceivedTier(pass: BattlePass, tier: Int) : ReceivedTierState {
+fun Player.hasReceivedTier(pass: BattlePass, tier: Int): ReceivedTierState {
     val bpTier = pass.getTier(tier) ?: return ReceivedTierState.NOT_RECEIVED
     val receivedTiers = this.getReceivedTiers(pass)
-    return if (bpTier.saveId in receivedTiers)  {
-        ReceivedTierState.RECEIVED
-    } else if (bpTier.saveIdFree in receivedTiers && bpTier.rewards.any { it.tier == TierType.PREMIUM }) {
-        ReceivedTierState.RECEIVED_FREE
-    } else if (bpTier.saveIdFree in receivedTiers) {
-        ReceivedTierState.RECEIVED
-    } else ReceivedTierState.NOT_RECEIVED
+
+    val hasFull = bpTier.saveId in receivedTiers
+    val hasFree = bpTier.saveIdFree in receivedTiers
+    val hasPremium = bpTier.saveIdPremium in receivedTiers
+
+    return when {
+        hasFull -> ReceivedTierState.RECEIVED
+        hasFree && hasPremium -> ReceivedTierState.RECEIVED
+        hasFree -> {
+            if (bpTier.rewards.any { it.tier == TierType.PREMIUM }) {
+                ReceivedTierState.RECEIVED_FREE
+            } else {
+                ReceivedTierState.RECEIVED
+            }
+        }
+
+        hasPremium -> {
+            if (bpTier.rewards.any { it.tier == TierType.FREE }) {
+                ReceivedTierState.RECEIVED_PREMIUM
+            } else {
+                ReceivedTierState.RECEIVED
+            }
+        }
+
+        else -> ReceivedTierState.NOT_RECEIVED
+    }
 }

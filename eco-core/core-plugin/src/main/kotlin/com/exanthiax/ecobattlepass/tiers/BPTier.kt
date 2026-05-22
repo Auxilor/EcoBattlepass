@@ -20,6 +20,7 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
     val rewards = config.getSubsections("rewards").map { BPReward(it) }
     val saveId = "bptier_$number"
     val saveIdFree = "bptier_${number}_free"
+    val saveIdPremium = "bptier_${number}_premium"
     val transient = false
 
     fun getRewardsFormatted(tierType: TierType, player: Player): List<String> {
@@ -45,46 +46,70 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
         return line.startsWith("&") || line.startsWith("§")
     }
 
-    fun format(strings: List<String>, player: Player): List<String> {
+    fun format(strings: List<String>, player: Player, filterTierType: TierType? = null): List<String> {
         val result = mutableListOf<String>()
-
         for (string in strings) {
             when {
-                string.contains("%free-rewards%") -> handleRewards(
-                    result, string, player, TierType.FREE,
-                    "%free-rewards%", "tiers-gui.buttons.free-rewards-format"
-                )
+                string.contains("%free-rewards%") -> {
+                    if (filterTierType == TierType.PREMIUM) {
+                        result.add(string.replace("%free-rewards%", "")); continue
+                    }
+                    handleRewards(
+                        result,
+                        string,
+                        player,
+                        TierType.FREE,
+                        "%free-rewards%",
+                        "tiers-gui.buttons.free-rewards-format"
+                    )
+                }
 
-                string.contains("%premium-rewards%") -> handleRewards(
-                    result, string, player, TierType.PREMIUM,
-                    "%premium-rewards%", null
-                ) { _, p ->
-                    if (p.hasPremium(battlepass)) {
-                        "tiers-gui.buttons.premium-rewards-format"
-                    } else {
-                        "tiers-gui.buttons.missing-premium-rewards-format"
+                string.contains("%premium-rewards%") -> {
+                    if (filterTierType == TierType.FREE) {
+                        result.add(string.replace("%premium-rewards%", "")); continue
+                    }
+                    handleRewards(result, string, player, TierType.PREMIUM, "%premium-rewards%", null) { _, p ->
+                        if (p.hasPremium(battlepass)) "tiers-gui.buttons.premium-rewards-format"
+                        else "tiers-gui.buttons.missing-premium-rewards-format"
                     }
                 }
 
-                string.contains("%claimed-free-rewards%") -> handleRewards(
-                    result, string, player, TierType.FREE,
-                    "%claimed-free-rewards%", "tiers-gui.buttons.claimed-free-rewards-format"
-                )
+                string.contains("%claimed-free-rewards%") -> {
+                    if (filterTierType == TierType.PREMIUM) {
+                        result.add(string.replace("%claimed-free-rewards%", "")); continue
+                    }
+                    handleRewards(
+                        result,
+                        string,
+                        player,
+                        TierType.FREE,
+                        "%claimed-free-rewards%",
+                        "tiers-gui.buttons.claimed-free-rewards-format"
+                    )
+                }
 
-                string.contains("%claimed-premium-rewards%") -> handleRewards(
-                    result, string, player, TierType.PREMIUM,
-                    "%claimed-premium-rewards%", "tiers-gui.buttons.claimed-premium-rewards-format"
-                )
+                string.contains("%claimed-premium-rewards%") -> {
+                    if (filterTierType == TierType.FREE) {
+                        result.add(string.replace("%claimed-premium-rewards%", "")); continue
+                    }
+                    handleRewards(
+                        result,
+                        string,
+                        player,
+                        TierType.PREMIUM,
+                        "%claimed-premium-rewards%",
+                        "tiers-gui.buttons.claimed-premium-rewards-format"
+                    )
+                }
 
                 else -> result.add(InternalPlaceholders.TierPlaceholders.replace(string, this, battlepass, player))
             }
         }
-
         return result.formatEco(player, true)
     }
 
-    fun format(singleString: String, player: Player): List<String> {
-        return format(listOf(singleString), player)
+    fun format(singleString: String, player: Player, filterTierType: TierType? = null): List<String> {
+        return format(listOf(singleString), player, filterTierType)
     }
 
     private fun handleRewards(

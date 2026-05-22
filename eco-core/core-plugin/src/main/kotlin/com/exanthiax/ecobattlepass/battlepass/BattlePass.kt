@@ -3,6 +3,7 @@ package com.exanthiax.ecobattlepass.battlepass
 import com.exanthiax.ecobattlepass.api.getPassExp
 import com.exanthiax.ecobattlepass.api.getTier
 import com.exanthiax.ecobattlepass.api.hasReceivedTier
+import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.commands.dynamic.DynamicPassCommand
@@ -26,7 +27,7 @@ import org.bukkit.entity.Player
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class BattlePass(private val _id: String, val config: Config): Registrable {
+class BattlePass(private val _id: String, val config: Config) : Registrable {
     init {
         InternalPlaceholders.BattlePassPlaceholders.register(this)
     }
@@ -61,14 +62,14 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
     val isActive: Boolean
         get() = LocalDateTime.now().isAfter(startDate) && LocalDateTime.now().isBefore(endDate)
 
-    val startDate = run {
+    val startDate: LocalDateTime = run {
         val dateTimeString = config.getString("battlepass.battlepass-start")
         val pattern = plugin.configYml.getString("date-format")
         val formatter = DateTimeFormatter.ofPattern(pattern)
         LocalDateTime.parse(dateTimeString, formatter)
     }
 
-    val endDate = run {
+    val endDate: LocalDateTime = run {
         val dateTimeString = config.getString("battlepass.battlepass-end")
         val pattern = plugin.configYml.getString("date-format")
         val formatter = DateTimeFormatter.ofPattern(pattern)
@@ -84,8 +85,10 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
             )
         }
 
-        plugin.logger.info("Registered ${this.size} tiers (${this.filter { it.transient }.size} transient)" +
-                " for pass ${this@BattlePass.name}")
+        plugin.logger.info(
+            "Registered ${this.size} tiers (${this.filter { it.transient }.size} transient)" +
+                    " for pass ${this@BattlePass.name}"
+        )
     }
 
     val xpFormula = config.getString("battlepass.xp-formula")
@@ -95,7 +98,7 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
 
     val categories: List<Category>
         get() = Categories.values().filter { it.battlepass == this }
-            .sortedWith(compareBy<Category>{ it.config.getInt("priority") }.thenBy { it.id })
+            .sortedWith(compareBy<Category> { it.config.getInt("priority") }.thenBy { it.id })
 
     fun getExpForLevel(level: Int): Double {
         return if (level <= 0) {
@@ -127,9 +130,21 @@ class BattlePass(private val _id: String, val config: Config): Registrable {
     }
 
     fun getClaimable(player: Player): Int {
-        return tiers.filter {
-            player.getTier(this) >= it.number && player.hasReceivedTier(this, it.number) != ReceivedTierState.RECEIVED
+        return tiers.filter { tier ->
+            player.getTier(this) >= tier.number && when (player.hasReceivedTier(this, tier.number)) {
+                ReceivedTierState.RECEIVED -> false
+                ReceivedTierState.RECEIVED_FREE -> player.hasPremium(this)
+                ReceivedTierState.RECEIVED_PREMIUM -> true
+                ReceivedTierState.NOT_RECEIVED -> true
+            }
         }.size
+    }
+
+    fun getClaimableTiers(player: Player): List<BPTier> {
+        return tiers.filter {
+            player.getTier(this) >= it.number &&
+                    player.hasReceivedTier(this, it.number) != ReceivedTierState.RECEIVED
+        }
     }
 
     fun resetAll() {

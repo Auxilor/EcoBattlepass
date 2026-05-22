@@ -14,28 +14,38 @@ import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import org.bukkit.entity.Player
 
-class CategoriesGUI(private val player: Player, val pass: BattlePass,
-                    val page: Int = 1, val backButton: Boolean = false) {
+class CategoriesGUI(
+    private val player: Player, val pass: BattlePass,
+    val page: Int = 1, val backButton: Boolean = false
+) {
+
+    private fun String.withBattlePassPlaceholders(): String =
+        InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
+
+    private fun List<String>.withBattlePassPlaceholders(): List<String> =
+        InternalPlaceholders.BattlePassPlaceholders.replaceAll(this, battlepass = pass, player = player)
+
     fun open() {
         val pattern = plugin.configYml.getStrings("categories-gui.mask.pattern")
         val menu = Menu.builder(pattern.size)
-            .setTitle(plugin.configYml.getFormattedString("categories-gui.title")
-                .replace("%page%", page.toString())
-                .replace("%pass%", pass.name)
+            .setTitle(
+                plugin.configYml.getString("categories-gui.title")
+                    .replace("%page%", page.toString())
+                    .withBattlePassPlaceholders()
             )
         var row = 1
-        var num = ((page-1)*getPerPage())
+        var num = ((page - 1) * getPerPage())
         pattern.forEach {
             var col = 1
-            it.toCharArray().forEach {
-                    s -> kotlin.run {
-                if (s.equals('c', true)) {
-                    if (num < pass.categories.size) {
-                        menu.setSlot(row, col, slot(pass.categories.toList()[num]))
+            it.toCharArray().forEach { s ->
+                kotlin.run {
+                    if (s.equals('c', true)) {
+                        if (num < pass.categories.size) {
+                            menu.setSlot(row, col, slot(pass.categories.toList()[num]))
+                        }
+                        num++
                     }
-                    num++
                 }
-            }
                 col++
             }
             row++
@@ -56,19 +66,20 @@ class CategoriesGUI(private val player: Player, val pass: BattlePass,
             plugin.configYml.getInt("categories-gui.buttons.prev-page.column"),
             prevSlot()
         )
+
         for (slotConfig in plugin.configYml.getSubsections("categories-gui.buttons.custom-slots")) {
             val resolved = slotConfig.clone().apply {
-                fun r(s: String) = InternalPlaceholders.BattlePassPlaceholders.replace(
-                    s,
-                    player = player,
-                    battlepass = pass
-                )
-
-                set("item", r(getString("item")))
-                set("lore", getStrings("lore").map(::r))
+                val nameKey = getStringOrNull("name")
+                val itemStr = getString("item").withBattlePassPlaceholders()
+                if (nameKey != null && !itemStr.contains("name:")) {
+                    set("item", "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\"")
+                } else {
+                    set("item", itemStr)
+                }
+                set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
                 listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                     if (this.has(click)) {
-                        this.set(click, this.getStrings(click).map(::r))
+                        this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
                     }
                 }
             }
@@ -84,15 +95,7 @@ class CategoriesGUI(private val player: Player, val pass: BattlePass,
             menu.setSlot(
                 plugin.configYml.getInt("categories-gui.buttons.close.row"),
                 plugin.configYml.getInt("categories-gui.buttons.close.column"),
-                Slot.builder(
-                    ItemStackBuilder(
-                        Items.lookup(plugin.configYml.getString("categories-gui.buttons.close.material"))
-                    ).setDisplayName(plugin.configYml.getString("categories-gui.buttons.close.name"))
-                        .addLoreLines(plugin.configYml.getFormattedStrings("categories-gui.buttons.close.lore"))
-                        .build()
-                ).onLeftClick { event, _ ->
-                    event.whoClicked.closeInventory()
-                }.build()
+                buildCloseSlot("categories-gui.buttons.close")
             )
         }
 
@@ -115,12 +118,9 @@ class CategoriesGUI(private val player: Player, val pass: BattlePass,
 
     private fun nextSlot(): Slot {
         val nextActive = page < getMaxPages()
+        val state = if (nextActive) "active" else "inactive"
         val builder = Slot.builder(
-            ItemStackBuilder(
-                Items.lookup(plugin.configYml.getString("categories-gui.buttons.next-page.item.${getActive(nextActive)}"))
-            ).addLoreLines(
-                plugin.configYml.getFormattedStrings("categories-gui.buttons.next-page.lore.${getActive(nextActive)}")
-            ).build()
+            buildPageItem("categories-gui.buttons.next-page", state)
         )
         if (nextActive) {
             builder.onLeftClick { _, _ ->
@@ -132,27 +132,61 @@ class CategoriesGUI(private val player: Player, val pass: BattlePass,
 
     private fun prevSlot(): Slot {
         val prevActive = page > 1 || backButton
+        val state = if (prevActive) "active" else "inactive"
         val builder = Slot.builder(
-            ItemStackBuilder(
-                Items.lookup(plugin.configYml.getString("categories-gui.buttons.prev-page.item.${getActive(prevActive)}"))
-            ).addLoreLines(
-                plugin.configYml.getFormattedStrings("categories-gui.buttons.prev-page.lore.${getActive(prevActive)}")
-            ).build()
+            buildPageItem("categories-gui.buttons.prev-page", state)
         )
 
         if (prevActive) {
             builder.onLeftClick { _, _ ->
                 when {
                     page > 1 -> CategoriesGUI(player, pass, page - 1, backButton).open()
-                    backButton -> BattlePassGUI.createAndOpen(player, pass)
+                    else -> BattlePassGUI.createAndOpen(player, pass)
                 }
             }
         }
         return builder.build()
     }
 
-    private fun getActive(active: Boolean): String {
-        return if (active) "active" else "inactive"
+    private fun buildPageItem(basePath: String, state: String): org.bukkit.inventory.ItemStack {
+        val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
+            ?: plugin.configYml.getStringOrNull("$basePath.item")
+            ?: plugin.configYml.getString("$basePath.material")
+
+        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
+
+        val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
+            ?: plugin.configYml.getStringOrNull("$basePath.name")
+        if (name != null) {
+            itemBuilder.setDisplayName(name.withBattlePassPlaceholders())
+        }
+
+        val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
+            ?: plugin.configYml.getStringsOrNull("$basePath.lore")
+            ?: emptyList()
+        itemBuilder.addLoreLines(lore.withBattlePassPlaceholders())
+
+        return itemBuilder.build()
+    }
+
+    private fun buildCloseSlot(basePath: String): Slot {
+        val itemString = plugin.configYml.getStringOrNull("$basePath.item")
+            ?: plugin.configYml.getString("$basePath.material")
+
+        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
+
+        plugin.configYml.getStringOrNull("$basePath.name")?.let {
+            itemBuilder.setDisplayName(it.withBattlePassPlaceholders())
+        }
+
+        val lore = plugin.configYml.getStringsOrNull("$basePath.lore")
+            ?: emptyList()
+        itemBuilder.addLoreLines(lore.withBattlePassPlaceholders())
+
+        return Slot.builder(itemBuilder.build())
+            .onLeftClick { event, _ ->
+                event.whoClicked.closeInventory()
+            }.build()
     }
 
     private fun slot(pair: Category): Slot {

@@ -8,7 +8,7 @@ name: "&6Example Battlepass" # The name of the battlepass, shown in the GUI
 battlepass:
   xp-formula: 1.5 * %level% + 5 # The formula to calculate the XP needed to reach the next tier
   max-tier: 100 # The maximum tier of the battlepass
-  command: 'battlepass' # The command to open the battlepass GUI
+  command: "battlepass" # The command to open the battlepass GUI
   premium-permission: "example.pass.premium" # The permission required to access the premium path of the battlepass
   battlepass-start: 2025-01-01 00:00 # The date the battlepass starts. This must match the date format in config.yml, otherise you will get errors.
   battlepass-end: 2026-01-01 00:00 # The date the battlepass ends. This must match the date format in config.yml, otherise you will get errors.
@@ -27,8 +27,98 @@ tiers:
         tier: premium # The tier the reward is in (free/premium)
       - id: golden_apple_3
         tier: premium
+    display:
+      # Override genérico (para modo combined)
+      unlocked:
+        item: diamond_block
+        name: "&6&lTIER 1 - SPECIAL"
+        lore:
+          - "&7Special rewards await!"
+          - "&7Free Tier:"
+          - "%free-rewards%"
+          - "&7Premium Tier:"
+          - "%premium-rewards%"
+
+      # Para modo split - track FREE
+      free-track:
+        unlocked:
+          item: emerald_block
+          name: "&a&lFREE TIER 1 - SPECIAL"
+          lore:
+            - "&7Exclusive free rewards!"
+            - "%free-rewards%"
+        claimed:
+          item: emerald
+          name: "&a&lCLAIMED FREE TIER 10"
+
+      # Para modo split - track PREMIUM
+      premium-track:
+        unlocked:
+          item: diamond_block
+          name: "&b&lPREMIUM TIER 1 - SPECIAL"
+          lore:
+            - "&7Exclusive premium rewards!"
+            - "%premium-rewards%"
+        premium-required:
+          item: gold_block
+          name: "&6&lPREMIUM TIER 1 - UPGRADE NEEDED"
+        claimed:
+          item: diamond
+          name: "&a&lCLAIMED PREMIUM TIER 10"
 
   - tier: 5
     rewards:
       - id: xp_100
         tier: premium
+    # Per-level item overrides allow you to customize the appearance of this specific tier
+    # These overrides take priority over the default button configurations in config.yml
+
+    display:
+      # Generic override (applies to both combined mode and as fallback for split mode)
+      unlocked:
+        item: diamond_block
+        name: "&6&lSPECIAL TIER X"
+        lore:
+          - "&7This tier has special rewards!"
+          - "&7Free Tier:"
+          - "%free-rewards%"
+          - "&7Premium Tier:"
+          - "%premium-rewards%"
+          - ""
+          - "&6&lCLAIM NOW!"
+
+      claimed:
+        item: emerald_block
+        name: "&a&lSPECIAL TIER X - CLAIMED"
+        lore:
+          - "&7You claimed all rewards from this special tier!"
+          - "&7Free Tier:"
+          - "%claimed-free-rewards%"
+          - "&7Premium Tier:"
+          - "%claimed-premium-rewards%"
+
+      # Split mode specific overrides (only used when layout: split in config.yml)
+      free-track:
+        unlocked:
+          item: emerald_block
+          name: "&a&lFREE TIER X - SPECIAL"
+          lore:
+            - "&7Exclusive free rewards for this special tier!"
+            - "%free-rewards%"
+        claimed:
+          item: emerald
+          name: "&a&lCLAIMED FREE TIER X"
+
+      premium-track:
+        unlocked:
+          item: diamond_block
+          name: "&b&lPREMIUM TIER X - SPECIAL"
+          lore:
+            - "&7Exclusive premium rewards for this special tier!"
+            - "%premium-rewards%"
+        premium-required:
+          item: gold_block
+          name: "&6&lPREMIUM TIER X - UPGRADE NEEDED"
+        claimed:
+          item: diamond
+          name: "&a&lCLAIMED PREMIUM TIER X"

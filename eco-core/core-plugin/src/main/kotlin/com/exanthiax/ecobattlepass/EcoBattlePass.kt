@@ -14,6 +14,7 @@ import com.exanthiax.ecobattlepass.libreforge.effects.EffectSetBPTier
 import com.exanthiax.ecobattlepass.libreforge.effects.EffectTaskExpMultiplier
 import com.exanthiax.ecobattlepass.libreforge.filters.FilterReward
 import com.exanthiax.ecobattlepass.libreforge.filters.FilterTask
+import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPExpGain
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPRewardClaim
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPTaskComplete
@@ -94,11 +95,14 @@ class EcoBattlePass : LibreforgePlugin() {
         Triggers.register(TriggerBPRewardClaim)
         Triggers.register(TriggerBPTaskComplete)
         Triggers.register(TriggerBPTierUp)
+
+        BattleTiersGUI.onReload()
     }
 
     override fun handleReload() {
         // BattlePassLegacy.update()
         BattlePasses.updateTaskBindings()
+        BattleTiersGUI.onReload()
     }
 
     override fun createTasks() {

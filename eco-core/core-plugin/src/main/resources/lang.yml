@@ -40,6 +40,15 @@ messages:
   premium-broadcast: "&b%playername% &7has unlocked premium &6%pass%&7!"
   completed-task: "&7Successfully completed task '&e%task%&7' in &r%pass% &7for &6%playername%&7."
   task-already-completed: "&eTask %task% in %pass% is already completed for %playername%."
+  # Claim command errors
+  tier-not-found: "&cTier %tier% not found!"
+  tier-not-unlocked: "&cYou haven't unlocked tier &a%tier%&7 yet!"
+  tier-already-claimed: "&cYou have already claimed all rewards for tier &a%tier%&7!"
+  no-rewards-to-claim: "&cYou have no rewards to claim!"
+  claim-no-premium: "&cYou don't have premium access to claim premium rewards!"
+  # Claim command success
+  claim-all-success: "&7Claimed rewards for &a%count%&7 tier(s)."
+
 
 pass-type:
   free: "&9Free"
