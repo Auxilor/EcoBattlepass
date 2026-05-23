@@ -111,6 +111,10 @@ class Category(private val _id: String, val config: Config) : Registrable {
                 quest.reset(player)
             }
         }
+
+        for (quest in this.quests) {
+            quest.regenerate()
+        }
     }
 
     val isActive: Boolean
