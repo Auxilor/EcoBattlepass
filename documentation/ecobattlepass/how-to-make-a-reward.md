@@ -1,4 +1,4 @@
----
+﻿---
 title: "How to make a Reward"
 sidebar_position: 2
 ---
@@ -49,7 +49,7 @@ display:
 ```
 
 #### The Effects Section
-:::dangerEffects Section
+:::danger Effects Section
 
 The effects section is the core functionality of the reward. You can configure effects, conditions, filters, and mutators in this section to run when the BattlePass reward is claimed.
 
