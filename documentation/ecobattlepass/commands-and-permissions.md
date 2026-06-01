@@ -3,6 +3,10 @@ title: "Commands and Permissions"
 sidebar_position: 5
 ---
 
+Every command and permission EcoBattlepass registers, for looking up what each one does and which node it needs. `<battlepass_id>` / `<pass_id>` is the ID of a pass (its file name); `<player/all>` targets one player or everyone.
+
+## Commands
+
 | Command                                                                                                                                                        | Description                                                     | Permission                           |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|--------------------------------------|
 | `/<battlepass_id>`                                                                                                                                             | Open the battlepass GUI                                         | `ecobattlepass.command.<pass_id>`    |
@@ -16,7 +20,7 @@ sidebar_position: 5
 | `/ecobattlepass give <player/all> <pass_id> <tier/xp> <amount>`   <br/> `/ecobattlepass give <player/all> task_xp <category_id> <quest_id> <task_id> <amount>` | Give the player battlepass tiers, experience or task experience | `ecobattlepass.command.give`         |
 
 
-### Additional Permissions
+## Additional permissions
 
 | Permission                               | Description                                                                                                |
 |------------------------------------------|------------------------------------------------------------------------------------------------------------|
@@ -25,3 +29,10 @@ sidebar_position: 5
 | `ecobattlepass.xpmultiplier.double`      | Gives double battlepass XP (2x multiplier)                                                                 |
 | `ecobattlepass.xpmultiplier.triple`      | Gives triple battlepass XP (3x multiplier)                                                                 |
 | `ecobattlepass.xpmultiplier.quadruple`   | Gives quadruple battlepass XP (4x multiplier)                                                              |
+
+<hr/>
+
+## Where to go next
+
+- **Build a pass:** [How to make a battlepass](how-to-make-a-battlepass) sets the `command` these permissions gate.
+- **Placeholders:** [Internal placeholders](internalplaceholders) and [PlaceholderAPI](placeholderapi) cover what you can show in GUIs and chat.

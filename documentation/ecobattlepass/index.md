@@ -4,20 +4,21 @@ title: "EcoBattlepass"
 
 ## What is EcoBattlepass?
 
-EcoBattlepass is a fully customizable and feature-rich Battle Pass plugin designed to elevate player engagement. It offers Daily, Weekly, and Monthly quests, which can reset on any schedule you choose, along with infinite tiers and both Free and Premium reward tracks.
+EcoBattlepass is a fully customizable Battle Pass plugin for your server. It ships Daily, Weekly, and Monthly quests that reset on any schedule you choose, infinite tiers, and separate Free and Premium reward tracks.
 
-With EcoBattlepass, you can create multiple battle passes, each with unique quests, rewards, and premium permissions—ideal for seasonal events, limited-time challenges, or distinct progression paths.
+You can run multiple battle passes at once, each with its own quests, rewards, and premium permission, so a seasonal main pass and a limited-time event pass can run side by side.
 
-## Key Features
+## What sets EcoBattlepass apart?
 
-### Extensive Effects System
+- **Powered by libreforge.** Build rewards and quests from over 200 effects, 100 conditions, and 100 triggers. Grant potion effects, run commands, enchant items, apply multipliers, and more.
+- **Deep eco integration.** Works with [EcoSkills](https://plugins.auxilor.io/ecoskills) and [EcoEnchants](https://plugins.auxilor.io/ecoenchants), plus compatibility with popular plugins such as AxEnvoy, McMMO, and Votifier.
+- **Fully custom GUIs.** Use custom items from ItemsAdder, Oraxen, Nexo, or any item with CustomModelData, so the pass interface matches your server's theme.
 
-Build dynamic pass rewards and quests using over 200 effects, 100 conditions, and 100 triggers, powered by libreforge. From granting potion effects to running commands, enchanting items, applying multipliers, and more—there are no limits.
+<hr/>
 
-### Plugin Integrations
+## Where to go next
 
-Supports deep integration with other eco plugins like EcoSkills and EcoEnchants, as well as compatibility with other popular plugins such as AxEnvoy, McMMO, Votifier, and more—ensuring smooth interaction across your server's ecosystem.
-
-### Customizable GUIs
-
-Create fully custom menus with support for custom items from ItemsAdder, Oraxen, Nexo, or any item using CustomModelData. Design a pass interface that matches your server's branding and theme.
+- **Build your first pass:** [How to make a battlepass](how-to-make-a-battlepass) walks you from an empty file to a working pass.
+- **Add rewards:** [How to make a reward](how-to-make-a-reward) covers what players earn per tier.
+- **Add quests:** [Configuring a category](how-to-make-a-battlequest/configuring-a-category) starts the quest system.
+- **Tune the GUIs:** [Plugin config](plugin-config) is the full annotated `config.yml`.

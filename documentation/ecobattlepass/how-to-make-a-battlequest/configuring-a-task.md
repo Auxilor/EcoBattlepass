@@ -1,69 +1,99 @@
 ---
-title: Configuring a Task
+title: "Configuring a Task"
 sidebar_position: 3
 ---
 
-## How to add tasks
+A **task** is the trackable action behind a quest, e.g. "kill 100 chickens". Each task is one config file with a **display** and one or more **XP gain methods** that turn in-game triggers into progress. This page builds one from scratch.
 
-Each task is its own config file, placed in the `/tasks/` folder, and you can add or remove them as you please. There's an example config called `_example.yml` to help you out!
+## Quick start
 
-The ID of the Task is the file name. This is what you use in your Quests.\
-ID's must be lowercase letters, numbers, and underscores only.
+1. Open the `/plugins/EcoBattlepass/tasks/` folder and copy `_example.yml` to a new file, e.g. `chickens.yml`. The file name is the task ID.
+2. Set the `display` `display-name` and `lore` shown in the quest.
+3. Under `xp-gain-methods:`, set a `trigger`, a `value` or `multiplier`, and optional `filters`. See the [triggers list](https://plugins.auxilor.io/effects/all-triggers).
+4. Reference the task ID from a [quest](configuring-a-quest), run `/ecobattlepass reload`, and confirm the action raises the task's progress in game.
 
-## Example Task Config
+:::tip
+`_example.yml` is included as a reference and is **never loaded**, so copy or rename it to make a real task. You can also organise tasks into subfolders inside `tasks/`, and they'll still load.
+:::
+
+## Naming and IDs
+
+The file name without `.yml` is the task ID. You use this ID in your quests.
+
+:::warning ID rules
+IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the task will not load.
+:::
+
+## The structure of a task
+
+| Part | What it controls |
+| --- | --- |
+| **Display** | The name and lore shown for the task in the quest |
+| **XP gain methods** | The triggers that turn in-game actions into task progress |
 
 ```yaml
+# === Display: what shows in the quest ===
 display:
-  display-name: Chickens
+  display-name: Chickens # Task name
   lore:
     - "&7Kill chickens"
     - "&7%current_task_xp%/%required_task_xp%"
 
+# === XP gain methods: how progress is earned ===
 xp-gain-methods:
-  - trigger: kill
-    value: 1
-    filters:
+  - trigger: kill # The libreforge trigger to listen for
+    value: 1 # Flat progress per trigger; use "multiplier" to scale the trigger's value
+    filters: # Optional; restrict which triggers count
       entities:
         - chicken
 ```
 
-### Understanding the Sections
+### Display
 
-#### The Display Section
+The `display` block is the task's name and lore inside the quest.
 
 ```yaml
 display:
-  # The display name and lore of the task, this shows in the Quest.
-  display-name: Chickens
+  display-name: Chickens # Task name
   lore:
     - "&7Kill chickens"
     - "&7%current_task_xp%/%required_task_xp%"
 ```
 
-#### The XP Gain Methods
+### XP gain methods
+
+Each method takes a trigger, a count, optional conditions, args, and filters. Use `value` for a flat count per trigger, or `multiplier` to scale the value the trigger produces.
 
 ```yaml
-# An XP gain method takes a trigger, a multiplier, conditions, args and filters.
-# The 'multiplier' takes the value produced by the trigger and multiplies it
-# Alternatively, you can use 'value' to count a specific number and not a multiplier
 xp-gain-methods:
-  - trigger: kill
-    value: 1 # You can also use "multiplier" here.
-    filters: # Optional
+  - trigger: kill # See the triggers list for all options
+    value: 1 # Use "multiplier" instead to scale the trigger's value
+    filters: # Optional; here, only chickens count
       entities:
         - chicken
 ```
 
-Read [here](https://plugins.auxilor.io/effects/all-triggers) for the triggers.
+:::info Value versus multiplier
+`value` adds a fixed amount each time the trigger fires. `multiplier` instead takes the number the trigger produces (e.g. blocks mined) and scales it. Use one or the other.
+:::
 
-#### Internal Placeholders
+## Internal placeholders
 
-| Placeholder          | Value                 | Options                     |
-| -------------------- | --------------------- | --------------------------- |
-| `%current_task_xp%`  | The current task xp.  | add `_formatted` for commas |
-| `%required_task_xp%` | The required task xp. | add `_formatted` for commas |
+| Placeholder | Value | Options |
+| --- | --- | --- |
+| `%current_task_xp%` | The current task XP. | add `_formatted` for commas |
+| `%required_task_xp%` | The required task XP. | add `_formatted` for commas |
+
+:::tip Troubleshooting
+- **Task never progresses?** The `trigger` is wrong, or a `filter` excludes your action. Check the trigger against the triggers list and loosen the filter.
+- **Task missing from a quest?** The task ID isn't listed under that quest's `tasks:`. Add it.
+- **Config won't load after editing?** The file name (the ID) has invalid characters. Use lowercase letters, numbers, and underscores only.
+:::
 
 <hr/>
 
-## Default Configs
-The default configs can be found [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/tasks).
+## Where to go next
+
+- **Use the task:** [Configuring a quest](configuring-a-quest) is where you attach task IDs.
+- **Triggers:** the [triggers list](https://plugins.auxilor.io/effects/all-triggers) covers every `trigger` you can use.
+- **Defaults:** the shipped tasks live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/tasks).

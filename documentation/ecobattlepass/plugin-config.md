@@ -3,6 +3,8 @@ title: "Plugin Config"
 sidebar_position: 8
 ---
 
+The main config file is `config.yml`, found at `/plugins/EcoBattlepass/config.yml`. It controls the plugin-wide GUIs (the battlepass, tiers, categories, and quests menus), the quest icon, time and date formats, and sounds. After editing, run `/ecobattlepass reload` to apply your changes.
+
 ## Default config.yml
 
 ```yaml
@@ -49,7 +51,7 @@ battlepass-gui:
         column: 4
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#battlepass-and-category-gui
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#battlepass-and-category-gui
 
     quests:
       item: orange_stained_glass_pane
@@ -560,3 +562,12 @@ sound:
     volume: 1
     pitch: 1
 ```
+
+<hr/>
+
+## Where to go next
+
+- **Placeholders:** [Internal placeholders](internalplaceholders) lists everything usable in the GUI lore and names above.
+- **Build a pass:** [How to make a battlepass](how-to-make-a-battlepass) covers the per-pass configs these GUIs display.
+- **Custom GUI slots:** the [custom GUI slots](https://plugins.auxilor.io/all-plugins/custom-gui-slots) guide covers the `custom-slots` option.
+

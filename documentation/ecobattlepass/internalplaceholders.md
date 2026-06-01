@@ -7,7 +7,7 @@ EcoBattlepass offers a lot of internal placeholders that you can use in your lor
 
 Rather than cluttering the config.yml, this is a dedicated page for all the internal placeholders for config.yml.
 
-## BattlePass & Category GUI
+## BattlePass and category GUI
 
 | Placeholder             | Description                                                                | Options                         |
 |-------------------------|----------------------------------------------------------------------------|---------------------------------|
@@ -25,9 +25,9 @@ Rather than cluttering the config.yml, this is a dedicated page for all the inte
 | `%required_task_xp%`    | The XP required for the task                                               | add `_formatted` for commas     |
 | `%percentage_progress%` | The percentage of the tier XP progress                                     |                                 |
 
-## BattlePass Tiers GUI
+## BattlePass tiers GUI
 
-All the placeholders from BattlePass GUI work here. Additionally:
+All the placeholders from the BattlePass GUI work here. Additionally:
 
 | Placeholder                | Description                                                | Options                                           |
 |----------------------------|------------------------------------------------------------|---------------------------------------------------|
@@ -46,7 +46,7 @@ All the placeholders from BattlePass GUI work here. Additionally:
 | `%total%`         | Total number of quests in the category     |                                 |
 | `%time%`          | Time until the category start/reset/end    |                                 |
 
-## Tasks Lore
+## Tasks lore
 
 | Placeholder          | Description                      | Options                     |
 |----------------------|----------------------------------|-----------------------------|
@@ -54,11 +54,19 @@ All the placeholders from BattlePass GUI work here. Additionally:
 | `%current_task_xp%`  | Player's current XP in the task  | add `_formatted` for commas |
 | `%required_task_xp%` | XP required to complete the task | add `_formatted` for commas |
 
-## Other Internal Placeholders
+## Other internal placeholders
 
 | Placeholder  | Description         | Options                                  |
 |--------------|---------------------|------------------------------------------|
 | `%level%`    | The battlepass tier | Useful for math inside battlepass config |
 | `%page%`     | The page number     | Available in Category and Quest GUIs     |
 | `%category%` | The category name   | Available for Quest GUI title            |
+
+<hr/>
+
+## Where to go next
+
+- **Cross-plugin placeholders:** [PlaceholderAPI](placeholderapi) lists the placeholders usable outside EcoBattlepass GUIs.
+- **Where they go:** [Plugin config](plugin-config) is the `config.yml` whose lore and names use these.
+- **Per-pass placeholders:** [How to make a battlepass](how-to-make-a-battlepass) covers `%level%` in the XP formula.
 

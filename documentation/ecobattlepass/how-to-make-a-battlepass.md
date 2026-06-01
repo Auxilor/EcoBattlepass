@@ -1,95 +1,94 @@
 ---
-title: "How to make a BattlePass"
+title: "How to Make a Battlepass"
 sidebar_position: 1
 ---
 
-The battlepass configs are the star of the show. This is where you define how much XP is needed per-tier, how many tiers are in the battlepass, and what rewards the player receives.
+A **battlepass** is the star of the show: one config file that defines how much **XP** each tier needs, how many **tiers** exist, and which **rewards** players earn on the Free and Premium tracks. This page takes you from an empty file to a working pass you can open in game.
 
-EcoBattlepass gives you the freedom to create multiple battlepasses, each with its own Quests, Tasks, Tiers, Rewards and commands. This allows you to create a different battlepass for an event, whilst running simultaneously with your main, seasonal pass.
+## Quick start
 
-## How to add battlepasses
+1. Open the `/plugins/EcoBattlepass/battlepasses/` folder and copy `_example.yml` to a new file, e.g. `seasonal.yml`. The file name is the pass ID.
+2. Set the `name` and the `battlepass:` block: `xp-formula`, `max-tier`, `command`, `premium-permission`, and the `battlepass-start` / `battlepass-end` dates.
+3. Under `tiers:`, add a tier number and list the **reward** IDs it grants, each marked `free` or `premium`. See [How to make a reward](how-to-make-a-reward) for the reward files themselves.
+4. Run `/ecobattlepass reload`.
+5. Run your pass command (e.g. `/seasonal`) and confirm the GUI opens with your tiers and rewards.
 
-Each battlepass is its own config file, placed in the `/battlepasses/` folder, and you can add or remove them as you please. There's an example config called `_example.yml` to help you out!
+:::tip
+`_example.yml` is included as a reference and is **never loaded**, so copy or rename it to make a real battlepass. You can also organise battlepasses into subfolders inside `battlepasses/`, and they'll still load.
+:::
 
-The ID of the Battlepass is the file name. This is what you would use in your category configs and effects.\
-ID's must be lowercase letters, numbers, and underscores only.
+## Naming and IDs
 
-## Example BattlePass Config
+The file name without `.yml` is the battlepass ID. You use this ID in your category configs, in effect filters, and as the command name.
+
+:::warning ID rules
+IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the battlepass will not load.
+:::
+
+## The structure of a battlepass
+
+| Part | What it controls |
+| --- | --- |
+| **Settings** | The XP formula, tier count, command, premium permission, and start/end dates |
+| **Tiers** | Which rewards land on each tier, and whether they're free or premium |
+| **Display overrides** | Optional per-tier button appearance that beats the `config.yml` defaults |
 
 ```yaml
-name: "&6Example Battlepass"  
-  
-battlepass:  
-  xp-formula: 1.5 * %level% + 5
-  max-tier: 100
-  command: 'battlepass'
-  premium-permission: "example.pass.premium"  
-  battlepass-start: 2025-01-01 00:00
-  battlepass-end: 2025-05-01 00:00
+# === Settings: how the pass behaves ===
+name: "&6Example Battlepass" # Display name shown in the GUIs
+battlepass:
+  xp-formula: "1.5 * %level% + 5" # XP needed per tier; %level% scales it per tier
+  max-tier: 100 # Highest tier players can reach
+  command: "battlepass" # Command that opens this pass's GUI
+  premium-permission: "example.pass.premium" # Permission that grants the Premium track
+  battlepass-start: 2025-01-01 00:00 # Start date, server time; format YYYY-MM-DD HH:MM
+  battlepass-end: 2025-05-01 00:00 # End date, server time; format YYYY-MM-DD HH:MM
 
-tiers:  
-  - tier: 1 
-    rewards:  
-      - id: coins_5000
-        tier: free
+# === Tiers: what each tier awards ===
+tiers:
+  - tier: 1 # Skip a tier entirely to give it no reward
+    rewards:
+      - id: coins_5000 # Reward ID; the file name in /rewards/
+        tier: free # "free" anyone can claim, "premium" needs the premium permission
       - id: coins_10000
         tier: premium
-      - id: golden_apple_3  
-        tier: premium
 ```
 
-## Understanding the Sections
+### Settings
 
-#### The BattlePass Configuration
+The `battlepass:` block controls how the pass runs.
 
-```yml
-name: "&6Example Battlepass" # The name of the battlepass, to display in GUIs.
+```yaml
 battlepass:
-  # The formula to calculate the XP needed to reach the next tier.
-  # You can use %level% here to create xp scaling.
-  xp-formula: "1.5 * %level% + 5"
-   
-  # The maximum tier of the BattlePass.
-  max-tier: 100
-   
-   # The command used to open the BattlePass GUI.
-  command: "battlepass"
-
-  # The permission required for the premium pass
-  premium-permission: "example.pass.premium"
-
-  # The date and time the BattlePass starts. Format: YYYY-MM-DD HH:MM
-  # This uses the server time.
-  battlepass-start: 2025-01-01 00:00
-   
-  # The date the battle pass ends. Format: YYYY-MM-DD HH:MM
-  # This uses the server time.
-  battlepass-end: 2025-05-01 00:00
+  xp-formula: "1.5 * %level% + 5" # XP for the next tier; %level% is the current tier
+  max-tier: 100 # Highest reachable tier
+  command: "battlepass" # Command that opens the GUI
+  premium-permission: "example.pass.premium" # Permission for the Premium track
+  battlepass-start: 2025-01-01 00:00 # Start date, server time
+  battlepass-end: 2025-05-01 00:00 # End date, server time
 ```
 
-#### The Reward Tiers
+:::info Dates use server time
+`battlepass-start` and `battlepass-end` are read in the server's time zone, formatted `YYYY-MM-DD HH:MM`.
+:::
+
+### Tiers
+
+Each entry under `tiers:` is a tier number and the rewards it grants.
 
 ```yaml
 tiers:
-  # The tier number for the reward(s).
-  # Don't include the tier if you don't want a reward.
-  - tier: 1
+  - tier: 1 # Tiers you don't list simply have no reward
     rewards:
-      # The ID of the reward, see more here:
-      - id: diamond_block
-      # The tier the reward is in.
-      # "Premium" means only Premium players, "Free" allows anyone to claim
-        tier: free
-        
-      # List all the rewards in the same format.
+      - id: diamond_block # Reward ID, defined in /rewards/
+        tier: free # "free" anyone, "premium" needs the premium permission
       - id: money_1000
         tier: premium
 ```
 
-#### Per-Tier Display Overrides
+### Display overrides
 
-Each tier can optionally override the button appearance configured in `config.yml` for specific states.
-These take priority over the defaults.
+Each tier can optionally override the button appearance from `config.yml` for specific states. These beat the defaults, which is handy for highlighting milestone tiers.
 
 ```yaml
 tiers:
@@ -98,8 +97,8 @@ tiers:
       - id: diamond_block
         tier: free
     display:
-      # Generic override — applies in combined layout mode and as fallback in split mode.
-      # Available states: unlocked, locked, in-progress, claimed, unlocked-free, premium-required, hidden
+      # Generic override: used in combined layout, and as the fallback in split layout
+      # States: unlocked, locked, in-progress, claimed, unlocked-free, premium-required, hidden
       unlocked:
         item: diamond_block
         name: "&6&lSPECIAL TIER"
@@ -108,44 +107,38 @@ tiers:
           - "%free-rewards%"
           - "%premium-rewards%"
 
-      claimed:
-        item: emerald_block
-        name: "&a&lSPECIAL TIER - CLAIMED"
-
-      # Split layout overrides — only used when layout: split in config.yml
+      # Split-layout overrides: only used when layout: split in config.yml
       free-track:
         unlocked:
           item: emerald_block
           name: "&a&lFREE TIER - SPECIAL"
-          lore:
-            - "%free-rewards%"
-        claimed:
-          item: emerald
-          name: "&a&lCLAIMED FREE TIER"
-
       premium-track:
-        unlocked:
-          item: diamond_block
-          name: "&b&lPREMIUM TIER - SPECIAL"
-          lore:
-            - "%premium-rewards%"
         premium-required:
           item: gold_block
-          name: "&6&lPREMIUM TIER - UPGRADE NEEDED"
-        claimed:
-          item: diamond
-          name: "&a&lCLAIMED PREMIUM TIER"
+          name: "&6&lUPGRADE NEEDED"
 ```
 
-Override priority (highest to lowest): track-specific override → generic override → track-specific config.yml default → config.yml default.
+Override priority, highest to lowest: track-specific override, then generic override, then track-specific `config.yml` default, then `config.yml` default.
 
-## Internal Placeholders
+## Internal placeholders
 
-| Placeholder | Value                                             |
-| ----------- | ------------------------------------------------- |
-| `%level%`   | The battlepass tier/level. Useful for XP scaling. |
+| Placeholder | Value |
+| --- | --- |
+| `%level%` | The battlepass tier/level. Useful for XP scaling in `xp-formula`. |
+
+:::tip Troubleshooting
+- **Pass command does nothing?** The `command` value is wrong or the player lacks `ecobattlepass.command.<pass_id>`. Check the command name and permission.
+- **Premium rewards won't claim?** The player is missing the `premium-permission` you set. Grant it, or set the reward's `tier` to `free`.
+- **Config won't load after editing?** The file name (the ID) has invalid characters. Use lowercase letters, numbers, and underscores only.
+- **Tiers look wrong in the GUI?** A per-tier `display` override is taking priority over `config.yml`. Remove the override to fall back to the defaults.
+:::
 
 <hr/>
 
-## Default Configs
-The default configs can be found [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/battlepasses).
+## Where to go next
+
+- **Rewards:** [How to make a reward](how-to-make-a-reward) defines what each tier grants.
+- **Quests:** [Configuring a category](how-to-make-a-battlequest/configuring-a-category) adds the quest system that feeds XP into the pass.
+- **GUI appearance:** [Plugin config](plugin-config) is the full annotated `config.yml`.
+- **Placeholders:** [Internal placeholders](internalplaceholders) lists everything usable in lore and names.
+- **Defaults:** the shipped configs live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/battlepasses).

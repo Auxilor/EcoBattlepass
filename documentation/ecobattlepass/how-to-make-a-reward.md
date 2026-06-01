@@ -1,107 +1,95 @@
-﻿---
-title: "How to make a Reward"
+---
+title: "How to Make a Reward"
 sidebar_position: 2
 ---
 
-Rewards are what the players earn for tiering up the battlepass. Without rewards, what would be the point? Thanks to libreforge, rewards don't have to just be some XP, some currency, an item. They can be Potion Effects, stat multipliers, and much more. Rewards are really easy to setup, and they are totally reusable.
+A **reward** is what a player earns for tiering up the battlepass. Each reward is a reusable config file with a **display** (what shows on the tier button) and **effects** (what actually happens when it's claimed). Thanks to libreforge, a reward can be an item, currency, a potion effect, a stat multiplier, or anything else you can express as an effect. This page builds one from scratch.
 
-## How to add rewards
+## Quick start
 
-Each reward is its own config file, placed in the `/rewards/` folder, and you can add or remove them as you please. There's an example config called `_example.yml` to help you out!
+1. Open the `/plugins/EcoBattlepass/rewards/` folder and copy `_example.yml` to a new file, e.g. `diamond_block.yml`. The file name is the reward ID.
+2. Set the `display` `name` and `reward-lore` that show on the tier button.
+3. Add the `effects` that fire when the reward is claimed, using the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) for any item arguments.
+4. Reference the reward ID from a tier in your [battlepass config](how-to-make-a-battlepass).
+5. Run `/ecobattlepass reload`, open the pass, claim the tier, and confirm the player receives the reward.
 
-The ID of the Reward is the file name. This is what you use in your battlepass configs, and effect filters.\
-ID's must be lowercase letters, numbers, and underscores only.
-
-## Example Reward Config
-
-```yaml
-display:
-  name: "&6x&b1 &fDiamond Block"
-  reward-lore:
-    - "&7This is a diamond block"
-    - "&7It is very valuable"
-
-effects:
-  - id: give_item
-    args:
-      item: DIAMOND_BLOCK 1
-```
-
-## Understanding the Sections
-
-#### The Display Options
-
-```yaml
-# This is what is shown in the BattlePass GUI on the tier.
-display:
-  name: "&6x&b1 &fDiamond Block"
-  reward-lore:
-    - "&7This is a diamond block"
-    - "&7It is very valuable"
-```
-
-If you do not want to have any lore, you can simply blank it out.
-
-```yaml
-display:
-  name: "&6x&b1 &fDiamond Block"
-  reward-lore: [ ]
-```
-
-#### The Effects Section
-:::danger Effects Section
-
-The effects section is the core functionality of the reward. You can configure effects, conditions, filters, and mutators in this section to run when the BattlePass reward is claimed.
-
-Check out [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) to understand how to configure this section correctly.
-
-For more advanced users or setups, you can configure chains in this section to string together different effects under one trigger. Check out [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain) for more info.
-
+:::tip
+`_example.yml` is included as a reference and is **never loaded**, so copy or rename it to make a real reward. You can also organise rewards into subfolders inside `rewards/`, and they'll still load.
 :::
+
+## Naming and IDs
+
+The file name without `.yml` is the reward ID. You use this ID in your battlepass configs and effect filters.
+
+:::warning ID rules
+IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the reward will not load.
+:::
+
+## The structure of a reward
+
+| Part | What it controls |
+| --- | --- |
+| **Display** | The name and lore shown on the tier button in the GUI |
+| **Effects** | What happens when the reward is claimed |
+
 ```yaml
-# Effects are part of libreforge, you can read more below.
+# === Display: what the player sees on the tier ===
+display:
+  name: "&6x&b1 &fDiamond Block" # Reward name in the GUI
+  reward-lore: # Lines under the name; use [] for no lore
+    - "&7This is a diamond block"
+    - "&7It is very valuable"
+
+# === Effects: what the player gets on claim ===
+effects:
+  - id: give_item # libreforge effect
+    args:
+      item: DIAMOND_BLOCK 1 # Item Lookup System syntax
+```
+
+### Display
+
+The `display` block is the reward's name and lore on the tier button.
+
+```yaml
+display:
+  name: "&6x&b1 &fDiamond Block" # Shown on the tier
+  reward-lore: # Use [] to show no lore at all
+    - "&7This is a diamond block"
+    - "&7It is very valuable"
+```
+
+### Effects
+
+The `effects` block is the core of the reward: it runs when the player claims the tier.
+
+```yaml
 effects:
   - id: give_item
     args:
-      item: DIAMOND_BLOCK 1
+      item: DIAMOND_BLOCK 1 # Item Lookup System syntax
 ```
 
-**Other Examples:**
+Gives the player a diamond block when they claim the tier.
 
-```yml
-effects:
-  - id: add_holder
-    args:
-      effects: 
-        - id: movement_speed_multiplier
-          args:
-            multiplier: 1.25
-      conditions: []
-      duration: 36000
-```
+:::danger Effects are their own system
+Effects, conditions, filters, and mutators are a shared libreforge system, documented in full elsewhere.
 
-This example grants the player a 25% Movement Speed Bonus for 30 Minutes.
+- [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) covers single effects, conditions, and filters.
+- [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain) covers stringing multiple effects together under one trigger.
+:::
 
-```yaml
-effects:
-  - id: run_command
-    args:
-      command: '/envoy flare default %player% 2'
-```
-
-This example runs a command from an external plugin, in this case, giving the player 2 Envoy Flares from AxEnvoy.
-
-```yaml
-effects:
-  - id: give_skill_xp
-    args:
-      amount: 100
-      skill: mining
-```
-
-This example gives 100 Skill XP for the EcoSkills Mining skill.
+:::tip Troubleshooting
+- **Reward shows in the GUI but nothing happens on claim?** The `effects` block is missing or has a bad `id`. Check the effect against the libreforge docs.
+- **Item won't give?** The `item:` argument is malformed. Verify the syntax with the Item Lookup System.
+- **Config won't load after editing?** The file name (the ID) has invalid characters. Use lowercase letters, numbers, and underscores only.
+:::
 
 <hr/>
 
-## Default Configs
-The default configs can be found [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/rewards).
+## Where to go next
+
+- **Use the reward:** [How to make a battlepass](how-to-make-a-battlepass) is where you attach reward IDs to tiers.
+- **Effects deep-dive:** [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) is the full libreforge reference.
+- **Item syntax:** the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) covers item arguments.
+- **Defaults:** the shipped rewards live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/rewards).

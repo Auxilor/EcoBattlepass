@@ -3,6 +3,8 @@ title: "PlaceholderAPI"
 sidebar_position: 6
 ---
 
+These are the EcoBattlepass placeholders you can use anywhere PlaceholderAPI is supported, e.g. scoreboards, chat, and other plugins. Replace `<battlepass>`, `<id>`, `<tier>`, and `<line>` with real values. For placeholders used inside EcoBattlepass GUIs, see [Internal placeholders](internalplaceholders) instead.
+
 | Placeholder                                        | Description                                     | Options                     |
 |----------------------------------------------------|-------------------------------------------------|-----------------------------|
 | `%ecobattlepass_category_<id>_start_date%`         | The start date of the quest category.           |                             |
@@ -22,7 +24,7 @@ sidebar_position: 6
 | `%ecobattlepass_tier_claimed_free_reward_<battlepass>_<tier>_<line>%` | A specific line of the claimed free rewards for a tier (0-indexed).                            | |
 | `%ecobattlepass_tier_claimed_premium_reward_<battlepass>_<tier>_<line>%` | A specific line of the claimed premium rewards for a tier (0-indexed).                      | |
 
-### Tier Reward Line Placeholders Example
+## Tier reward line placeholders example
 
 Given a reward defined as:
 ```yaml
@@ -44,3 +46,10 @@ For this reward in Tier 7 (free track) of a battlepass with ID `battlepass`:
 %ecobattlepass_tier_free_reward_battlepass_7_0% → Iron Sword      (Line 0 - Name)
 %ecobattlepass_tier_free_reward_battlepass_7_1% → &7Sharpness II  (Line 1 - Lore)
 ```
+
+<hr/>
+
+## Where to go next
+
+- **GUI placeholders:** [Internal placeholders](internalplaceholders) covers the placeholders used inside EcoBattlepass menus.
+- **Build a pass:** [How to make a battlepass](how-to-make-a-battlepass) sets up the tiers and rewards these placeholders read.
