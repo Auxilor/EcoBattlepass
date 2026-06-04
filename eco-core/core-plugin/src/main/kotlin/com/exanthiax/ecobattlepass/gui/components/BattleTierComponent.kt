@@ -11,8 +11,8 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
-import com.github.benmanes.caffeine.cache.Caffeine
 import com.willfp.eco.core.EcoPlugin
+import com.willfp.eco.core.cache.EcoCache
 import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.items.Items
@@ -25,17 +25,16 @@ import com.willfp.eco.util.openMenu
 import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.time.Duration
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 
-private val levelItemCache = Caffeine.newBuilder()
+private val levelItemCache = EcoCache.builder<Triple<UUID, Int, TierType?>, ItemStack>()
     .expireAfterWrite(
-        com.exanthiax.ecobattlepass.plugin.configYml.getInt("gui-cache-ttl").toLong(),
-        TimeUnit.MILLISECONDS
+        Duration.ofMillis(com.exanthiax.ecobattlepass.plugin.configYml.getInt("gui-cache-ttl").toLong())
     )
-    .build<Triple<UUID, Int, TierType?>, ItemStack>()
+    .build()
 
 fun invalidateTierItemCache() {
     levelItemCache.invalidateAll()

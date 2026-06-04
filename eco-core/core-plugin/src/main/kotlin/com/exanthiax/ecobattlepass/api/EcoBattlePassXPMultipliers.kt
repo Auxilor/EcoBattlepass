@@ -1,12 +1,12 @@
 package com.exanthiax.ecobattlepass.api
 
-import com.github.benmanes.caffeine.cache.Caffeine
+import com.willfp.eco.core.cache.EcoCache
 import org.bukkit.entity.Player
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 import kotlin.math.max
 
-private val expMultiplierCache = Caffeine.newBuilder()
-    .expireAfterWrite(10, TimeUnit.SECONDS).build<Player, Double> {
+private val expMultiplierCache = EcoCache.builder<Player, Double>()
+    .expireAfterWrite(Duration.ofSeconds(10)).build {
         it.cacheBPExperienceMultiplier()
     }
 
