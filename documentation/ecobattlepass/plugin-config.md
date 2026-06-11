@@ -371,7 +371,8 @@ tiers-gui:
 
 # GUI Configuration for the Categories GUI (/battlepass quests)
 categories-gui:
-  title: "&8Categories: %page%"
+  # Supports %page% and %max_page% placeholders
+  title: "&8Categories: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
     # And then a pattern to use those materials.
@@ -433,7 +434,8 @@ categories-gui:
 
 # GUI Configuration for the Quests GUI
 quests-gui:
-  title: "&8%category%: %page%"
+  # Supports %category%, %page% and %max_page% placeholders
+  title: "&8%category%: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
     # And then a pattern to use those materials.
