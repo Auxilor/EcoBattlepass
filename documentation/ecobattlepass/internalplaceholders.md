@@ -58,9 +58,10 @@ All the placeholders from the BattlePass GUI work here. Additionally:
 
 | Placeholder  | Description         | Options                                  |
 |--------------|---------------------|------------------------------------------|
-| `%level%`    | The battlepass tier | Useful for math inside battlepass config |
-| `%page%`     | The page number     | Available in Category and Quest GUIs     |
-| `%category%` | The category name   | Available for Quest GUI title            |
+| `%level%`    | The battlepass tier  | Useful for math inside battlepass config             |
+| `%page%`     | The current page     | Available in Category, Quest and Tiers GUI titles    |
+| `%max_page%` | The total page count | Available in Category, Quest and Tiers GUI titles    |
+| `%category%` | The category name    | Available for Quest GUI title                        |
 
 <hr/>
 
