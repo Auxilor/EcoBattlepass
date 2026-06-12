@@ -49,10 +49,13 @@ class QuestsGUI(
         val prevPagePath = "quests-gui.buttons.prev-page"
         val nextPagePath = "quests-gui.buttons.next-page"
 
-        val prevRow = plugin.configYml.getInt("$prevPagePath.row")
-        val prevCol = plugin.configYml.getInt("$prevPagePath.column")
-        val nextRow = plugin.configYml.getInt("$nextPagePath.row")
-        val nextCol = plugin.configYml.getInt("$nextPagePath.column")
+        fun loc(path: String, key: String): Int =
+            plugin.configYml.getIntOrNull("$path.location.$key") ?: plugin.configYml.getInt("$path.$key")
+
+        val prevRow = loc(prevPagePath, "row")
+        val prevCol = loc(prevPagePath, "column")
+        val nextRow = loc(nextPagePath, "row")
+        val nextCol = loc(nextPagePath, "column")
 
         val menu = menu(pattern.size) {
             title = renderTitle(1)
@@ -161,8 +164,8 @@ class QuestsGUI(
 
             if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {
                 setSlot(
-                    plugin.configYml.getInt("quests-gui.buttons.close.row"),
-                    plugin.configYml.getInt("quests-gui.buttons.close.column"),
+                    loc("quests-gui.buttons.close", "row"),
+                    loc("quests-gui.buttons.close", "column"),
                     buildCloseSlot("quests-gui.buttons.close")
                 )
             }

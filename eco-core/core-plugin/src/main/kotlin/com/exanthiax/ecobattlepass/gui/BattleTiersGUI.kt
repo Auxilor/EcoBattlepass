@@ -115,14 +115,16 @@ object BattleTiersGUI {
                 val freeComponent = BattleTierComponent(
                     plugin, pass,
                     tierType = TierType.FREE,
-                    patternPath = "tiers-gui.split.free-pattern",
+                    patternPath = "tiers-gui.layouts.split.free-pattern",
+                    legacyPatternPath = "tiers-gui.split.free-pattern",
                     emptyTierDisplayMode = emptyDisplayMode,
                     maxItemAmount = maxItemAmount
                 )
                 val premiumComponent = BattleTierComponent(
                     plugin, pass,
                     tierType = TierType.PREMIUM,
-                    patternPath = "tiers-gui.split.premium-pattern",
+                    patternPath = "tiers-gui.layouts.split.premium-pattern",
+                    legacyPatternPath = "tiers-gui.split.premium-pattern",
                     emptyTierDisplayMode = emptyDisplayMode,
                     maxItemAmount = maxItemAmount
                 )
