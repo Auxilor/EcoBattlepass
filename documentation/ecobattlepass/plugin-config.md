@@ -12,6 +12,18 @@ The main config file is `config.yml`, found at `/plugins/EcoBattlepass/config.ym
 # Prevents spamming the GUI to cause lag
 gui-cache-ttl: 1000
 
+# Date format patterns (case-sensitive):
+# d = day, M = month, y = year, H = hour (0-23), m = minute, s = second
+# Example: "dd/MM/yyyy HH:mm:ss" → 31/05/2025 14:07:30
+date-format: "yyyy-MM-dd HH:mm"
+
+time-format:
+  split: " "
+  days: "&6%value%&fd"
+  hours: "&6%value%&fh"
+  minutes: "&6%value%&fm"
+  seconds: "&6%value%&fs"
+
 # GUI Configuration for the Battlepass GUI (/battlepass)
 battlepass-gui:
   title: "EcoBattlepass"
@@ -34,6 +46,9 @@ battlepass-gui:
 
   buttons:
     tiers:
+      # Supports PlaceholderAPI placeholders, resolved per-player at display time. Examples:
+      # item: player_head name:%player_name%         # Player's own head
+      # item: diamond_sword                          # A simple item
       item: lime_stained_glass_pane
       name: "&aTiers"
       lore:
@@ -82,22 +97,20 @@ tiers-gui:
   # Supports %page% and %max_page% placeholders
   title: "EcoBattlepass: Tiers (%page%/%max_page%)"
 
-  # Layout mode:
-  # "combined" - Original behavior, free and premium rewards shown on the same row.
-  # "split"    - Free rewards on one row, premium rewards on another (uses free-pattern/premium-pattern below).
-  layout: "combined"
-
-  # How to display tiers that have no rewards:
-  # "normal"              - Show with their real state (original behavior)
-  # "hidden"              - All empty tiers are invisible
-  # "hidden-behind-level" - Empty tiers at or below the player's level are hidden; others show normally
-  # "behind-level"        - Empty tiers at or below the player's level show as claimed; others show normally
-  # "all"                 - All empty tiers show as claimed regardless of level
-  empty-tier-display-mode: "normal"
-
   # Whether to open the tiers GUI at the player's current tier page.
   # Set to false to always open at page 1.
   open-at-current-tier: true
+
+  # How to display tiers with no rewards:
+  # "normal"              - Empty tiers show with their real state (original behavior)
+  # "hidden"              - All empty tiers are invisible
+  # "hidden-behind-level" - Empty tiers at or below the player's level are hidden; others show normal
+  # "behind-level"        - Empty tiers at or below the player's level show as claimed; others show normal
+  # "all"                 - All empty tiers show as claimed regardless of level
+  empty-tier-display-mode: "normal"
+
+  # Layout mode: "combined" (default, original behavior) or "split" (free on one row, premium on another)
+  layout: "combined"
 
   mask:
     # The way the mask works is by having a list of materials
@@ -118,33 +131,37 @@ tiers-gui:
       - "111111111"
       - "111111111"
       - "111111111"
-    progression-pattern:
-      # To set the order of the pattern,
-      # Use 1-9 and then a-z: a goes after 9.
-      # Used when layout is "combined" (default).
-      - "109ab0jkl"
-      - "2080c0i0m"
-      - "3070d0h0n"
-      - "4560efg0o"
-      - "00000000p"
-      - "00000000q"
 
-  # Split layout configuration (only used when layout: split)
-  split:
-    free-pattern:
-      - "000000000"
-      - "123456789"
-      - "000000000"
-      - "000000000"
-      - "000000000"
-      - "000000000"
-    premium-pattern:
-      - "000000000"
-      - "000000000"
-      - "000000000"
-      - "123456789"
-      - "000000000"
-      - "000000000"
+  # Tier-slot layouts. Which one is used depends on the "layout" option above.
+  # All patterns use the 1-9 then a-z system (a goes after 9) to set tier order.
+  layouts:
+    # Used when layout: "combined" (default).
+    combined:
+      pattern:
+        - "109ab0jkl"
+        - "2080c0i0m"
+        - "3070d0h0n"
+        - "4560efg0o"
+        - "00000000p"
+        - "00000000q"
+
+    # Used when layout: "split".
+    # free-pattern / premium-pattern define where tiers appear on each row.
+    split:
+      free-pattern:
+        - "000000000"
+        - "123456789"
+        - "000000000"
+        - "000000000"
+        - "000000000"
+        - "000000000"
+      premium-pattern:
+        - "000000000"
+        - "000000000"
+        - "000000000"
+        - "123456789"
+        - "000000000"
+        - "000000000"
 
   buttons:
     # The amount of the item as a function of the level
@@ -153,12 +170,10 @@ tiers-gui:
     # The value is always rounded down.
 
     # Maximum item stack size for tier items (1-99).
-    # Values above 64 require Paper 1.20.5+.
+    # Values above 64 require Paper 1.20.5+ (uses setMaxStackSize).
+    # Invalid values will default to 64 with a console warning.
     max-item-amount: 64
 
-    # Page changers support active/inactive states for when there are/aren't more pages.
-    # The "item" and "name" keys each accept "active" and "inactive" sub-keys.
-    # Legacy format (single material + name) is still supported for backward compatibility.
     prev-page:
       item:
         active: orange_stained_glass_pane
@@ -189,11 +204,25 @@ tiers-gui:
 
     close:
       enabled: true
+      # Supports both "material" (legacy) and "item" key.
+      # Also supports separate "name" key or inline name in item string.
       item: barrier
       name: "&cClose"
       location:
         row: 6
         column: 5
+
+    # Reward placeholders documentation:
+    # These placeholders are used in tier button lore to display rewards
+    #
+    # %free-rewards% - Shows unclaimed free rewards (one per line)
+    # %premium-rewards% - Shows unclaimed premium rewards (one per line)
+    # %claimed-free-rewards% - Shows claimed free rewards (one per line)
+    # %claimed-premium-rewards% - Shows claimed premium rewards (one per line)
+    #
+    # IMPORTANT: These placeholders will show blank lines if there are no rewards of that type
+    # For example, if a tier has no free rewards, %free-rewards% will show nothing
+    # This is intentional - it allows you to conditionally show reward sections
 
     empty-rewards-format: "&8&oNo rewards for this tier!"
     free-rewards-format: "&8»&r &9%reward%"
@@ -286,8 +315,8 @@ tiers-gui:
         - ""
         - "&aCLAIMED"
 
-    # Split layout button configurations (only used when layout: split)
-    # These define the appearance of free and premium track buttons independently.
+    # Split mode button configurations (only used when layout: split)
+    # These override the default buttons for their respective tracks
     free-track:
       unlocked:
         item: lime_stained_glass_pane
@@ -405,8 +434,9 @@ categories-gui:
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 6
+      location:
+        row: 5
+        column: 6
     prev-page:
       item:
         active: orange_stained_glass_pane
@@ -417,14 +447,16 @@ categories-gui:
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 4
+      location:
+        row: 5
+        column: 4
     close:
       enabled: true
       item: barrier
       name: "&cClose"
-      row: 5
-      column: 5
+      location:
+        row: 5
+        column: 5
 
     # List of available placeholders:
     # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#battlepass-and-category-gui
@@ -468,8 +500,9 @@ quests-gui:
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 6
+      location:
+        row: 5
+        column: 6
     prev-page:
       item:
         active: orange_stained_glass_pane
@@ -480,17 +513,19 @@ quests-gui:
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 4
+      location:
+        row: 5
+        column: 4
     close:
       enabled: true
       item: barrier
       name: "&cClose"
-      row: 5
-      column: 5
+      location:
+        row: 5
+        column: 5
 
     # List of available placeholders:
-    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#quest-gui
+    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#quest-gui
 
     # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
     custom-slots: []
@@ -514,18 +549,6 @@ quests-icon:
     - ""
     - "&7%quest_tier%" # Premium or Both
     - "&7%quest_timer%" # This shows either: When it unlocks, when it started, or the time until it resets.
-
-time-format:
-  split: " "
-  days: "&6%value%&fd"
-  hours: "&6%value%&fh"
-  minutes: "&6%value%&fm"
-  seconds: "&6%value%&fs"
-
-# Date format patterns (case-sensitive):
-# d = day, M = month, y = year, H = hour (0-23), m = minute, s = second
-# Example: "dd/MM/yyyy HH:mm:ss" → 31/05/2025 14:07:30
-date-format: "yyyy-MM-dd HH:mm"
 
 sound:
   tier-up:
