@@ -169,33 +169,10 @@ tiers-gui:
     # Invalid values will default to 64 with a console warning.
     max-item-amount: 64
 
-    # Page changers support multiple formats:
-    # Format 1 (new, recommended):
-    #   item:
-    #     active: "orange_stained_glass_pane"
-    #     inactive: "gray_stained_glass_pane"
-    #   name:
-    #     active: "&aPrevious page"
-    #     inactive: "&7No more pages"
-    #
-    # Format 2 (inline name in item string):
-    #   item:
-    #     active: orange_stained_glass_pane name:"&aPrevious page"
-    #     inactive: gray_stained_glass_pane
-    #
-    # Format 3 (legacy, single material + name):
-    #   material: orange_stained_glass_pane
-    #   name: "&aPrevious page"
-    #
-    # All three formats are supported for backward compatibility.
-
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -205,11 +182,8 @@ tiers-gui:
 
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext Page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aNext Page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -415,6 +389,7 @@ tiers-gui:
 
 # GUI Configuration for the Categories GUI (/battlepass quests)
 categories-gui:
+  # Supports %page% and %max_page% placeholders
   title: "&8Categories: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
@@ -433,18 +408,15 @@ categories-gui:
       # Categories are sorted in the order they are in the categories.yml file.
       - "111111111"
       - "1c1c1c1c1"
+      - "1111c1111"
       - "111111111"
       - "111111111"
-      - "111101111"
 
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
@@ -453,11 +425,8 @@ categories-gui:
         column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
@@ -480,6 +449,7 @@ categories-gui:
 
 # GUI Configuration for the Quests GUI
 quests-gui:
+  # Supports %category%, %page% and %max_page% placeholders
   title: "&8%category%: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
@@ -505,11 +475,8 @@ quests-gui:
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []
@@ -518,11 +485,8 @@ quests-gui:
         column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []

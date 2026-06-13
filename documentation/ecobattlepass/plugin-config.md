@@ -176,11 +176,8 @@ tiers-gui:
 
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -190,11 +187,8 @@ tiers-gui:
 
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext Page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aNext Page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -426,11 +420,8 @@ categories-gui:
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
@@ -439,11 +430,8 @@ categories-gui:
         column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
@@ -492,11 +480,8 @@ quests-gui:
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []
@@ -505,11 +490,8 @@ quests-gui:
         column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []
@@ -525,7 +507,7 @@ quests-gui:
         column: 5
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#quest-gui
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#quest-gui
 
     # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
     custom-slots: []
@@ -582,6 +564,11 @@ sound:
     volume: 1
     pitch: 1
   gui-click-sound:
+    enabled: true
+    sound: ui_button_click
+    volume: 1
+    pitch: 1
+  page-turn:
     enabled: true
     sound: ui_button_click
     volume: 1
