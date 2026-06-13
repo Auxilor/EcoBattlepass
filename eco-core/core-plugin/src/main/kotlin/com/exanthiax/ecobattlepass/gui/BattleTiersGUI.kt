@@ -8,6 +8,7 @@ import com.exanthiax.ecobattlepass.gui.components.LayoutMode
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
@@ -71,26 +72,26 @@ object BattleTiersGUI {
         fun String.withBattlePassPlaceholders(): String =
             InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
 
-        fun pageButtonItem(basePath: String, state: String, page: Int, maxPage: Int): ItemStack? {
+        fun pageButtonItem(basePath: String, state: String): ItemStack? {
             val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
                 ?: plugin.configYml.getStringOrNull("$basePath.item")
                 ?: plugin.configYml.getStringOrNull("$basePath.material")
                 ?: return null
 
             val builder = ItemStackBuilder(
-                Items.lookup(itemString.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
+                Items.lookup(itemString.withBattlePassPlaceholders())
             )
 
             val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
                 ?: plugin.configYml.getStringOrNull("$basePath.name")
             if (name != null) {
-                builder.setDisplayName(name.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
+                builder.setDisplayName(name.withBattlePassPlaceholders())
             }
 
             val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
                 ?: plugin.configYml.getStringsOrNull("$basePath.lore")
                 ?: emptyList()
-            builder.addLoreLines(lore.map { it.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage) })
+            builder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
 
             return builder.build()
         }
@@ -133,12 +134,6 @@ object BattleTiersGUI {
             }
         }
 
-        val defaultPageNum = if (openAtCurrentTier) {
-            components.first().getPageOf(player.getTier(pass)).coerceAtLeast(1)
-        } else {
-            1
-        }
-
         val prevPagePath = "tiers-gui.buttons.prev-page"
         val nextPagePath = "tiers-gui.buttons.next-page"
 
@@ -153,7 +148,7 @@ object BattleTiersGUI {
             .formatEco()
 
         val menu = menu(maskPattern.size) {
-            title = rawTitle.withPagePlaceholders(defaultPageNum, totalPages)
+            title = rawTitle
 
             maxPages(totalPages)
 
@@ -167,38 +162,28 @@ object BattleTiersGUI {
                 }
             }
 
-            onRender { eventPlayer, eventMenu ->
-                eventMenu.refreshPageTitle(eventPlayer, rawTitle, totalPages)
-            }
-
             if (backButton) {
-                addComponent(
-                    MenuLayer.LOWER,
-                    prevRow, prevCol,
-                    slot(pageButtonItem(prevPagePath, "active", 1, totalPages) ?: Items.lookup("stone").item) {
-                        onLeftClick { _, _ ->
-                            BattlePassGUI.createAndOpen(player, pass)
+                pageButtonItem(prevPagePath, "active")?.let { active ->
+                    addComponent(
+                        MenuLayer.LOWER,
+                        prevRow, prevCol,
+                        slot(active) {
+                            onLeftClick { _, _ ->
+                                BattlePassGUI.createAndOpen(player, pass)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
-            addComponent(
-                MenuLayer.TOP,
-                prevRow, prevCol,
-                PageChangerComponent(PageChanger.Direction.BACKWARDS, pageChangeSound) { state, page, max ->
-                    if (state == PageButtonState.INACTIVE && backButton) return@PageChangerComponent null
-                    pageButtonItem(prevPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
-                }
-            )
+            pageButtonItem(prevPagePath, "active")?.let { active ->
+                val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
+                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
+            }
 
-            addComponent(
-                MenuLayer.TOP,
-                nextRow, nextCol,
-                PageChangerComponent(PageChanger.Direction.FORWARDS, pageChangeSound) { state, page, max ->
-                    pageButtonItem(nextPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
-                }
-            )
+            pageButtonItem(nextPagePath, "active")?.let { active ->
+                addPageChanger(PageChanger.Direction.FORWARDS, active, pageButtonItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+            }
 
             if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {
                 val closePath = "tiers-gui.buttons.close"

@@ -7,6 +7,7 @@ import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addPage
+import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
@@ -56,30 +57,18 @@ class CategoriesGUI(
         val nextCol = loc(nextPagePath, "column")
 
         val menu = menu(pattern.size) {
-            title = rawTitle.withPagePlaceholders(1, maxPage)
+            title = rawTitle
 
             maxPages(maxPage)
 
-            onRender { eventPlayer, eventMenu ->
-                eventMenu.refreshPageTitle(eventPlayer, rawTitle, maxPage)
+            buildPageItem(prevPagePath, "active")?.let { active ->
+                val inactive = if (backButton) null else buildPageItem(prevPagePath, "inactive")
+                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
             }
 
-            addComponent(
-                MenuLayer.TOP,
-                prevRow, prevCol,
-                PageChangerComponent(PageChanger.Direction.BACKWARDS, pageChangeSound) { state, page, max ->
-                    if (state == PageButtonState.INACTIVE && backButton) return@PageChangerComponent null
-                    buildPageItem(prevPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
-                }
-            )
-
-            addComponent(
-                MenuLayer.TOP,
-                nextRow, nextCol,
-                PageChangerComponent(PageChanger.Direction.FORWARDS, pageChangeSound) { state, page, max ->
-                    buildPageItem(nextPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
-                }
-            )
+            buildPageItem(nextPagePath, "active")?.let { active ->
+                addPageChanger(PageChanger.Direction.FORWARDS, active, buildPageItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+            }
 
             for (page in 1..maxPage) {
                 addPage(page) {
@@ -107,15 +96,17 @@ class CategoriesGUI(
                     }
 
                     if (backButton) {
-                        addComponent(
-                            MenuLayer.LOWER,
-                            prevRow, prevCol,
-                            slot(buildPageItem(prevPagePath, "active", 1, maxPage) ?: Items.lookup("stone").item) {
-                                onLeftClick { _, _ ->
-                                    BattlePassGUI.createAndOpen(player, pass)
+                        buildPageItem(prevPagePath, "active")?.let { active ->
+                            addComponent(
+                                MenuLayer.LOWER,
+                                prevRow, prevCol,
+                                slot(active) {
+                                    onLeftClick { _, _ ->
+                                        BattlePassGUI.createAndOpen(player, pass)
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
 
                     for (slotConfig in plugin.configYml.getSubsections("categories-gui.buttons.custom-slots")) {
@@ -170,26 +161,26 @@ class CategoriesGUI(
         return ((total + perPage - 1) / perPage).coerceAtLeast(1)
     }
 
-    private fun buildPageItem(basePath: String, state: String, page: Int, maxPage: Int): ItemStack? {
+    private fun buildPageItem(basePath: String, state: String): ItemStack? {
         val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.item")
             ?: plugin.configYml.getStringOrNull("$basePath.material")
             ?: return null
 
         val itemBuilder = ItemStackBuilder(
-            Items.lookup(itemString.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
+            Items.lookup(itemString.withBattlePassPlaceholders())
         )
 
         val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.name")
         if (name != null) {
-            itemBuilder.setDisplayName(name.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
+            itemBuilder.setDisplayName(name.withBattlePassPlaceholders())
         }
 
         val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
-        itemBuilder.addLoreLines(lore.map { it.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage) })
+        itemBuilder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
 
         return itemBuilder.build()
     }
