@@ -433,9 +433,9 @@ categories-gui:
       # Categories are sorted in the order they are in the categories.yml file.
       - "111111111"
       - "1c1c1c1c1"
-      - "1111c1111"
       - "111111111"
       - "111111111"
+      - "111101111"
 
   buttons:
     next-page:
@@ -595,6 +595,11 @@ sound:
     volume: 1
     pitch: 1
   gui-click-sound:
+    enabled: true
+    sound: ui_button_click
+    volume: 1
+    pitch: 1
+  page-turn:
     enabled: true
     sound: ui_button_click
     volume: 1

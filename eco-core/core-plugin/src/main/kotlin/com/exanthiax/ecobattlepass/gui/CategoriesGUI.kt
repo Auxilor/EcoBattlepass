@@ -9,8 +9,6 @@ import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
-import com.willfp.eco.core.gui.onEvent
-import com.willfp.eco.core.gui.page.PageChangeEvent
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
@@ -40,11 +38,11 @@ class CategoriesGUI(
         val maxPage = getMaxPages()
         val categories = pass.categories.toList()
 
-        fun renderTitle(page: Int) = plugin.configYml.getString("categories-gui.title")
-            .replace("%page%", page.toString())
-            .replace("%max_page%", maxPage.toString())
+        val rawTitle = plugin.configYml.getString("categories-gui.title")
             .withBattlePassPlaceholders()
             .formatEco()
+
+        val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("sound.page-turn"))
 
         val prevPagePath = "categories-gui.buttons.prev-page"
         val nextPagePath = "categories-gui.buttons.next-page"
@@ -58,26 +56,40 @@ class CategoriesGUI(
         val nextCol = loc(nextPagePath, "column")
 
         val menu = menu(pattern.size) {
-            title = renderTitle(1)
+            title = rawTitle.withPagePlaceholders(1, maxPage)
 
             maxPages(maxPage)
 
-            setMask(
-                FillerMask(
-                    MaskItems.fromItemNames(plugin.configYml.getStrings("categories-gui.mask.items")),
-                    *pattern.toTypedArray()
-                )
+            onRender { eventPlayer, eventMenu ->
+                eventMenu.refreshPageTitle(eventPlayer, rawTitle, maxPage)
+            }
+
+            addComponent(
+                MenuLayer.TOP,
+                prevRow, prevCol,
+                PageChangerComponent(PageChanger.Direction.BACKWARDS, pageChangeSound) { state, page, max ->
+                    if (state == PageButtonState.INACTIVE && backButton) return@PageChangerComponent null
+                    buildPageItem(prevPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
+                }
             )
 
-            onEvent<PageChangeEvent> { eventPlayer, _, event ->
-                try {
-                    eventPlayer.openInventory.setTitle(renderTitle(event.newPage))
-                } catch (_: Exception) {
+            addComponent(
+                MenuLayer.TOP,
+                nextRow, nextCol,
+                PageChangerComponent(PageChanger.Direction.FORWARDS, pageChangeSound) { state, page, max ->
+                    buildPageItem(nextPagePath, if (state == PageButtonState.ACTIVE) "active" else "inactive", page, max)
                 }
-            }
+            )
 
             for (page in 1..maxPage) {
                 addPage(page) {
+                    setMask(
+                        FillerMask(
+                            MaskItems.fromItemNames(plugin.configYml.getStrings("categories-gui.mask.materials")),
+                            *pattern.toTypedArray()
+                        )
+                    )
+
                     var num = (page - 1) * perPage
                     var row = 1
                     pattern.forEach { line ->
@@ -93,81 +105,51 @@ class CategoriesGUI(
                         }
                         row++
                     }
-                }
-            }
 
-            if (!backButton) {
-                addComponent(
-                    MenuLayer.LOWER,
-                    prevRow, prevCol,
-                    slot(buildPageItem(prevPagePath, "inactive"))
-                )
-            }
-
-            if (backButton) {
-                addComponent(
-                    MenuLayer.LOWER,
-                    prevRow, prevCol,
-                    slot(buildPageItem(prevPagePath, "active")) {
-                        onLeftClick { _, _ ->
-                            BattlePassGUI.createAndOpen(player, pass)
-                        }
+                    if (backButton) {
+                        addComponent(
+                            MenuLayer.LOWER,
+                            prevRow, prevCol,
+                            slot(buildPageItem(prevPagePath, "active", 1, maxPage) ?: Items.lookup("stone").item) {
+                                onLeftClick { _, _ ->
+                                    BattlePassGUI.createAndOpen(player, pass)
+                                }
+                            }
+                        )
                     }
-                )
-            }
 
-            addComponent(
-                prevRow, prevCol,
-                PageChanger(
-                    buildPageItem(prevPagePath, "active"),
-                    PageChanger.Direction.BACKWARDS
-                )
-            )
-
-            addComponent(
-                MenuLayer.LOWER,
-                nextRow, nextCol,
-                slot(buildPageItem(nextPagePath, "inactive"))
-            )
-
-            addComponent(
-                nextRow, nextCol,
-                PageChanger(
-                    buildPageItem(nextPagePath, "active"),
-                    PageChanger.Direction.FORWARDS
-                )
-            )
-
-            for (slotConfig in plugin.configYml.getSubsections("categories-gui.buttons.custom-slots")) {
-                val resolved = slotConfig.clone().apply {
-                    val nameKey = getStringOrNull("name")
-                    val itemStr = getString("item").withBattlePassPlaceholders()
-                    if (nameKey != null && !itemStr.contains("name:")) {
-                        set("item", "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\"")
-                    } else {
-                        set("item", itemStr)
-                    }
-                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
-                    listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
-                        if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                    for (slotConfig in plugin.configYml.getSubsections("categories-gui.buttons.custom-slots")) {
+                        val resolved = slotConfig.clone().apply {
+                            val nameKey = getStringOrNull("name")
+                            val itemStr = getString("item").withBattlePassPlaceholders()
+                            if (nameKey != null && !itemStr.contains("name:")) {
+                                set("item", "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\"")
+                            } else {
+                                set("item", itemStr)
+                            }
+                            set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                            listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
+                                if (this.has(click)) {
+                                    this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                                }
+                            }
                         }
+
+                        setSlot(
+                            resolved.getInt("row"),
+                            resolved.getInt("column"),
+                            ConfigSlot(resolved)
+                        )
+                    }
+
+                    if (plugin.configYml.getBool("categories-gui.buttons.close.enabled")) {
+                        setSlot(
+                            loc("categories-gui.buttons.close", "row"),
+                            loc("categories-gui.buttons.close", "column"),
+                            buildCloseSlot("categories-gui.buttons.close")
+                        )
                     }
                 }
-
-                setSlot(
-                    resolved.getInt("row"),
-                    resolved.getInt("column"),
-                    ConfigSlot(resolved)
-                )
-            }
-
-            if (plugin.configYml.getBool("categories-gui.buttons.close.enabled")) {
-                setSlot(
-                    loc("categories-gui.buttons.close", "row"),
-                    loc("categories-gui.buttons.close", "column"),
-                    buildCloseSlot("categories-gui.buttons.close")
-                )
             }
         }
 
@@ -188,23 +170,26 @@ class CategoriesGUI(
         return ((total + perPage - 1) / perPage).coerceAtLeast(1)
     }
 
-    private fun buildPageItem(basePath: String, state: String): ItemStack {
+    private fun buildPageItem(basePath: String, state: String, page: Int, maxPage: Int): ItemStack? {
         val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.item")
-            ?: plugin.configYml.getString("$basePath.material")
+            ?: plugin.configYml.getStringOrNull("$basePath.material")
+            ?: return null
 
-        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
+        val itemBuilder = ItemStackBuilder(
+            Items.lookup(itemString.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
+        )
 
         val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.name")
         if (name != null) {
-            itemBuilder.setDisplayName(name.withBattlePassPlaceholders())
+            itemBuilder.setDisplayName(name.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage))
         }
 
         val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
-        itemBuilder.addLoreLines(lore.withBattlePassPlaceholders())
+        itemBuilder.addLoreLines(lore.map { it.withBattlePassPlaceholders().withPagePlaceholders(page, maxPage) })
 
         return itemBuilder.build()
     }
