@@ -1,0 +1,75 @@
+package io.auxilor.ecobattlepass.commands.give
+
+import io.auxilor.ecobattlepass.api.giveExactBPExperience
+import io.auxilor.ecobattlepass.battlepass.BattlePasses
+import io.auxilor.ecobattlepass.commands.helpers.COMMON_AMOUNTS
+import io.auxilor.ecobattlepass.commands.helpers.Messages
+import io.auxilor.ecobattlepass.commands.helpers.replacePlaceholders
+import io.auxilor.ecobattlepass.commands.helpers.resolveBattlePass
+import io.auxilor.ecobattlepass.commands.helpers.resolvePlayers
+import io.auxilor.ecobattlepass.plugin
+import com.willfp.eco.core.command.impl.Subcommand
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
+import org.bukkit.util.StringUtil
+
+object GiveXPSubcommand : Subcommand(
+    plugin,
+    "xp",
+    "ecobattlepass.command.give.xp",
+    false
+) {
+    override fun onExecute(sender: CommandSender, args: List<String>) {
+        val players = sender.resolvePlayers(args.getOrNull(0)) ?: return
+        val pass = sender.resolveBattlePass(args.getOrNull(1)) ?: return
+
+        val amountString = args.getOrNull(2) ?: run {
+            Messages.sendAmountRequired(sender)
+            return
+        }
+
+        val amount = amountString.toDoubleOrNull() ?: run {
+            Messages.sendInvalidAmount(sender)
+            return
+        }
+
+        val baseGiven = Messages.getGivenExperience()
+        val baseReceived = Messages.getReceivedExperience()
+
+        val isAll = players.size > 1
+        val displayName = if (isAll) "all players" else players.first().name
+
+        for (player in players) {
+            player.giveExactBPExperience(pass, amount)
+
+            player.sendMessage(
+                baseReceived.replacePlaceholders(player, amount, pass)
+            )
+        }
+
+        sender.sendMessage(
+            baseGiven.replacePlaceholders(
+                player = players.first(),
+                amount = amount,
+                pass = pass
+            ).replace("%playername%", displayName)
+        )
+    }
+
+    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
+        return when (args.size) {
+            1 -> StringUtil.copyPartialMatches(
+                args[0],
+                Bukkit.getOnlinePlayers().map { it.name } + "all",
+                mutableListOf()
+            )
+            2 -> StringUtil.copyPartialMatches(
+                args[1],
+                BattlePasses.values().map { it.id },
+                mutableListOf()
+            )
+            3 -> StringUtil.copyPartialMatches(args[2], COMMON_AMOUNTS, mutableListOf())
+            else -> emptyList()
+        }
+    }
+}

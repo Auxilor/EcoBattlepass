@@ -1,0 +1,44 @@
+package io.auxilor.ecobattlepass.libreforge.effects
+
+import io.auxilor.ecobattlepass.api.events.PlayerTierLevelUpEvent
+import io.auxilor.ecobattlepass.api.getTier
+import io.auxilor.ecobattlepass.api.setTier
+import io.auxilor.ecobattlepass.battlepass.BattlePasses
+import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.libreforge.ConfigArguments
+import com.willfp.libreforge.NoCompileData
+import com.willfp.libreforge.arguments
+import com.willfp.libreforge.effects.Effect
+import com.willfp.libreforge.triggers.TriggerData
+import com.willfp.libreforge.triggers.TriggerParameter
+import org.bukkit.Bukkit
+
+object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
+    override val arguments: ConfigArguments = arguments {
+        require("tiers", "You must specify the amount of tiers to give!")
+        require("battlepass",
+            "You must specify a battlepass!",
+            {passId -> BattlePasses.getByID(passId)},
+            {battlepass -> battlepass != null}
+        )
+    }
+
+    override val parameters: Set<TriggerParameter> = setOf(TriggerParameter.PLAYER)
+
+    override fun onTrigger(config: Config, data: TriggerData, compileData: NoCompileData): Boolean {
+        val player = data.player ?: return false
+        val amount = config.getIntFromExpression("tiers", player)
+        val pass = BattlePasses.getByID(config.getString("battlepass")) ?: return false
+
+        val event = PlayerTierLevelUpEvent(player, pass, player.getTier(pass) + amount)
+
+        Bukkit.getPluginManager().callEvent(event)
+
+        if (!event.isCancelled) {
+            player.setTier(pass, player.getTier(pass) + amount)
+            return true
+        }
+
+        return false
+    }
+}

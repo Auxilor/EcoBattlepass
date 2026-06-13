@@ -9,7 +9,7 @@ plugins {
     id("com.willfp.libreforge-gradle-plugin") version "2.1.0"
 }
 
-group = "com.exanthiax"
+group = "io.auxilor"
 version = findProperty("version")!!
 // useGradleVersions=true (set by release workflows) pins dependencies to the
 // versions in gradle.properties; otherwise dev builds track the latest master snapshot.
@@ -39,7 +39,7 @@ allprojects {
             content {
                 excludeGroup("com.willfp")
                 excludeGroup("com.auxilor")
-                excludeGroup("com.exanthiax")
+                excludeGroup("io.auxilor")
             }
         }
         maven("https://repo.papermc.io/repository/maven-public/")
@@ -74,8 +74,8 @@ allprojects {
     tasks {
         shadowJar {
             exclude("META-INF/**")
-            relocate("com.willfp.ecomponent", "com.exanthiax.ecobattlepass.ecomponent")
-            relocate("com.willfp.libreforge.loader", "com.exanthiax.ecobattlepass.libreforge.loader")
+            relocate("com.willfp.ecomponent", "io.auxilor.ecobattlepass.ecomponent")
+            relocate("com.willfp.libreforge.loader", "io.auxilor.ecobattlepass.libreforge.loader")
             relocate("kotlin", "com.willfp.eco.libs.kotlin")
             relocate("kotlin.jvm", "com.willfp.eco.libs.kotlin.jvm")
             relocate("kotlin.coroutines", "com.willfp.eco.libs.kotlin.coroutines")

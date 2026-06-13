@@ -1,0 +1,172 @@
+package io.auxilor.ecobattlepass.commands.helpers
+
+import io.auxilor.ecobattlepass.battlepass.BattlePass
+import io.auxilor.ecobattlepass.tasks.ActiveBattleTask
+import io.auxilor.ecobattlepass.plugin
+import io.auxilor.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.util.toNiceString
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+
+/**
+ * Centralized access to lang.yml messages.
+ *
+ * - "send" functions: directly send a message to a CommandSender (for errors/usage)
+ * - "get" functions: return the raw string for further placeholder replacement (for success/feedback messages)
+ */
+object Messages {
+
+    // ===== Error / Requirement Messages =====
+    fun sendPlayerRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("player-required"))
+
+    fun sendPlayerNotFound(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("player-not-found"))
+
+    fun sendPassRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("pass-required"))
+
+    fun sendPassNotFound(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("pass-not-found"))
+
+    fun sendAmountRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("amount-required"))
+
+    fun sendInvalidAmount(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("invalid-amount"))
+
+    fun sendCategoryRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("category-required"))
+
+    fun sendQuestRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("quest-required"))
+
+    fun sendTaskRequired(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("task-required"))
+
+    fun sendInvalidCategory(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("invalid-category"))
+
+    fun sendInvalidQuest(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("invalid-quest"))
+
+    fun sendInvalidTask(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("invalid-task"))
+
+    // ===== Claim Command Messages =====
+    fun sendTierNotFound(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-not-found")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendTierNotUnlocked(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-not-unlocked")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendTierAlreadyClaimed(sender: CommandSender, tier: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("tier-already-claimed")
+                .replace("%tier%", tier.toString())
+        )
+
+    fun sendNoRewardsToClaim(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("no-rewards-to-claim"))
+
+    fun sendClaimNoPremium(sender: CommandSender) =
+        sender.sendMessage(plugin.langYml.getMessage("claim-no-premium"))
+
+    fun sendClaimAllSuccess(sender: CommandSender, count: Int) =
+        sender.sendMessage(
+            plugin.langYml.getMessage("claim-all-success")
+                .replace("%count%", count.toString())
+        )
+
+    // ===== Give Command Success Messages =====
+    fun getGivenExperience(): String = plugin.langYml.getMessage("given-experience")
+    fun getReceivedExperience(): String = plugin.langYml.getMessage("received-experience")
+
+    fun getGivenTiers(): String = plugin.langYml.getMessage("given-tiers")
+    fun getReceivedTiers(): String = plugin.langYml.getMessage("received-tiers")
+
+    fun getGivenTaskProgress(): String = plugin.langYml.getMessage("given-task-progress")
+    fun getReceivedTaskProgress(): String = plugin.langYml.getMessage("received-task-progress")
+
+    // ===== Complete Task =====
+    fun getCompletedTask(): String = plugin.langYml.getMessage("completed-task")
+    fun getTaskAlreadyCompleted(): String = plugin.langYml.getMessage("task-already-completed")
+
+    // ===== Reset Command =====
+    fun getResetPlayer(): String = plugin.langYml.getMessage("reset-player")
+    fun getResetTask(): String = plugin.langYml.getMessage("reset-task")
+
+    // ===== Set Premium Command =====
+    fun getAlreadyPremium(): String = plugin.langYml.getMessage("already-premium")
+    fun getNotPremium(): String = plugin.langYml.getMessage("not-premium")
+
+    fun getPremiumGiven(): String = plugin.langYml.getMessage("premium-given")
+    fun getPremiumRemoved(): String = plugin.langYml.getMessage("premium-removed")
+
+    fun getPremiumUnlocked(): String = plugin.langYml.getMessage("premium-unlocked")
+    fun getPremiumRevoked(): String = plugin.langYml.getMessage("premium-revoked")
+
+    fun getPremiumBroadcast(): String = plugin.langYml.getMessage("premium-broadcast")
+
+    // ===== Usage / Help =====
+    fun sendGiveUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass give <xp|tiers|taskxp> <player|all> <pass> [args...]")
+
+    fun sendSetPremiumUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass setpremium <player> <pass> [true|false] [silent]")
+
+    fun sendQuestsUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass quests [pass] [category]")
+
+    fun sendCompleteTaskUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass complete_task <player|all> <pass> <category> <quest> <task>")
+
+    fun sendTiersUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass tiers <pass>")
+
+    fun sendResetUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /ecobattlepass reset <pass|task> <player|all> <pass> [category] [quest] [task]")
+
+    fun sendDynamicPassUsage(sender: CommandSender) =
+        sender.sendMessage("§cUsage: /<pass> [tiers|quests <category>|claim <tier|all> [free|premium]]")
+}
+
+/**
+ * Extension function to replace common placeholders in feedback messages.
+ * Used for success/info messages that include player name, amount, pass, and optionally task.
+ */
+fun String.replacePlaceholders(
+    player: Player,
+    amount: Number,
+    pass: BattlePass,
+    task: ActiveBattleTask? = null,
+    taskName: String? = null
+): String {
+    var message = this
+    if (task != null) {
+        message = InternalPlaceholders.TaskPlaceholders.replace(message, task, player)
+        message = InternalPlaceholders.CategoryPlaceholders.replace(message, task.quest.category, player)
+    }
+
+    message = InternalPlaceholders.BattlePassPlaceholders.replace(message, pass, player)
+        .replace("%pass_id%", pass.id)
+        .replace("%playername%", player.name)
+        .replace("%pass%", pass.name)
+
+    message = when (amount) {
+        is Double -> message.replace("%amount%", amount.toNiceString())
+        else -> message.replace("%amount%", amount.toString())
+    }
+
+    if (taskName != null) {
+        message = message.replace("%task%", taskName)
+    }
+
+    return message
+}

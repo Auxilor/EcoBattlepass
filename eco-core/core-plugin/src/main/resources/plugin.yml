@@ -1,6 +1,6 @@
 ﻿name: ${pluginName}
 version: ${version}
-main: com.exanthiax.ecobattlepass.EcoBattlePass
+main: io.auxilor.ecobattlepass.EcoBattlePass
 author: Exanthiax, _OfTeN_, Auxilor
 api-version: 1.21.8
 depend:
