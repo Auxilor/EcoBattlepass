@@ -19,10 +19,6 @@ object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
 
     override val categories = setOf("economy")
 
-    override val additionalInfo = listOf(
-        "Can be cancelled by other plugins listening to the tier level up event."
-    )
-
     override val arguments: ConfigArguments = arguments {
         require(
             "tiers",

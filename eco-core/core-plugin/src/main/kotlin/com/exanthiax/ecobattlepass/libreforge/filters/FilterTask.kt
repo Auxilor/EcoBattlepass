@@ -15,10 +15,6 @@ object FilterTask: Filter<NoCompileData, Collection<String>>("battlepass_task") 
 
     override val valueType = ArgType.STRING_LIST
 
-    override val additionalInfo = listOf(
-        "Does not match if the trigger was not caused by completing a battlepass task."
-    )
-
     override fun getValue(config: Config, data: TriggerData?, key: String): Collection<String> {
         return config.getStrings(key)
     }

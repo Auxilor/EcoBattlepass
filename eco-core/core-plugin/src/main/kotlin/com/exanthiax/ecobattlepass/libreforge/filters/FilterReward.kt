@@ -15,10 +15,6 @@ object FilterReward: Filter<NoCompileData, Collection<String>>("battlepass_rewar
 
     override val valueType = ArgType.STRING_LIST
 
-    override val additionalInfo = listOf(
-        "Does not match if the trigger was not caused by claiming a battlepass reward."
-    )
-
     override fun getValue(config: Config, data: TriggerData?, key: String): Collection<String> {
         return config.getStrings(key)
     }

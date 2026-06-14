@@ -18,15 +18,11 @@ object EffectSetBPTier: Effect<NoCompileData>("set_battlepass_tier") {
 
     override val categories = setOf("economy")
 
-    override val additionalInfo = listOf(
-        "Can be cancelled by other plugins listening to the tier level up event."
-    )
-
     override val arguments: ConfigArguments = arguments {
         require(
             "tier",
             "You must specify the tier to set!",
-            description = "The battlepass tier to set the player to. Supports expressions.",
+            description = "The battlepass tier to set the player to.",
             type = ArgType.EXPRESSION
         )
         require("battlepass",

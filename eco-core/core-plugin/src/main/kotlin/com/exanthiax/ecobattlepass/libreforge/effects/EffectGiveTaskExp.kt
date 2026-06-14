@@ -20,7 +20,7 @@ object EffectGiveTaskExp: Effect<NoCompileData>("give_battlepass_task_exp") {
         require(
             "amount",
             "You must specify the exp amount!",
-            description = "The amount of task progress to give. Supports expressions.",
+            description = "The amount of task progress to give.,
             type = ArgType.EXPRESSION
         )
         require(
