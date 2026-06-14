@@ -8,6 +8,10 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
 
 object TriggerBPExpGain: Trigger("gain_battlepass_xp") {
+    override val description = "Fires when the player gains battlepass experience."
+
+    override val categories = setOf("player")
+
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
         TriggerParameter.EVENT

@@ -8,6 +8,10 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
 
 object TriggerBPRewardClaim: Trigger("claim_battlepass_reward") {
+    override val description = "Fires when the player claims a battlepass reward."
+
+    override val categories = setOf("player")
+
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
         TriggerParameter.EVENT

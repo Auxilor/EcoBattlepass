@@ -5,6 +5,7 @@ import com.exanthiax.ecobattlepass.api.getTier
 import com.exanthiax.ecobattlepass.api.setTier
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.libreforge.ArgType
 import com.willfp.libreforge.ConfigArguments
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.arguments
@@ -14,12 +15,29 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.Bukkit
 
 object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
+    override val description = "Gives the player additional battlepass tiers on top of their current tier."
+
+    override val categories = setOf("economy")
+
+    override val additionalInfo = listOf(
+        "Can be cancelled by other plugins listening to the tier level up event."
+    )
+
     override val arguments: ConfigArguments = arguments {
-        require("tiers", "You must specify the amount of tiers to give!")
+        require(
+            "tiers",
+            "You must specify the amount of tiers to give!",
+            description = "The number of battlepass tiers to give. Supports expressions.",
+            type = ArgType.EXPRESSION
+        )
         require("battlepass",
             "You must specify a battlepass!",
             {passId -> BattlePasses.getByID(passId)},
             {battlepass -> battlepass != null}
+        )
+        describe("battlepass",
+            description = "The ID of the battlepass to give tiers for.",
+            type = ArgType.STRING
         )
     }
 

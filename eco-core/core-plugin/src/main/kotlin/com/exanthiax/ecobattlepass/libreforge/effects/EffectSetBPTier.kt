@@ -4,6 +4,7 @@ import com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent
 import com.exanthiax.ecobattlepass.api.setTier
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.libreforge.ArgType
 import com.willfp.libreforge.ConfigArguments
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.arguments
@@ -13,12 +14,29 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.Bukkit
 
 object EffectSetBPTier: Effect<NoCompileData>("set_battlepass_tier") {
+    override val description = "Sets the player's battlepass tier to the given value."
+
+    override val categories = setOf("economy")
+
+    override val additionalInfo = listOf(
+        "Can be cancelled by other plugins listening to the tier level up event."
+    )
+
     override val arguments: ConfigArguments = arguments {
-        require("tier", "You must specify the tier to set!")
+        require(
+            "tier",
+            "You must specify the tier to set!",
+            description = "The battlepass tier to set the player to. Supports expressions.",
+            type = ArgType.EXPRESSION
+        )
         require("battlepass",
             "You must specify a battlepass!",
             {passId -> BattlePasses.getByID(passId)},
             {battlepass -> battlepass != null}
+        )
+        describe("battlepass",
+            description = "The ID of the battlepass to set the tier for.",
+            type = ArgType.STRING
         )
     }
 

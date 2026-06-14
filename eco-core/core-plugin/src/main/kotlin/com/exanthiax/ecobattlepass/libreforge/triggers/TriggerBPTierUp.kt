@@ -8,6 +8,10 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
 
 object TriggerBPTierUp: Trigger("tier_up_battlepass") {
+    override val description = "Fires when the player advances to a new battlepass tier."
+
+    override val categories = setOf("player")
+
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
         TriggerParameter.EVENT
