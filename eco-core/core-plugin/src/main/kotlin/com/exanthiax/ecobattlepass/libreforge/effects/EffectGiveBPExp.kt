@@ -21,7 +21,7 @@ object EffectGiveBPExp: Effect<NoCompileData>("give_battlepass_xp") {
         require(
             "amount",
             "You must specify the exp amount!",
-            description = "The amount of battlepass experience to give.,
+            description = "The amount of battlepass experience to give.",
             type = ArgType.EXPRESSION
         )
         require("battlepass",
