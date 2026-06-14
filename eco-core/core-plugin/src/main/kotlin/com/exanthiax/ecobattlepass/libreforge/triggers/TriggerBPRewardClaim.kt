@@ -14,7 +14,14 @@ object TriggerBPRewardClaim: Trigger("claim_battlepass_reward") {
 
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
-        TriggerParameter.EVENT
+        TriggerParameter.EVENT,
+        TriggerParameter.TEXT,
+        TriggerParameter.VALUE
+    )
+
+    override val parameterDescriptions = mapOf(
+        TriggerParameter.TEXT to "The ID of the battlepass reward that was claimed",
+        TriggerParameter.VALUE to "Always 1.0, representing a single reward claim"
     )
 
     @EventHandler(ignoreCancelled = true)

@@ -14,7 +14,14 @@ object TriggerBPTaskComplete: Trigger("complete_battlepass_task") {
 
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
-        TriggerParameter.EVENT
+        TriggerParameter.EVENT,
+        TriggerParameter.TEXT,
+        TriggerParameter.VALUE
+    )
+
+    override val parameterDescriptions = mapOf(
+        TriggerParameter.TEXT to "The ID of the completed task",
+        TriggerParameter.VALUE to "Always 1.0, representing a single task completion"
     )
 
     @EventHandler(ignoreCancelled = true)
