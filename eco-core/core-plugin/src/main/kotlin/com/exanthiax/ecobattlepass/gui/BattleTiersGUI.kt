@@ -8,10 +8,9 @@ import com.exanthiax.ecobattlepass.gui.components.LayoutMode
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
-import com.willfp.eco.core.gui.onEvent
-import com.willfp.eco.core.gui.page.PageChangeEvent
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
@@ -19,6 +18,7 @@ import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -72,40 +72,31 @@ object BattleTiersGUI {
         fun String.withBattlePassPlaceholders(): String =
             InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
 
-        /**
-         * Reads a button item supporting both old and new config formats:
-         *
-         * Old format:
-         *   material: orange_stained_glass_pane
-         *   name: "&aNext page"
-         *
-         * New format:
-         *   item:
-         *     active: orange_stained_glass_pane
-         *     inactive: gray_stained_glass_pane
-         *   name:
-         *     active: "&aNext page"
-         *     inactive: "&7No more pages"
-         */
-        fun readButtonItem(basePath: String, state: String): ItemStack {
-            // Try new format: item.active / item.inactive
+        fun pageButtonItem(basePath: String, state: String): ItemStack? {
             val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
+                ?: plugin.configYml.getStringOrNull("$basePath.item")
+                ?: plugin.configYml.getStringOrNull("$basePath.material")
+                ?: return null
 
-            if (itemString != null) {
-                val nameString = plugin.configYml.getStringOrNull("$basePath.name.$state")
-                    ?: plugin.configYml.getStringOrNull("$basePath.name")
-                val builder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
-                if (nameString != null) builder.setDisplayName(nameString.withBattlePassPlaceholders())
-                return builder.build()
+            val builder = ItemStackBuilder(
+                Items.lookup(itemString.withBattlePassPlaceholders())
+            )
+
+            val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
+                ?: plugin.configYml.getStringOrNull("$basePath.name")
+            if (name != null) {
+                builder.setDisplayName(name.withBattlePassPlaceholders())
             }
 
-            // Old format: material with optional inline name
-            val materialString = plugin.configYml.getStringOrNull("$basePath.material") ?: "stone"
-            val nameString = plugin.configYml.getStringOrNull("$basePath.name")
-            val builder = ItemStackBuilder(Items.lookup(materialString.withBattlePassPlaceholders()))
-            if (nameString != null) builder.setDisplayName(nameString.withBattlePassPlaceholders())
+            val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
+                ?: plugin.configYml.getStringsOrNull("$basePath.lore")
+                ?: emptyList()
+            builder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
+
             return builder.build()
         }
+
+        val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("sound.page-turn"))
 
         val components: List<BattleTierComponent>
         val totalPages: Int
@@ -115,14 +106,16 @@ object BattleTiersGUI {
                 val freeComponent = BattleTierComponent(
                     plugin, pass,
                     tierType = TierType.FREE,
-                    patternPath = "tiers-gui.split.free-pattern",
+                    patternPath = "tiers-gui.layouts.split.free-pattern",
+                    legacyPatternPath = "tiers-gui.split.free-pattern",
                     emptyTierDisplayMode = emptyDisplayMode,
                     maxItemAmount = maxItemAmount
                 )
                 val premiumComponent = BattleTierComponent(
                     plugin, pass,
                     tierType = TierType.PREMIUM,
-                    patternPath = "tiers-gui.split.premium-pattern",
+                    patternPath = "tiers-gui.layouts.split.premium-pattern",
+                    legacyPatternPath = "tiers-gui.split.premium-pattern",
                     emptyTierDisplayMode = emptyDisplayMode,
                     maxItemAmount = maxItemAmount
                 )
@@ -141,13 +134,6 @@ object BattleTiersGUI {
             }
         }
 
-        // Calculate default page for initial title (%page% placeholder)
-        val defaultPageNum = if (openAtCurrentTier) {
-            components.first().getPageOf(player.getTier(pass)).coerceAtLeast(1)
-        } else {
-            1
-        }
-
         val prevPagePath = "tiers-gui.buttons.prev-page"
         val nextPagePath = "tiers-gui.buttons.next-page"
 
@@ -156,13 +142,13 @@ object BattleTiersGUI {
         val nextRow = plugin.configYml.getInt("$nextPagePath.location.row")
         val nextCol = plugin.configYml.getInt("$nextPagePath.location.column")
 
+        val rawTitle = plugin.configYml.getString("tiers-gui.title")
+            .withBattlePassPlaceholders()
+            .replace("%pass%", pass.name)
+            .formatEco()
+
         val menu = menu(maskPattern.size) {
-            title = plugin.configYml.getString("tiers-gui.title")
-                .withBattlePassPlaceholders()
-                .replace("%pass%", pass.name)
-                .replace("%page%", defaultPageNum.toString())
-                .replace("%max_page%", totalPages.toString())
-                .formatEco()
+            title = rawTitle
 
             maxPages(totalPages)
 
@@ -170,91 +156,35 @@ object BattleTiersGUI {
 
             components.forEach { addComponent(1, 1, it) }
 
-            // Open at current tier (configurable, default true)
             if (openAtCurrentTier) {
                 defaultPage {
                     components.first().getPageOf(it.getTier(pass)).coerceAtLeast(1)
                 }
             }
 
-            // Update title on page change for %page% / %max_page% (Paper 1.20+ only)
-            onEvent<PageChangeEvent> { eventPlayer, _, event ->
-                try {
-                    val newTitle = plugin.configYml.getString("tiers-gui.title")
-                        .withBattlePassPlaceholders()
-                        .replace("%pass%", pass.name)
-                        .replace("%page%", event.newPage.toString())
-                        .replace("%max_page%", totalPages.toString())
-                        .formatEco()
-                    @Suppress("DEPRECATION")
-                    eventPlayer.openInventory.setTitle(newTitle)
-                } catch (_: Exception) {
-                    // setTitle not available on this server version
+            if (backButton) {
+                pageButtonItem(prevPagePath, "active")?.let { active ->
+                    addComponent(
+                        MenuLayer.LOWER,
+                        prevRow, prevCol,
+                        slot(active) {
+                            onLeftClick { _, _ ->
+                                BattlePassGUI.createAndOpen(player, pass)
+                            }
+                        }
+                    )
                 }
             }
 
-            // --- Prev-page ---
-
-            // Inactive item (shows when PageChanger returns null on first page)
-            val prevInactiveItem = plugin.configYml.getStringOrNull("$prevPagePath.item.inactive")
-            if (prevInactiveItem != null && !backButton) {
-                val inactiveName = plugin.configYml.getStringOrNull("$prevPagePath.name.inactive")
-                val inactiveBuilder = ItemStackBuilder(Items.lookup(prevInactiveItem.withBattlePassPlaceholders()))
-                if (inactiveName != null) inactiveBuilder.setDisplayName(inactiveName.withBattlePassPlaceholders())
-                addComponent(
-                    MenuLayer.LOWER,
-                    prevRow, prevCol,
-                    slot(inactiveBuilder.build())
-                )
+            pageButtonItem(prevPagePath, "active")?.let { active ->
+                val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
+                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
             }
 
-            // Back button (shows on first page instead of prev-page when opened from BattlePassGUI)
-            if (backButton) {
-                addComponent(
-                    MenuLayer.LOWER,
-                    prevRow, prevCol,
-                    slot(readButtonItem(prevPagePath, "active")) {
-                        onLeftClick { _, _ ->
-                            BattlePassGUI.createAndOpen(player, pass)
-                        }
-                    }
-                )
+            pageButtonItem(nextPagePath, "active")?.let { active ->
+                addPageChanger(PageChanger.Direction.FORWARDS, active, pageButtonItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
             }
 
-            // Prev-page changer (MIDDLE layer — covers inactive/back button when on page 2+)
-            addComponent(
-                prevRow, prevCol,
-                PageChanger(
-                    readButtonItem(prevPagePath, "active"),
-                    PageChanger.Direction.BACKWARDS
-                )
-            )
-
-            // --- Next-page ---
-
-            // Inactive item (shows when PageChanger returns null on last page)
-            val nextInactiveItem = plugin.configYml.getStringOrNull("$nextPagePath.item.inactive")
-            if (nextInactiveItem != null) {
-                val inactiveName = plugin.configYml.getStringOrNull("$nextPagePath.name.inactive")
-                val inactiveBuilder = ItemStackBuilder(Items.lookup(nextInactiveItem.withBattlePassPlaceholders()))
-                if (inactiveName != null) inactiveBuilder.setDisplayName(inactiveName.withBattlePassPlaceholders())
-                addComponent(
-                    MenuLayer.LOWER,
-                    nextRow, nextCol,
-                    slot(inactiveBuilder.build())
-                )
-            }
-
-            // Next-page changer
-            addComponent(
-                nextRow, nextCol,
-                PageChanger(
-                    readButtonItem(nextPagePath, "active"),
-                    PageChanger.Direction.FORWARDS
-                )
-            )
-
-            // --- Close button ---
             if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {
                 val closePath = "tiers-gui.buttons.close"
                 val closeMaterial = plugin.configYml.getStringOrNull("$closePath.material") ?: "barrier"
@@ -273,7 +203,6 @@ object BattleTiersGUI {
                 )
             }
 
-            // --- Custom slots ---
             for (slotConfig in plugin.configYml.getSubsections("tiers-gui.buttons.custom-slots")) {
                 val resolved = slotConfig.clone().apply {
                     val itemStr = getString("item").withBattlePassPlaceholders()

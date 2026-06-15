@@ -7,6 +7,18 @@
 # Prevents spamming the GUI to cause lag
 gui-cache-ttl: 1000
 
+# Date format patterns (case-sensitive):
+# d = day, M = month, y = year, H = hour (0-23), m = minute, s = second
+# Example: "dd/MM/yyyy HH:mm:ss" → 31/05/2025 14:07:30
+date-format: "yyyy-MM-dd HH:mm"
+
+time-format:
+  split: " "
+  days: "&6%value%&fd"
+  hours: "&6%value%&fh"
+  minutes: "&6%value%&fm"
+  seconds: "&6%value%&fs"
+
 # GUI Configuration for the Battlepass GUI (/battlepass)
 battlepass-gui:
   title: "EcoBattlepass"
@@ -49,7 +61,7 @@ battlepass-gui:
         column: 4
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#battlepass-and-category-gui
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#battlepass-and-category-gui
 
     quests:
       item: orange_stained_glass_pane
@@ -66,7 +78,7 @@ battlepass-gui:
 
     close:
       enabled: true
-      material: barrier
+      item: barrier
       name: "&cClose"
       location:
         row: 3
@@ -80,8 +92,9 @@ tiers-gui:
   # Supports %page% and %max_page% placeholders
   title: "EcoBattlepass: Tiers (%page%/%max_page%)"
 
-  # Layout mode: "combined" (default, original behavior) or "split" (free on one row, premium on another)
-  layout: "combined"
+  # Whether to open the tiers GUI at the player's current tier page.
+  # Set to false to always open at page 1.
+  open-at-current-tier: true
 
   # How to display tiers with no rewards:
   # "normal"              - Empty tiers show with their real state (original behavior)
@@ -91,9 +104,8 @@ tiers-gui:
   # "all"                 - All empty tiers show as claimed regardless of level
   empty-tier-display-mode: "normal"
 
-  # Whether to open the tiers GUI at the player's current tier page.
-  # Set to false to always open at page 1.
-  open-at-current-tier: true
+  # Layout mode: "combined" (default, original behavior) or "split" (free on one row, premium on another)
+  layout: "combined"
 
   mask:
     # The way the mask works is by having a list of materials
@@ -114,35 +126,37 @@ tiers-gui:
       - "111111111"
       - "111111111"
       - "111111111"
-    progression-pattern:
-      # To set the order of the pattern,
-      # Use 1-9 and then a-z: a goes after 9.
-      # Used when layout is "combined" (default).
-      - "109ab0jkl"
-      - "2080c0i0m"
-      - "3070d0h0n"
-      - "4560efg0o"
-      - "00000000p"
-      - "00000000q"
 
-  # Split layout configuration (only used when layout is "split")
-  # Each pattern defines where tiers appear for free and premium rows respectively.
-  # Uses the same 1-9 + a-z system as progression-pattern.
-  split:
-    free-pattern:
-      - "000000000"
-      - "123456789"
-      - "000000000"
-      - "000000000"
-      - "000000000"
-      - "000000000"
-    premium-pattern:
-      - "000000000"
-      - "000000000"
-      - "000000000"
-      - "123456789"
-      - "000000000"
-      - "000000000"
+  # Tier-slot layouts. Which one is used depends on the "layout" option above.
+  # All patterns use the 1-9 then a-z system (a goes after 9) to set tier order.
+  layouts:
+    # Used when layout: "combined" (default).
+    combined:
+      pattern:
+        - "109ab0jkl"
+        - "2080c0i0m"
+        - "3070d0h0n"
+        - "4560efg0o"
+        - "00000000p"
+        - "00000000q"
+
+    # Used when layout: "split".
+    # free-pattern / premium-pattern define where tiers appear on each row.
+    split:
+      free-pattern:
+        - "000000000"
+        - "123456789"
+        - "000000000"
+        - "000000000"
+        - "000000000"
+        - "000000000"
+      premium-pattern:
+        - "000000000"
+        - "000000000"
+        - "000000000"
+        - "123456789"
+        - "000000000"
+        - "000000000"
 
   buttons:
     # The amount of the item as a function of the level
@@ -155,33 +169,10 @@ tiers-gui:
     # Invalid values will default to 64 with a console warning.
     max-item-amount: 64
 
-    # Page changers support multiple formats:
-    # Format 1 (new, recommended):
-    #   item:
-    #     active: "orange_stained_glass_pane"
-    #     inactive: "gray_stained_glass_pane"
-    #   name:
-    #     active: "&aPrevious page"
-    #     inactive: "&7No more pages"
-    #
-    # Format 2 (inline name in item string):
-    #   item:
-    #     active: orange_stained_glass_pane name:"&aPrevious page"
-    #     inactive: gray_stained_glass_pane
-    #
-    # Format 3 (legacy, single material + name):
-    #   material: orange_stained_glass_pane
-    #   name: "&aPrevious page"
-    #
-    # All three formats are supported for backward compatibility.
-
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -191,11 +182,8 @@ tiers-gui:
 
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext Page"
-        inactive: "&7No more pages"
+        active: orange_stained_glass_pane name:"&aNext Page"
+        inactive: gray_stained_glass_pane name:"&7No more pages"
       lore:
         active: []
         inactive: []
@@ -224,16 +212,6 @@ tiers-gui:
     # IMPORTANT: These placeholders will show blank lines if there are no rewards of that type
     # For example, if a tier has no free rewards, %free-rewards% will show nothing
     # This is intentional - it allows you to conditionally show reward sections
-    #
-    # Dynamic placeholders for accessing specific reward lines (useful for custom GUI slots):
-    # tier_free_reward_{battlepass_id}_{tier_number}_{line_index}
-    # tier_premium_reward_{battlepass_id}_{tier_number}_{line_index}
-    # tier_claimed_free_reward_{battlepass_id}_{tier_number}_{line_index}
-    # tier_claimed_premium_reward_{battlepass_id}_{tier_number}_{line_index}
-    #
-    # Example: tier_free_reward_battlepass_10_0 returns the first line of free rewards for tier 10
-    # Example: tier_premium_reward_battlepass_10_1 returns the second line of premium rewards for tier 10
-    # If the line index is out of bounds, it returns an empty string
 
     empty-rewards-format: "&8&oNo rewards for this tier!"
     free-rewards-format: "&8»&r &9%reward%"
@@ -243,31 +221,7 @@ tiers-gui:
     claimed-premium-rewards-format: "&a&l✔ &6%reward%"
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#battlepass-tiers-gui
-
-    # Per-level item overrides documentation:
-    # You can override button items for specific tiers in the battlepass tier config files
-    # Structure in tier config (e.g., battlepasses/yourpass/tiers/10.yml):
-    #   display:
-    #     {state}.item: material
-    #     {state}.name: display name
-    #     {state}.lore: [lore lines]
-    #
-    # States: unlocked, locked, in-progress, claimed, unlocked-free, premium-required, hidden
-    #
-    # For split mode, you can also specify track-specific overrides:
-    #   display:
-    #     free-track.{state}.item: material
-    #     premium-track.{state}.item: material
-    #
-    # Priority: track-specific override > generic override > track-specific config > default config
-    #
-    # Example (in tier config):
-    #   display:
-    #     unlocked.item: diamond
-    #     unlocked.name: "&6Special Tier %tier_numeral%"
-    #     free-track.unlocked.item: emerald
-    #     premium-track.unlocked.item: diamond
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#battlepass-tiers-gui
 
     # The different states a tier can be in
     # When only the free rewards are claimable.
@@ -435,7 +389,8 @@ tiers-gui:
 
 # GUI Configuration for the Categories GUI (/battlepass quests)
 categories-gui:
-  title: "&8Categories: %page%"
+  # Supports %page% and %max_page% placeholders
+  title: "&8Categories: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
     # And then a pattern to use those materials.
@@ -460,44 +415,42 @@ categories-gui:
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 6
+      location:
+        row: 5
+        column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: gray_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: ""
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: gray_stained_glass_pane name:""
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 4
+      location:
+        row: 5
+        column: 4
     close:
       enabled: true
       item: barrier
       name: "&cClose"
-      row: 5
-      column: 5
+      location:
+        row: 5
+        column: 5
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#battlepass-and-category-gui
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#battlepass-and-category-gui
 
     # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
     custom-slots: []
 
 # GUI Configuration for the Quests GUI
 quests-gui:
-  title: "&8%category%: %page%"
+  # Supports %category%, %page% and %max_page% placeholders
+  title: "&8%category%: %page%/%max_page%"
   mask:
     # The way the mask works is by having a list of materials
     # And then a pattern to use those materials.
@@ -522,37 +475,34 @@ quests-gui:
   buttons:
     next-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aNext page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aNext page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 6
+      location:
+        row: 5
+        column: 6
     prev-page:
       item:
-        active: orange_stained_glass_pane
-        inactive: black_stained_glass_pane
-      name:
-        active: "&aPrevious page"
-        inactive: " "
+        active: orange_stained_glass_pane name:"&aPrevious page"
+        inactive: black_stained_glass_pane name:" "
       lore:
         active: []
         inactive: []
-      row: 5
-      column: 4
+      location:
+        row: 5
+        column: 4
     close:
       enabled: true
       item: barrier
       name: "&cClose"
-      row: 5
-      column: 5
+      location:
+        row: 5
+        column: 5
 
     # List of available placeholders:
-    # https://exanthiax.gitbook.io/ecobattlepass/useful/internal-placeholders#quest-gui
+    # https://plugins.auxilor.io/ecobattlepass/internalplaceholders#quest-gui
 
     # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
     custom-slots: []
@@ -576,18 +526,6 @@ quests-icon:
     - ""
     - "&7%quest_tier%" # Premium or Both
     - "&7%quest_timer%" # This shows either: When it unlocks, when it started, or the time until it resets.
-
-time-format:
-  split: " "
-  days: "&6%value%&fd"
-  hours: "&6%value%&fh"
-  minutes: "&6%value%&fm"
-  seconds: "&6%value%&fs"
-
-# Date format patterns (case-sensitive):
-# d = day, M = month, y = year, H = hour (0-23), m = minute, s = second
-# Example: "dd/MM/yyyy HH:mm:ss" → 31/05/2025 14:07:30
-date-format: "yyyy-MM-dd HH:mm"
 
 sound:
   tier-up:
@@ -621,6 +559,11 @@ sound:
     volume: 1
     pitch: 1
   gui-click-sound:
+    enabled: true
+    sound: ui_button_click
+    volume: 1
+    pitch: 1
+  page-turn:
     enabled: true
     sound: ui_button_click
     volume: 1

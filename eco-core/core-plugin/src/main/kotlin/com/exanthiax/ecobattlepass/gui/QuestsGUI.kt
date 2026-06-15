@@ -6,18 +6,25 @@ import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.core.gui.menu.Menu
+import com.willfp.eco.core.gui.addPage
+import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.menu
+import com.willfp.eco.core.gui.menu.MenuLayer
+import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
-import com.willfp.eco.core.gui.slot.Slot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.core.sound.PlayableSound
+import com.willfp.eco.util.formatEco
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 class QuestsGUI(
-    private val player: Player, val category: Category, val page: Int = 1,
+    private val player: Player, val category: Category,
     val wasBack: Boolean = false
 ) {
     private fun String.withCategoryPlaceholders(): String =
@@ -28,81 +35,117 @@ class QuestsGUI(
 
     fun open() {
         val pattern = plugin.configYml.getStrings("quests-gui.mask.pattern")
-        val menu = Menu.builder(pattern.size)
-            .setTitle(
-                plugin.configYml.getString("quests-gui.title")
-                    .replace("%page%", page.toString())
-                    .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
-                    .replace("%pass%", category.battlepass.name)
-                    .withCategoryPlaceholders()
-            )
-        var row = 1
-        var num = ((page - 1) * getPerPage())
-        pattern.forEach {
-            var col = 1
-            it.toCharArray().forEach { s ->
-                kotlin.run {
-                    if (s.equals('q', true)) {
-                        if (num < category.quests.size) {
-                            menu.setSlot(row, col, slot(category.quests[num]))
+        val perPage = getPerPage()
+        val maxPage = getMaxPages()
+
+        val rawTitle = plugin.configYml.getString("quests-gui.title")
+            .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
+            .replace("%pass%", category.battlepass.name)
+            .withCategoryPlaceholders()
+            .formatEco()
+
+        val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("sound.page-turn"))
+
+        val prevPagePath = "quests-gui.buttons.prev-page"
+        val nextPagePath = "quests-gui.buttons.next-page"
+
+        fun loc(path: String, key: String): Int =
+            plugin.configYml.getIntOrNull("$path.location.$key") ?: plugin.configYml.getInt("$path.$key")
+
+        val prevRow = loc(prevPagePath, "row")
+        val prevCol = loc(prevPagePath, "column")
+        val nextRow = loc(nextPagePath, "row")
+        val nextCol = loc(nextPagePath, "column")
+
+        val menu = menu(pattern.size) {
+            title = rawTitle
+
+            maxPages(maxPage)
+
+            buildPageItem(prevPagePath, "active")?.let { active ->
+                val inactive = if (wasBack) null else buildPageItem(prevPagePath, "inactive")
+                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
+            }
+
+            buildPageItem(nextPagePath, "active")?.let { active ->
+                addPageChanger(PageChanger.Direction.FORWARDS, active, buildPageItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+            }
+
+            for (page in 1..maxPage) {
+                addPage(page) {
+                    setMask(
+                        FillerMask(
+                            MaskItems.fromItemNames(plugin.configYml.getStrings("quests-gui.mask.materials")),
+                            *pattern.toTypedArray()
+                        )
+                    )
+
+                    var num = (page - 1) * perPage
+                    var row = 1
+                    pattern.forEach { line ->
+                        var col = 1
+                        line.toCharArray().forEach { s ->
+                            if (s.equals('q', true)) {
+                                if (num < category.quests.size) {
+                                    setSlot(row, col, questSlot(category.quests[num]))
+                                }
+                                num++
+                            }
+                            col++
                         }
-                        num++
+                        row++
+                    }
+
+                    if (wasBack) {
+                        buildPageItem(prevPagePath, "active")?.let { active ->
+                            addComponent(
+                                MenuLayer.LOWER,
+                                prevRow, prevCol,
+                                slot(active) {
+                                    onLeftClick { _, _ ->
+                                        CategoriesGUI(player, category.battlepass, backButton = true).open()
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    for (slotConfig in plugin.configYml.getSubsections("quests-gui.buttons.custom-slots")) {
+                        val resolved = slotConfig.clone().apply {
+                            val nameKey = getStringOrNull("name")
+                            val itemStr = getString("item").withCategoryPlaceholders()
+                            if (nameKey != null && !itemStr.contains("name:")) {
+                                set("item", "$itemStr name:\"${nameKey.withCategoryPlaceholders()}\"")
+                            } else {
+                                set("item", itemStr)
+                            }
+                            set("lore", getStrings("lore").map { it.withCategoryPlaceholders() })
+                            listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
+                                if (this.has(click)) {
+                                    this.set(click, this.getStrings(click).map { it.withCategoryPlaceholders() })
+                                }
+                            }
+                        }
+
+                        setSlot(
+                            resolved.getInt("row"),
+                            resolved.getInt("column"),
+                            ConfigSlot(resolved)
+                        )
+                    }
+
+                    if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {
+                        setSlot(
+                            loc("quests-gui.buttons.close", "row"),
+                            loc("quests-gui.buttons.close", "column"),
+                            buildCloseSlot("quests-gui.buttons.close")
+                        )
                     }
                 }
-                col++
             }
-            row++
-        }
-        menu.setMask(
-            FillerMask(
-                MaskItems.fromItemNames(plugin.configYml.getStrings("quests-gui.mask.items")),
-                *pattern.toTypedArray()
-            )
-        )
-        menu.setSlot(
-            plugin.configYml.getInt("quests-gui.buttons.next-page.row"),
-            plugin.configYml.getInt("quests-gui.buttons.next-page.column"),
-            nextSlot()
-        )
-        menu.setSlot(
-            plugin.configYml.getInt("quests-gui.buttons.prev-page.row"),
-            plugin.configYml.getInt("quests-gui.buttons.prev-page.column"),
-            prevSlot()
-        )
-
-        for (slotConfig in plugin.configYml.getSubsections("quests-gui.buttons.custom-slots")) {
-            val resolved = slotConfig.clone().apply {
-                val nameKey = getStringOrNull("name")
-                val itemStr = getString("item").withCategoryPlaceholders()
-                if (nameKey != null && !itemStr.contains("name:")) {
-                    set("item", "$itemStr name:\"${nameKey.withCategoryPlaceholders()}\"")
-                } else {
-                    set("item", itemStr)
-                }
-                set("lore", getStrings("lore").map { it.withCategoryPlaceholders() })
-                listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
-                    if (this.has(click)) {
-                        this.set(click, this.getStrings(click).map { it.withCategoryPlaceholders() })
-                    }
-                }
-            }
-
-            menu.setSlot(
-                resolved.getInt("row"),
-                resolved.getInt("column"),
-                ConfigSlot(resolved)
-            )
         }
 
-        if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {
-            menu.setSlot(
-                plugin.configYml.getInt("quests-gui.buttons.close.row"),
-                plugin.configYml.getInt("quests-gui.buttons.close.column"),
-                buildCloseSlot("quests-gui.buttons.close")
-            )
-        }
-
-        menu.build().open(player)
+        menu.open(player)
     }
 
     private fun getPerPage(): Int {
@@ -116,52 +159,18 @@ class QuestsGUI(
         val total = category.quests.size
         val perPage = getPerPage()
         if (perPage <= 0) return 1
-        return (total + perPage - 1) / perPage
+        return ((total + perPage - 1) / perPage).coerceAtLeast(1)
     }
 
-    private fun nextSlot(): Slot {
-        val nextActive = page < getMaxPages()
-        val state = if (nextActive) "active" else "inactive"
-        val builder = Slot.builder(
-            buildPageItem("quests-gui.buttons.next-page", state)
-        )
-
-        if (nextActive) {
-            builder.onLeftClick { _, _ ->
-                QuestsGUI(player, category, page + 1, wasBack = wasBack).open()
-            }
-        }
-        return builder.build()
-    }
-
-    private fun prevSlot(): Slot {
-        val prevActive = page > 1 || wasBack
-        val state = if (prevActive) "active" else "inactive"
-        val builder = Slot.builder(
-            buildPageItem("quests-gui.buttons.prev-page", state)
-        )
-
-        if (prevActive) {
-            builder.onLeftClick { _, _ ->
-                when {
-                    page > 1 -> QuestsGUI(player, category, page - 1, wasBack = wasBack).open()
-                    else -> CategoriesGUI(
-                        player,
-                        category.battlepass,
-                        backButton = true
-                    ).open()
-                }
-            }
-        }
-        return builder.build()
-    }
-
-    private fun buildPageItem(basePath: String, state: String): org.bukkit.inventory.ItemStack {
+    private fun buildPageItem(basePath: String, state: String): ItemStack? {
         val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.item")
-            ?: plugin.configYml.getString("$basePath.material")
+            ?: plugin.configYml.getStringOrNull("$basePath.material")
+            ?: return null
 
-        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withCategoryPlaceholders()))
+        val itemBuilder = ItemStackBuilder(
+            Items.lookup(itemString.withCategoryPlaceholders())
+        )
 
         val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
             ?: plugin.configYml.getStringOrNull("$basePath.name")
@@ -172,12 +181,19 @@ class QuestsGUI(
         val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
-        itemBuilder.addLoreLines(lore.withCategoryPlaceholders())
+        itemBuilder.addLoreLines(lore.map { it.withCategoryPlaceholders() })
 
         return itemBuilder.build()
     }
 
-    private fun buildCloseSlot(basePath: String): Slot {
+    private fun buildCloseSlot(basePath: String) =
+        slot(buildCloseItem(basePath)) {
+            onLeftClick { event, _ ->
+                event.whoClicked.closeInventory()
+            }
+        }
+
+    private fun buildCloseItem(basePath: String): ItemStack {
         val itemString = plugin.configYml.getStringOrNull("$basePath.item")
             ?: plugin.configYml.getString("$basePath.material")
 
@@ -191,24 +207,17 @@ class QuestsGUI(
             ?: emptyList()
         itemBuilder.addLoreLines(lore.withCategoryPlaceholders())
 
-        return Slot.builder(itemBuilder.build())
-            .onLeftClick { event, _ ->
-                event.whoClicked.closeInventory()
-            }.build()
+        return itemBuilder.build()
     }
 
-    private fun slot(pair: ActiveBattleQuest): Slot {
-        val itemBuilder = ItemStackBuilder(
-            Items.lookup(pair.parent.itemString.replace("%player%", player.name)).item.clone()
-        ).setDisplayName(
-            pair.getFormattedName(player)
-        ).addLoreLines(
-            pair.getFormattedLore(player)
+    private fun questSlot(quest: ActiveBattleQuest) =
+        slot(
+            ItemStackBuilder(
+                Items.lookup(quest.parent.itemString.replace("%player%", player.name)).item.clone()
+            ).setDisplayName(
+                quest.getFormattedName(player)
+            ).addLoreLines(
+                quest.getFormattedLore(player)
+            ).build()
         )
-
-        return Slot.builder(
-            itemBuilder.build()
-        )
-            .build()
-    }
 }
