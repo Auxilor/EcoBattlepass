@@ -8,9 +8,18 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
 
 object TriggerBPTaskComplete: Trigger("complete_battlepass_task") {
+    override val description = "Fires when the player completes a battlepass task."
+
+    override val categories = setOf("player")
+
     override val parameters: Set<TriggerParameter> = setOf(
         TriggerParameter.PLAYER,
-        TriggerParameter.EVENT
+        TriggerParameter.EVENT,
+        TriggerParameter.TEXT
+    )
+
+    override val parameterDescriptions = mapOf(
+        TriggerParameter.TEXT to "The ID of the completed task"
     )
 
     @EventHandler(ignoreCancelled = true)
@@ -21,8 +30,7 @@ object TriggerBPTaskComplete: Trigger("complete_battlepass_task") {
                 dispatcher = event.player.toDispatcher(),
                 player = event.player,
                 text = event.task.parent.id,
-                event = event,
-                value = 1.0
+                event = event
             )
         )
     }

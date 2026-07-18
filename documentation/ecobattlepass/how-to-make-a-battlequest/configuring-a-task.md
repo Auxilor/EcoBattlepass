@@ -9,7 +9,7 @@ A **task** is the trackable action behind a quest, e.g. "kill 100 chickens". Eac
 
 1. Open the `/plugins/EcoBattlepass/tasks/` folder and copy `_example.yml` to a new file, e.g. `chickens.yml`. The file name is the task ID.
 2. Set the `display` `display-name` and `lore` shown in the quest.
-3. Under `xp-gain-methods:`, set a `trigger`, a `value` or `multiplier`, and optional `filters`. See the [triggers list](https://plugins.auxilor.io/effects/all-triggers).
+3. Under `xp-gain-methods:`, set a `trigger`, a `value` or `multiplier`, and optional `filters`. See the triggers list.
 4. Reference the task ID from a [quest](configuring-a-quest), run `/ecobattlepass reload`, and confirm the action raises the task's progress in game.
 
 :::tip
@@ -95,5 +95,5 @@ xp-gain-methods:
 ## Where to go next
 
 - **Use the task:** [Configuring a quest](configuring-a-quest) is where you attach task IDs.
-- **Triggers:** the [triggers list](https://plugins.auxilor.io/effects/all-triggers) covers every `trigger` you can use.
+- **Triggers:** the triggers list covers every `trigger` you can use.
 - **Defaults:** the shipped tasks live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/tasks).

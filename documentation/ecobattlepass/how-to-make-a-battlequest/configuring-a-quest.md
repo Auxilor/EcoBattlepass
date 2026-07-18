@@ -8,7 +8,7 @@ A **quest** is a goal a player works toward inside a category. Each quest is one
 ## Quick start
 
 1. Open the `/plugins/EcoBattlepass/quests/` folder and copy `_example.yml` to a new file, e.g. `chickens.yml`. The file name is the quest ID.
-2. Set the `display` `item`, `display-name`, and `description`, using the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) for the icon.
+2. Set the `display` `item`, `display-name`, and `description`, using the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) for the icon.
 3. Set `battlepass-points` and `battlepass-tier` for the XP reward and track.
 4. Under `tasks:`, list the [task](configuring-a-task) IDs and the `xp` each needs, then set `task-amount`.
 5. Add the quest ID to a [category](configuring-a-category), run `/ecobattlepass reload`, open the Quests GUI, and confirm it appears.
@@ -96,5 +96,5 @@ task-amount: 1 # Tasks required from the list, e.g. 2 of 3 options
 
 - **Add tasks:** [Configuring a task](configuring-a-task) defines what each task tracks.
 - **Group quests:** [Configuring a category](configuring-a-category) is where you list this quest.
-- **Item syntax:** the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) covers the display icon.
+- **Item syntax:** the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) covers the display icon.
 - **Defaults:** the shipped quests live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/quests).

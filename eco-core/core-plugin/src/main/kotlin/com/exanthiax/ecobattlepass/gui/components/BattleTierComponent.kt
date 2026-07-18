@@ -44,12 +44,14 @@ class BattleTierComponent(
     private val plugin: EcoPlugin,
     private val pass: BattlePass,
     private val tierType: TierType? = null,
-    patternPath: String = "tiers-gui.mask.progression-pattern",
+    patternPath: String = "tiers-gui.layouts.combined.pattern",
+    legacyPatternPath: String? = "tiers-gui.mask.progression-pattern",
     private val emptyTierDisplayMode: EmptyDisplayMode = EmptyDisplayMode.NORMAL,
     private val maxItemAmount: Int =
         (plugin.configYml.getIntOrNull("tiers-gui.buttons.max-item-amount") ?: 64).coerceIn(1, 99)
 ) : ProperLevelComponent() {
     override val pattern: List<String> = plugin.configYml.getStrings(patternPath)
+        .ifEmpty { legacyPatternPath?.let { plugin.configYml.getStrings(it) } ?: emptyList() }
     override val maxLevel = pass.maxLevel
     private val itemCache = nestedMap<LevelState, Int, ItemStack>()
 

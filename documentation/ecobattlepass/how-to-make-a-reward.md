@@ -9,7 +9,7 @@ A **reward** is what a player earns for tiering up the battlepass. Each reward i
 
 1. Open the `/plugins/EcoBattlepass/rewards/` folder and copy `_example.yml` to a new file, e.g. `diamond_block.yml`. The file name is the reward ID.
 2. Set the `display` `name` and `reward-lore` that show on the tier button.
-3. Add the `effects` that fire when the reward is claimed, using the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) for any item arguments.
+3. Add the `effects` that fire when the reward is claimed, using the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) for any item arguments.
 4. Reference the reward ID from a tier in your [battlepass config](how-to-make-a-battlepass).
 5. Run `/ecobattlepass reload`, open the pass, claim the tier, and confirm the player receives the reward.
 
@@ -75,8 +75,8 @@ Gives the player a diamond block when they claim the tier.
 :::danger Effects are their own system
 Effects, conditions, filters, and mutators are a shared libreforge system, documented in full elsewhere.
 
-- [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) covers single effects, conditions, and filters.
-- [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain) covers stringing multiple effects together under one trigger.
+- [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect) covers single effects, conditions, and filters.
+- [Configuring an Effect Chain](https://hub.auxilor.io/wiki/libreforge/configuring-a-chain) covers stringing multiple effects together under one trigger.
 :::
 
 :::tip Troubleshooting
@@ -90,6 +90,6 @@ Effects, conditions, filters, and mutators are a shared libreforge system, docum
 ## Where to go next
 
 - **Use the reward:** [How to make a battlepass](how-to-make-a-battlepass) is where you attach reward IDs to tiers.
-- **Effects deep-dive:** [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) is the full libreforge reference.
-- **Item syntax:** the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) covers item arguments.
+- **Effects deep-dive:** [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect) is the full libreforge reference.
+- **Item syntax:** the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) covers item arguments.
 - **Defaults:** the shipped rewards live [here](https://github.com/Auxilor/EcoBattlepass/tree/master/eco-core/core-plugin/src/main/resources/rewards).

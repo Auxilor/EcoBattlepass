@@ -11,7 +11,7 @@ You can run multiple battle passes at once, each with its own quests, rewards, a
 ## What sets EcoBattlepass apart?
 
 - **Powered by libreforge.** Build rewards and quests from over 200 effects, 100 conditions, and 100 triggers. Grant potion effects, run commands, enchant items, apply multipliers, and more.
-- **Deep eco integration.** Works with [EcoSkills](https://plugins.auxilor.io/ecoskills) and [EcoEnchants](https://plugins.auxilor.io/ecoenchants), plus compatibility with popular plugins such as AxEnvoy, McMMO, and Votifier.
+- **Deep eco integration.** Works with [EcoSkills](https://hub.auxilor.io/wiki/ecoskills/ecoskills) and [EcoEnchants](https://hub.auxilor.io/wiki/ecoenchants/ecoenchants), plus compatibility with popular plugins such as AxEnvoy, McMMO, and Votifier.
 - **Fully custom GUIs.** Use custom items from ItemsAdder, Oraxen, Nexo, or any item with CustomModelData, so the pass interface matches your server's theme.
 
 <hr/>
