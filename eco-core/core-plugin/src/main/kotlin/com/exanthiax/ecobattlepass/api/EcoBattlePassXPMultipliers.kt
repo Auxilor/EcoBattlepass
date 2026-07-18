@@ -11,7 +11,7 @@ private val expMultiplierCache = EcoCache.builder<Player, Double>()
     }
 
 val Player.bpExperienceMultiplier: Double
-    get() = expMultiplierCache.get(this)
+    get() = expMultiplierCache.get(this) { it.cacheBPExperienceMultiplier() }
 
 private fun Player.cacheBPExperienceMultiplier(): Double {
     if (this.hasPermission("ecobattlepass.xpmultiplier.quadruple")) {
