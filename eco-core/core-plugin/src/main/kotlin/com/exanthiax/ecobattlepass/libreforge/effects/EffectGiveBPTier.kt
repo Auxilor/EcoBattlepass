@@ -24,7 +24,8 @@ object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
             "tiers",
             "You must specify the amount of tiers to give!",
             description = "The number of battlepass tiers to give. Supports expressions.",
-            type = ArgType.EXPRESSION
+            type = ArgType.EXPRESSION,
+            example = "1 + %level%"
         )
         require("battlepass",
             "You must specify a battlepass!",
@@ -33,7 +34,8 @@ object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
         )
         describe("battlepass",
             description = "The ID of the battlepass to give tiers for.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "halloween_pass"
         )
     }
 

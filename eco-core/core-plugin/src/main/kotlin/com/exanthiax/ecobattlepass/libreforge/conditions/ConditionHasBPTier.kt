@@ -23,13 +23,15 @@ object ConditionHasBPTier: Condition<NoCompileData>("has_battlepass_tier") {
             "tier",
             "You must specify the battlepass tier!",
             description = "The minimum battlepass tier required. Supports expressions.",
-            type = ArgType.EXPRESSION
+            type = ArgType.EXPRESSION,
+            example = "5 + %level%"
         )
         require(
             "battlepass",
             "You must specify a battlepass!",
             description = "The ID of the battlepass to check the player's tier for.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "halloween_pass"
         )
     }
 

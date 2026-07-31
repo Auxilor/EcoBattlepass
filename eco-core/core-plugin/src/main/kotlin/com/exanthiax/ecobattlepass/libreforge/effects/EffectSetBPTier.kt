@@ -23,7 +23,8 @@ object EffectSetBPTier: Effect<NoCompileData>("set_battlepass_tier") {
             "tier",
             "You must specify the tier to set!",
             description = "The battlepass tier to set the player to.",
-            type = ArgType.EXPRESSION
+            type = ArgType.EXPRESSION,
+            example = "5 + %level%"
         )
         require("battlepass",
             "You must specify a battlepass!",
@@ -32,7 +33,8 @@ object EffectSetBPTier: Effect<NoCompileData>("set_battlepass_tier") {
         )
         describe("battlepass",
             description = "The ID of the battlepass to set the tier for.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "halloween_pass"
         )
     }
 

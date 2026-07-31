@@ -23,7 +23,8 @@ object ConditionHasBPPremium: Condition<NoCompileData>("has_premium_battlepass")
             "battlepass",
             "You must specify a battlepass!",
             description = "The ID of the battlepass to check premium access for.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "halloween_pass"
         )
     }
 
