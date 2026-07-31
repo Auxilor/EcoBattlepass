@@ -21,19 +21,22 @@ object EffectGiveTaskExp: Effect<NoCompileData>("give_battlepass_task_exp") {
             "amount",
             "You must specify the exp amount!",
             description = "The amount of task progress to give.",
-            type = ArgType.EXPRESSION
+            type = ArgType.EXPRESSION,
+            example = "%level% * 10"
         )
         require(
             "task",
             "You must specify the task to give exp for!",
             description = "The ID of the task to give progress towards.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "click_doors"
         )
         require(
             "quest",
             "You must specify the quest to give exp for!",
             description = "The ID of the quest that the task belongs to.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "mining"
         )
         require("battlepass",
             "You must specify a battlepass!",
@@ -42,7 +45,8 @@ object EffectGiveTaskExp: Effect<NoCompileData>("give_battlepass_task_exp") {
         )
         describe("battlepass",
             description = "The ID of the battlepass that the quest belongs to.",
-            type = ArgType.STRING
+            type = ArgType.STRING,
+            example = "halloween_pass"
         )
     }
 
