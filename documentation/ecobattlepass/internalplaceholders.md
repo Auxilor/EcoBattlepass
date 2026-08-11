@@ -1,6 +1,6 @@
 ---
 title: "Internal Placeholders"
-sidebar_position: 7
+sidebar_position: 5
 ---
 
 EcoBattlepass offers a lot of internal placeholders that you can use in your lore and display names for BattlePasses, Categories, and Quests.

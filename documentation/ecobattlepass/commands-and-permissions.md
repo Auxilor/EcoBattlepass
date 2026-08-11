@@ -1,6 +1,6 @@
 ---
 title: "Commands and Permissions"
-sidebar_position: 5
+sidebar_position: 6
 ---
 
 Every command and permission EcoBattlepass registers, for looking up what each one does and which node it needs. `<battlepass_id>` / `<pass_id>` is the ID of a pass (its file name); `<player/all>` targets one player or everyone.

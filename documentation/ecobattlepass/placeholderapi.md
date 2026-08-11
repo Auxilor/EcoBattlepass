@@ -1,6 +1,6 @@
 ---
 title: "PlaceholderAPI"
-sidebar_position: 6
+sidebar_position: 4
 ---
 
 These are the EcoBattlepass placeholders you can use anywhere PlaceholderAPI is supported, e.g. scoreboards, chat, and other plugins. Replace `<battlepass>`, `<id>`, `<tier>`, and `<line>` with real values. For placeholders used inside EcoBattlepass GUIs, see [Internal placeholders](internalplaceholders) instead.

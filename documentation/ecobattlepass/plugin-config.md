@@ -1,6 +1,6 @@
 ---
 title: "Plugin Config"
-sidebar_position: 8
+sidebar_position: 7
 ---
 
 The main config file is `config.yml`, found at `/plugins/EcoBattlepass/config.yml`. It controls the plugin-wide GUIs (the battlepass, tiers, categories, and quests menus), the quest icon, time and date formats, and sounds. After editing, run `/ecobattlepass reload` to apply your changes.
