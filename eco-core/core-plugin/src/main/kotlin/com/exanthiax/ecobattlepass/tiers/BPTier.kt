@@ -52,7 +52,8 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
             when {
                 string.contains("%free-rewards%") -> {
                     if (filterTierType == TierType.PREMIUM) {
-                        result.add(string.replace("%free-rewards%", "")); continue
+                        result.add(string.replace("%free-rewards%", ""))
+                        continue
                     }
                     handleRewards(
                         result,
@@ -66,7 +67,8 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
 
                 string.contains("%premium-rewards%") -> {
                     if (filterTierType == TierType.FREE) {
-                        result.add(string.replace("%premium-rewards%", "")); continue
+                        result.add(string.replace("%premium-rewards%", ""))
+                        continue
                     }
                     handleRewards(result, string, player, TierType.PREMIUM, "%premium-rewards%", null) { _, p ->
                         if (p.hasPremium(battlepass)) "tiers-gui.buttons.premium-rewards-format"
@@ -76,7 +78,8 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
 
                 string.contains("%claimed-free-rewards%") -> {
                     if (filterTierType == TierType.PREMIUM) {
-                        result.add(string.replace("%claimed-free-rewards%", "")); continue
+                        result.add(string.replace("%claimed-free-rewards%", ""))
+                        continue
                     }
                     handleRewards(
                         result,
@@ -90,7 +93,8 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
 
                 string.contains("%claimed-premium-rewards%") -> {
                     if (filterTierType == TierType.FREE) {
-                        result.add(string.replace("%claimed-premium-rewards%", "")); continue
+                        result.add(string.replace("%claimed-premium-rewards%", ""))
+                        continue
                     }
                     handleRewards(
                         result,
@@ -129,7 +133,8 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
                     result.add(string.replace(placeholder, rewardLine))
                 } else {
                     val formatPath = formatSelector?.invoke(rewardLine, player) ?: defaultFormatPath
-                    val format = plugin.configYml.getFormattedString(formatPath!!)
+                    val format = formatPath?.let { plugin.configYml.getFormattedString(it) }
+                        ?: plugin.configYml.getFormattedString("tiers-gui.buttons.empty-rewards-format")
                     result.add(string.replace(placeholder, format.replace("%reward%", rewardLine)))
                 }
             }
@@ -142,6 +147,16 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
             )
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BPTier) return false
+        return number == other.number && battlepass == other.battlepass
+    }
+
+    override fun hashCode(): Int = 31 * number + battlepass.hashCode()
+
+    override fun toString(): String = "BPTier(number=$number, battlepass='${battlepass.getID()}')"
 }
 
 class BPReward(val config: Config) : Tiered {

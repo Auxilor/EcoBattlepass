@@ -7,13 +7,14 @@ import com.exanthiax.ecobattlepass.api.receiveTier
 import com.exanthiax.ecobattlepass.api.receiveTierFreeOnly
 import com.exanthiax.ecobattlepass.api.receiveTierPremiumOnly
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
+import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.EcoPlugin
-import com.willfp.eco.core.cache.EcoCache
 import com.willfp.eco.core.Prerequisite
+import com.willfp.eco.core.cache.EcoCache
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
@@ -28,17 +29,6 @@ import org.bukkit.inventory.ItemStack
 import java.time.Duration
 import java.util.UUID
 import kotlin.math.roundToInt
-
-
-private val levelItemCache = EcoCache.builder<Triple<UUID, Int, TierType?>, ItemStack>()
-    .expireAfterWrite(
-        Duration.ofMillis(com.exanthiax.ecobattlepass.plugin.configYml.getInt("gui-cache-ttl").toLong())
-    )
-    .build()
-
-fun invalidateTierItemCache() {
-    levelItemCache.invalidateAll()
-}
 
 class BattleTierComponent(
     private val plugin: EcoPlugin,
@@ -253,4 +243,12 @@ class BattleTierComponent(
             }
         }
     }
+}
+
+private val levelItemCache = EcoCache.builder<Triple<UUID, Int, TierType?>, ItemStack>()
+    .expireAfterWrite(Duration.ofMillis(plugin.configYml.getInt("gui-cache-ttl").toLong()))
+    .build()
+
+fun invalidateTierItemCache() {
+    levelItemCache.invalidateAll()
 }

@@ -104,7 +104,8 @@ object BattleTiersGUI {
         when (layoutMode) {
             LayoutMode.SPLIT -> {
                 val freeComponent = BattleTierComponent(
-                    plugin, pass,
+                    plugin,
+                    pass,
                     tierType = TierType.FREE,
                     patternPath = "tiers-gui.layouts.split.free-pattern",
                     legacyPatternPath = "tiers-gui.split.free-pattern",
@@ -112,7 +113,8 @@ object BattleTiersGUI {
                     maxItemAmount = maxItemAmount
                 )
                 val premiumComponent = BattleTierComponent(
-                    plugin, pass,
+                    plugin,
+                    pass,
                     tierType = TierType.PREMIUM,
                     patternPath = "tiers-gui.layouts.split.premium-pattern",
                     legacyPatternPath = "tiers-gui.split.premium-pattern",
@@ -125,7 +127,8 @@ object BattleTiersGUI {
 
             LayoutMode.COMBINED -> {
                 val levelComponent = BattleTierComponent(
-                    plugin, pass,
+                    plugin,
+                    pass,
                     emptyTierDisplayMode = emptyDisplayMode,
                     maxItemAmount = maxItemAmount
                 )
@@ -178,11 +181,25 @@ object BattleTiersGUI {
 
             pageButtonItem(prevPagePath, "active")?.let { active ->
                 val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
-                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
+                addPageChanger(
+                    PageChanger.Direction.BACKWARDS,
+                    active,
+                    inactive,
+                    pageChangeSound,
+                    prevRow,
+                    prevCol
+                )
             }
 
             pageButtonItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(PageChanger.Direction.FORWARDS, active, pageButtonItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+                addPageChanger(
+                    PageChanger.Direction.FORWARDS,
+                    active,
+                    pageButtonItem(nextPagePath, "inactive"),
+                    pageChangeSound,
+                    nextRow,
+                    nextCol
+                )
             }
 
             if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {

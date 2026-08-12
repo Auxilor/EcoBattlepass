@@ -19,4 +19,14 @@ class BattleTask(private val _id: String, val config: Config) : Registrable {
     val name = config.getString("display.display-name")
     val lore = config.getStrings("display.lore")
     val testable = Items.lookup(config.getString("display.item"))
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BattleTask) return false
+        return _id == other._id
+    }
+
+    override fun hashCode(): Int = _id.hashCode()
+
+    override fun toString(): String = "BattleTask(id='$_id')"
 }

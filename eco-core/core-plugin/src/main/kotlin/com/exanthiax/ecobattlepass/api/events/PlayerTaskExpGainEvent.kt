@@ -15,8 +15,8 @@ class PlayerTaskExpGainEvent(player: Player,
         return cancelled
     }
 
-    override fun setCancelled(p0: Boolean) {
-        cancelled = p0
+    override fun setCancelled(cancelled: Boolean) {
+        this.cancelled = cancelled
     }
 
     fun setAmount(amount: Double) {

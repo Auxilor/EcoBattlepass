@@ -5,24 +5,22 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import org.bukkit.inventory.ItemStack
 
-/**
- * Reads a button item from config supporting both old and new formats.
- *
- * OLD format (single item):
- *   material: orange_stained_glass_pane
- *   name: "&aNext page"
- *
- * NEW format (active/inactive with optional separate name):
- *   item:
- *     active: orange_stained_glass_pane name:"&aNext page"   ← inline name
- *     inactive: gray_stained_glass_pane
- *   name:
- *     active: "&aNext page"       ← separate name (overrides inline)
- *     inactive: "&7No more pages"
- *   lore:
- *     active: []
- *     inactive: []
- */
+// Reads a button item from config supporting both old and new formats.
+//
+// OLD format (single item):
+//   material: orange_stained_glass_pane
+//   name: "&aNext page"
+//
+// NEW format (active/inactive with optional separate name):
+//   item:
+//     active: orange_stained_glass_pane name:"&aNext page"   <- inline name
+//     inactive: gray_stained_glass_pane
+//   name:
+//     active: "&aNext page"       <- separate name (overrides inline)
+//     inactive: "&7No more pages"
+//   lore:
+//     active: []
+//     inactive: []
 object GuiItemHelper {
 
     fun readItem(basePath: String, state: String): ItemStack {

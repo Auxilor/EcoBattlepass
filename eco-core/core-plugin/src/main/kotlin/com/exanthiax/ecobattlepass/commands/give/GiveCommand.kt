@@ -18,7 +18,6 @@ object GiveCommand : PluginCommand(
         addSubcommand(GiveTaskXPSubcommand)
     }
 
-
     override fun onExecute(sender: CommandSender, args: List<String>) {
         Messages.sendGiveUsage(sender)
     }

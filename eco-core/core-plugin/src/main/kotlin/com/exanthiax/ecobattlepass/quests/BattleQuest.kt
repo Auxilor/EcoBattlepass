@@ -17,8 +17,6 @@ class BattleQuest(private val _id: String, val config: Config) : Registrable, Ti
 
     val itemString = config.getString("display.item")
 
-    // val item = Items.lookup(config.getString("display.item"))
-
     val displayName = config.getString("display.display-name")
 
     val displayLore = config.getStrings("display.description")
@@ -32,6 +30,16 @@ class BattleQuest(private val _id: String, val config: Config) : Registrable, Ti
             it
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BattleQuest) return false
+        return _id == other._id
+    }
+
+    override fun hashCode(): Int = _id.hashCode()
+
+    override fun toString(): String = "BattleQuest(id='$_id')"
 }
 
 data class PreparedBattleTask(val config: Config) {

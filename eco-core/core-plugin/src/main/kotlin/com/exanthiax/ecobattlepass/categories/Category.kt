@@ -62,9 +62,6 @@ class Category(private val _id: String, val config: Config) : Registrable {
     }
 
     fun getDisplayItem(player: Player): ItemStack {
-        //val key = this.getDisplayableStatusKey()
-        //val formattedTime = msToString(this.getDisplayableMs())
-
         val resolvedItem = InternalPlaceholders.CategoryPlaceholders.replace(itemString, this, player)
         return ItemStackBuilder(Items.lookup(resolvedItem).item.clone())
             .setDisplayName(InternalPlaceholders.CategoryPlaceholders.replace(name, this, player))
@@ -122,4 +119,14 @@ class Category(private val _id: String, val config: Config) : Registrable {
                 (endDate == null || LocalDateTime.now().isBefore(endDate))
 
     var consideredActive: Boolean = isActive
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Category) return false
+        return _id == other._id
+    }
+
+    override fun hashCode(): Int = _id.hashCode()
+
+    override fun toString(): String = "Category(id='$_id')"
 }

@@ -38,12 +38,14 @@ object EffectGiveTaskExp: Effect<NoCompileData>("give_battlepass_task_exp") {
             type = ArgType.STRING,
             example = "mining"
         )
-        require("battlepass",
+        require(
+            "battlepass",
             "You must specify a battlepass!",
-            {passId -> BattlePasses.getByID(passId)},
-            {battlepass -> battlepass != null}
+            { passId -> BattlePasses.getByID(passId) },
+            { battlepass -> battlepass != null }
         )
-        describe("battlepass",
+        describe(
+            "battlepass",
             description = "The ID of the battlepass that the quest belongs to.",
             type = ArgType.STRING,
             example = "halloween_pass"

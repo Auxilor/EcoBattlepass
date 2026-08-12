@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.exanthiax.ecobattlepass.gui
 
 import com.exanthiax.ecobattlepass.categories.Category
@@ -19,7 +17,6 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -38,8 +35,11 @@ class QuestsGUI(
         val perPage = getPerPage()
         val maxPage = getMaxPages()
 
+        @Suppress("DEPRECATION")
+        val strippedCategoryTitle = org.bukkit.ChatColor.stripColor(category.title)
+
         val rawTitle = plugin.configYml.getString("quests-gui.title")
-            .replace("%category%", ChatColor.stripColor(category.title) ?: category.id)
+            .replace("%category%", strippedCategoryTitle ?: category.id)
             .replace("%pass%", category.battlepass.name)
             .withCategoryPlaceholders()
             .formatEco()
@@ -64,11 +64,25 @@ class QuestsGUI(
 
             buildPageItem(prevPagePath, "active")?.let { active ->
                 val inactive = if (wasBack) null else buildPageItem(prevPagePath, "inactive")
-                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
+                addPageChanger(
+                    PageChanger.Direction.BACKWARDS,
+                    active,
+                    inactive,
+                    pageChangeSound,
+                    prevRow,
+                    prevCol
+                )
             }
 
             buildPageItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(PageChanger.Direction.FORWARDS, active, buildPageItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+                addPageChanger(
+                    PageChanger.Direction.FORWARDS,
+                    active,
+                    buildPageItem(nextPagePath, "inactive"),
+                    pageChangeSound,
+                    nextRow,
+                    nextCol
+                )
             }
 
             for (page in 1..maxPage) {

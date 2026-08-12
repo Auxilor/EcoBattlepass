@@ -18,10 +18,10 @@ import com.willfp.eco.util.formatWithCommas
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.toNumeral
 import org.bukkit.entity.Player
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
-import java.time.LocalDateTime
 
 object InternalPlaceholders {
 
@@ -65,14 +65,20 @@ object InternalPlaceholders {
                 battlepass.maxLevel.toNumeral()
             }.register()
 
-            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_state_${battlepass.id}_\\d+$")) { string, player ->
+            PlayerDynamicPlaceholder(
+                plugin,
+                Pattern.compile("tier_state_${battlepass.id}_\\d+$")
+            ) { string, player ->
                 val tierToken = string.split("_").last()
                 val requestedTier = tierToken.toIntOrNull()
                     ?: return@PlayerDynamicPlaceholder "Invalid tier $tierToken"
                 player.hasReceivedTier(battlepass, requestedTier).toString()
             }.register()
 
-            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_free_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+            PlayerDynamicPlaceholder(
+                plugin,
+                Pattern.compile("tier_free_reward_${battlepass.id}_\\d+_\\d+$")
+            ) { string, player ->
                 val parts = string.split("_")
                 val lineIndex = parts.last().toIntOrNull()
                     ?: return@PlayerDynamicPlaceholder ""
@@ -84,7 +90,10 @@ object InternalPlaceholders {
                 lines.getOrElse(lineIndex) { "" }
             }.register()
 
-            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_premium_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+            PlayerDynamicPlaceholder(
+                plugin,
+                Pattern.compile("tier_premium_reward_${battlepass.id}_\\d+_\\d+$")
+            ) { string, player ->
                 val parts = string.split("_")
                 val lineIndex = parts.last().toIntOrNull()
                     ?: return@PlayerDynamicPlaceholder ""
@@ -96,7 +105,10 @@ object InternalPlaceholders {
                 lines.getOrElse(lineIndex) { "" }
             }.register()
 
-            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_claimed_free_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+            PlayerDynamicPlaceholder(
+                plugin,
+                Pattern.compile("tier_claimed_free_reward_${battlepass.id}_\\d+_\\d+$")
+            ) { string, player ->
                 val parts = string.split("_")
                 val lineIndex = parts.last().toIntOrNull()
                     ?: return@PlayerDynamicPlaceholder ""
@@ -108,7 +120,10 @@ object InternalPlaceholders {
                 lines.getOrElse(lineIndex) { "" }
             }.register()
 
-            PlayerDynamicPlaceholder(plugin, Pattern.compile("tier_claimed_premium_reward_${battlepass.id}_\\d+_\\d+$")) { string, player ->
+            PlayerDynamicPlaceholder(
+                plugin,
+                Pattern.compile("tier_claimed_premium_reward_${battlepass.id}_\\d+_\\d+$")
+            ) { string, player ->
                 val parts = string.split("_")
                 val lineIndex = parts.last().toIntOrNull()
                     ?: return@PlayerDynamicPlaceholder ""
@@ -238,10 +253,11 @@ object InternalPlaceholders {
 
             PlayerlessPlaceholder(plugin, "category_${category.id}_end_timer") {
                 val duration = category.config.getInt("duration")
-                if (duration == -1) {
+                val endDate = category.endDate
+                if (duration == -1 || endDate == null) {
                     plugin.langYml.getFormattedString("infinity")
                 } else {
-                    val millisLeft = category.endDate!!.atZone(ZoneId.systemDefault()).toInstant()
+                    val millisLeft = endDate.atZone(ZoneId.systemDefault()).toInstant()
                         .toEpochMilli() - System.currentTimeMillis()
                     if (millisLeft <= 0) {
                         plugin.langYml.getFormattedString("category-expired")
@@ -403,7 +419,7 @@ object InternalPlaceholders {
             plugin.langYml.getFormattedString("season-finished")
         } else {
             val millisLeft = nextWeek.startDate
-                .atZone(java.time.ZoneId.systemDefault())
+                .atZone(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli() - System.currentTimeMillis()
             msToString(millisLeft.coerceAtLeast(0))
@@ -419,7 +435,7 @@ object InternalPlaceholders {
             return plugin.langYml.getFormattedString("season-finished")
         }
 
-        val millisLeft = battlepass.endDate.atZone(java.time.ZoneId.systemDefault())
+        val millisLeft = battlepass.endDate.atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli() - System.currentTimeMillis()
         return msToString(millisLeft.coerceAtLeast(0))
