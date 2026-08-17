@@ -14,7 +14,6 @@ import org.bukkit.entity.Player
 
 object ClaimHandler {
 
-    // Routes: /<pass> claim <tier|all> [free|premium]
     fun handleClaim(player: Player, pass: BattlePass, args: MutableList<String>) {
         val tierArg = args.getOrNull(1)?.lowercase() ?: run {
             Messages.sendDynamicPassUsage(player)
