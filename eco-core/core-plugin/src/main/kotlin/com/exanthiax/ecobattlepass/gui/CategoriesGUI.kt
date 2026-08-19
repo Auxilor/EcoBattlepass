@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.exanthiax.ecobattlepass.gui
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
@@ -63,11 +61,25 @@ class CategoriesGUI(
 
             buildPageItem(prevPagePath, "active")?.let { active ->
                 val inactive = if (backButton) null else buildPageItem(prevPagePath, "inactive")
-                addPageChanger(PageChanger.Direction.BACKWARDS, active, inactive, pageChangeSound, prevRow, prevCol)
+                addPageChanger(
+                    PageChanger.Direction.BACKWARDS,
+                    active,
+                    inactive,
+                    pageChangeSound,
+                    prevRow,
+                    prevCol
+                )
             }
 
             buildPageItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(PageChanger.Direction.FORWARDS, active, buildPageItem(nextPagePath, "inactive"), pageChangeSound, nextRow, nextCol)
+                addPageChanger(
+                    PageChanger.Direction.FORWARDS,
+                    active,
+                    buildPageItem(nextPagePath, "inactive"),
+                    pageChangeSound,
+                    nextRow,
+                    nextCol
+                )
             }
 
             for (page in 1..maxPage) {

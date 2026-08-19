@@ -14,8 +14,4 @@ object Rewards : RegistrableCategory<Reward>("reward", "rewards") {
     override fun clear(plugin: LibreforgePlugin) {
         registry.clear()
     }
-
-//    override fun afterReload(plugin: LibreforgePlugin) {
-//        BattlePassLegacy.update()
-//    }
 }

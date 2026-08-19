@@ -130,12 +130,9 @@ abstract class ProperLevelComponent : AutofillComponent() {
         return ceil(level.toDouble() / levelsPerPage).toInt()
     }
 
-    /** Get the item to be shown given a specific [level] and [levelState]. */
     abstract fun getLevelItem(player: Player, menu: Menu, level: Int, levelState: LevelState): ItemStack
 
-    /** Get the state given a [player]'s [level]. */
     abstract fun getLevelState(player: Player, level: Int): LevelState
 
-    /** Get the action given a [player]'s [level]. */
     abstract fun getLeftClickAction(player: Player, level: Int, levelState: LevelState): () -> Unit
 }

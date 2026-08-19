@@ -4,6 +4,8 @@ import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.commands.EcoBattlePassCommand
+import com.exanthiax.ecobattlepass.config.CategoriesYml
+import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
 import com.exanthiax.ecobattlepass.libreforge.conditions.ConditionHasBPPremium
 import com.exanthiax.ecobattlepass.libreforge.conditions.ConditionHasBPTier
 import com.exanthiax.ecobattlepass.libreforge.effects.EffectBPExpMultiplier
@@ -14,7 +16,6 @@ import com.exanthiax.ecobattlepass.libreforge.effects.EffectSetBPTier
 import com.exanthiax.ecobattlepass.libreforge.effects.EffectTaskExpMultiplier
 import com.exanthiax.ecobattlepass.libreforge.filters.FilterReward
 import com.exanthiax.ecobattlepass.libreforge.filters.FilterTask
-import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPExpGain
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPRewardClaim
 import com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPTaskComplete
@@ -25,43 +26,24 @@ import com.exanthiax.ecobattlepass.tasks.BattleTasks
 import com.exanthiax.ecobattlepass.utils.BattlePassListener
 import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
-import org.bukkit.Bukkit
-import com.willfp.eco.core.config.BaseConfig
-import com.willfp.eco.core.config.ConfigType
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.filters.Filters
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.triggers.Triggers
+import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
-lateinit var plugin: EcoBattlePass
+internal lateinit var plugin: EcoBattlePass
     private set
 
 class EcoBattlePass : LibreforgePlugin() {
+    val categoriesYml = CategoriesYml(this)
+
     init {
         plugin = this
-        this.configHandler.addConfig(
-            object : BaseConfig(
-                "categories",
-                this,
-                false,
-                ConfigType.YAML
-            ) {}
-        )
-    }
-
-    override fun loadListeners(): List<Listener> {
-        return listOf(
-            BattlePassListener
-        )
-    }
-
-    override fun loadPluginCommands(): MutableList<PluginCommand> {
-        return mutableListOf(
-            EcoBattlePassCommand
-        )
+        this.configHandler.addConfig(categoriesYml)
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
@@ -100,7 +82,6 @@ class EcoBattlePass : LibreforgePlugin() {
     }
 
     override fun handleReload() {
-        // BattlePassLegacy.update()
         BattlePasses.updateTaskBindings()
         BattleTiersGUI.onReload()
     }
@@ -110,6 +91,18 @@ class EcoBattlePass : LibreforgePlugin() {
             Categories.values().forEach { category -> if (category.isToReset()) category.reset() }
             BattlePasses.tickUpdates()
         }
+    }
+
+    override fun loadListeners(): List<Listener> {
+        return listOf(
+            BattlePassListener
+        )
+    }
+
+    override fun loadPluginCommands(): MutableList<PluginCommand> {
+        return mutableListOf(
+            EcoBattlePassCommand
+        )
     }
 
     override fun getCustomCharts() = listOf(

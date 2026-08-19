@@ -53,4 +53,14 @@ class Reward(private val _id: String, val config: Config) : Registrable {
 
         return true
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Reward) return false
+        return _id == other._id
+    }
+
+    override fun hashCode(): Int = _id.hashCode()
+
+    override fun toString(): String = "Reward(id='$_id')"
 }

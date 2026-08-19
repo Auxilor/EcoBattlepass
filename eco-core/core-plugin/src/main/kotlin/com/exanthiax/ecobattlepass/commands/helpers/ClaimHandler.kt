@@ -14,9 +14,6 @@ import org.bukkit.entity.Player
 
 object ClaimHandler {
 
-    /**
-     * Routes: /<pass> claim <tier|all> [free|premium]
-     */
     fun handleClaim(player: Player, pass: BattlePass, args: MutableList<String>) {
         val tierArg = args.getOrNull(1)?.lowercase() ?: run {
             Messages.sendDynamicPassUsage(player)
@@ -36,9 +33,6 @@ object ClaimHandler {
         }
     }
 
-    /**
-     * Claims rewards for a single tier.
-     */
     fun handleClaimSingle(player: Player, pass: BattlePass, tierNumber: Int, typeArg: String?) {
         val tier = pass.getTier(tierNumber) ?: run {
             Messages.sendTierNotFound(player, tierNumber)
@@ -124,9 +118,6 @@ object ClaimHandler {
         player.openMenu?.refresh(player)
     }
 
-    /**
-     * Claims all available tier rewards.
-     */
     fun handleClaimAll(player: Player, pass: BattlePass, typeArg: String?) {
         if (typeArg == "premium" && !player.hasPremium(pass)) {
             Messages.sendClaimNoPremium(player)

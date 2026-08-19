@@ -14,8 +14,8 @@ class PlayerTierLevelUpEvent(player: Player, val battlepass: BattlePass, val lev
         return cancelled
     }
 
-    override fun setCancelled(p0: Boolean) {
-        cancelled = p0
+    override fun setCancelled(cancelled: Boolean) {
+        this.cancelled = cancelled
     }
 
     override fun getHandlers(): HandlerList {

@@ -4,16 +4,13 @@ import com.exanthiax.ecobattlepass.plugin
 import com.willfp.eco.util.toNiceString
 
 fun msToString(ms: Long): String {
-    // Define constants
     val secondsPerMs = 0.001
     val secondsInMinute = 60
     val secondsInHour = 3600
     val secondsInDay = 86400
 
-    // Convert ticks to total seconds
     val totalSeconds = ms * secondsPerMs
 
-    // Calculate days, hours, minutes, and seconds
     val days = (totalSeconds / secondsInDay).toInt()
     val hours = ((totalSeconds % secondsInDay) / secondsInHour).toInt()
     val minutes = ((totalSeconds % secondsInHour) / secondsInMinute).toInt()
@@ -37,6 +34,5 @@ fun msToString(ms: Long): String {
     lst += plugin.configYml.getFormattedString("time-format.seconds")
         .replace("%value%", seconds.toNiceString())
 
-    // Format the result as a string
     return lst.joinToString(plugin.configYml.getFormattedString("time-format.split"))
 }

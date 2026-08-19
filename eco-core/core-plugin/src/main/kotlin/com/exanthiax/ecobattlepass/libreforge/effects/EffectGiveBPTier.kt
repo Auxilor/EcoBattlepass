@@ -27,12 +27,14 @@ object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
             type = ArgType.EXPRESSION,
             example = "1 + %level%"
         )
-        require("battlepass",
+        require(
+            "battlepass",
             "You must specify a battlepass!",
-            {passId -> BattlePasses.getByID(passId)},
-            {battlepass -> battlepass != null}
+            { passId -> BattlePasses.getByID(passId) },
+            { battlepass -> battlepass != null }
         )
-        describe("battlepass",
+        describe(
+            "battlepass",
             description = "The ID of the battlepass to give tiers for.",
             type = ArgType.STRING,
             example = "halloween_pass"

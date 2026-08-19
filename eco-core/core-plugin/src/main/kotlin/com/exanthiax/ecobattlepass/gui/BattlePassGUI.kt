@@ -142,6 +142,6 @@ object BattlePassGUI {
             }
         }
 
-            menu.open(player)
-        }
+        menu.open(player)
     }
+}

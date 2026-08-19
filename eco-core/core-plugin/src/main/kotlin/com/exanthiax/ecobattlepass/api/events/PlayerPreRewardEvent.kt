@@ -13,8 +13,8 @@ class PlayerPreRewardEvent(player: Player, val reward: Reward): PlayerEvent(play
         return cancelled
     }
 
-    override fun setCancelled(p0: Boolean) {
-        cancelled = p0
+    override fun setCancelled(cancelled: Boolean) {
+        this.cancelled = cancelled
     }
 
     override fun getHandlers(): HandlerList {

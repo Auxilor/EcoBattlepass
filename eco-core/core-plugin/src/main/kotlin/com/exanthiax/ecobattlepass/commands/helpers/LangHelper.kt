@@ -8,15 +8,8 @@ import com.willfp.eco.util.toNiceString
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-/**
- * Centralized access to lang.yml messages.
- *
- * - "send" functions: directly send a message to a CommandSender (for errors/usage)
- * - "get" functions: return the raw string for further placeholder replacement (for success/feedback messages)
- */
 object Messages {
 
-    // ===== Error / Requirement Messages =====
     fun sendPlayerRequired(sender: CommandSender) =
         sender.sendMessage(plugin.langYml.getMessage("player-required"))
 
@@ -53,7 +46,6 @@ object Messages {
     fun sendInvalidTask(sender: CommandSender) =
         sender.sendMessage(plugin.langYml.getMessage("invalid-task"))
 
-    // ===== Claim Command Messages =====
     fun sendTierNotFound(sender: CommandSender, tier: Int) =
         sender.sendMessage(
             plugin.langYml.getMessage("tier-not-found")
@@ -84,7 +76,6 @@ object Messages {
                 .replace("%count%", count.toString())
         )
 
-    // ===== Give Command Success Messages =====
     fun getGivenExperience(): String = plugin.langYml.getMessage("given-experience")
     fun getReceivedExperience(): String = plugin.langYml.getMessage("received-experience")
 
@@ -94,15 +85,12 @@ object Messages {
     fun getGivenTaskProgress(): String = plugin.langYml.getMessage("given-task-progress")
     fun getReceivedTaskProgress(): String = plugin.langYml.getMessage("received-task-progress")
 
-    // ===== Complete Task =====
     fun getCompletedTask(): String = plugin.langYml.getMessage("completed-task")
     fun getTaskAlreadyCompleted(): String = plugin.langYml.getMessage("task-already-completed")
 
-    // ===== Reset Command =====
     fun getResetPlayer(): String = plugin.langYml.getMessage("reset-player")
     fun getResetTask(): String = plugin.langYml.getMessage("reset-task")
 
-    // ===== Set Premium Command =====
     fun getAlreadyPremium(): String = plugin.langYml.getMessage("already-premium")
     fun getNotPremium(): String = plugin.langYml.getMessage("not-premium")
 
@@ -114,7 +102,6 @@ object Messages {
 
     fun getPremiumBroadcast(): String = plugin.langYml.getMessage("premium-broadcast")
 
-    // ===== Usage / Help =====
     fun sendGiveUsage(sender: CommandSender) =
         sender.sendMessage("§cUsage: /ecobattlepass give <xp|tiers|taskxp> <player|all> <pass> [args...]")
 
@@ -137,10 +124,6 @@ object Messages {
         sender.sendMessage("§cUsage: /<pass> [tiers|quests <category>|claim <tier|all> [free|premium]]")
 }
 
-/**
- * Extension function to replace common placeholders in feedback messages.
- * Used for success/info messages that include player name, amount, pass, and optionally task.
- */
 fun String.replacePlaceholders(
     player: Player,
     amount: Number,

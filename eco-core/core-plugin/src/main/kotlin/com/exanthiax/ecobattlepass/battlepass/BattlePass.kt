@@ -184,4 +184,14 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
     private fun <T : Any> writeToProfile(profile: Profile, key: PersistentDataKey<T>) {
         profile.write(key, key.defaultValue)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BattlePass) return false
+        return _id == other._id
+    }
+
+    override fun hashCode(): Int = _id.hashCode()
+
+    override fun toString(): String = "BattlePass(id='$_id')"
 }
