@@ -12,12 +12,13 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.data.profile
+import com.willfp.eco.core.progression.LevelProgression
+import com.willfp.eco.core.progression.StopReason
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionAttachment
 import java.util.UUID
-import kotlin.math.abs
 
 fun OfflinePlayer.getTier(pass: BattlePass): Int {
     return this.profile.read(pass.tierKey)
@@ -163,10 +164,9 @@ fun Player.checkCompletedQuest(task: ActiveBattleTask) {
 }
 
 fun Player.giveBPExperience(pass: BattlePass, experience: Double, withMultipliers: Boolean = true) {
-    val exp = abs(
-        if (withMultipliers) experience * this.bpExperienceMultiplier
-        else experience
-    )
+    // Previously abs() turned a negative amount into a gain, hiding the misconfiguration.
+    // giveExactBPExperience now refuses non-positive amounts instead.
+    val exp = if (withMultipliers) experience * this.bpExperienceMultiplier else experience
 
     val gainEvent = PlayerBPExpGainEvent(this, pass, exp, !withMultipliers)
     Bukkit.getPluginManager().callEvent(gainEvent)
@@ -179,31 +179,73 @@ fun Player.giveBPExperience(pass: BattlePass, experience: Double, withMultiplier
 }
 
 fun Player.giveExactBPExperience(pass: BattlePass, experience: Double) {
-    val level = this.getTier(pass)
+    if (!experience.isFinite() || experience <= 0.0) {
+        // Previously abs() turned a negative into a gain, hiding the misconfiguration.
+        plugin.logger.warning("Refused a non-positive BP xp grant of $experience for ${pass.id}")
+        return
+    }
 
-    val progress = this.getPassExp(pass) + experience
+    val startLevel = this.getTier(pass)
+    val change = LevelProgression.progress(pass.curve, startLevel, this.getPassExp(pass), experience)
 
-    if (progress >= pass.getExpForLevel(level + 1)) {
-        val overshoot = progress - pass.getExpForLevel(level + 1)
-        this.setPassExp(pass, 0.0)
-        this.setTier(pass, level + 1)
-        val levelUpEvent = PlayerTierLevelUpEvent(this, pass, level + 1)
-        Bukkit.getPluginManager().callEvent(levelUpEvent)
-        if (!levelUpEvent.isCancelled) {
-            this.giveExactBPExperience(pass, overshoot)
+    if (change.stopReason == StopReason.INVALID_REQUIREMENT) {
+        pass.warnBrokenCurveOnce(startLevel + 1)
+    }
+
+    val gained = change.levelsGained
+
+    if (gained == null) {
+        this.setPassExp(pass, change.newXp)
+        return
+    }
+
+    // Fire per level, committing as we go. Nothing is written before the event that can veto
+    // it, so a cancellation leaves the player exactly where they were.
+    var committed = startLevel
+
+    for (level in gained) {
+        val event = PlayerTierLevelUpEvent(this, pass, level)
+        Bukkit.getPluginManager().callEvent(event)
+
+        if (event.isCancelled) {
+            break
         }
+
+        this.setTier(pass, level)
+        committed = level
+    }
+
+    if (committed == change.newLevel) {
+        this.setPassExp(pass, change.newXp)
     } else {
-        this.setPassExp(pass, progress)
+        // A cancelled tier stops the climb. Bank the XP that was not spent on the tiers we
+        // did not grant, so the player does not lose progress to another plugin's veto.
+        var refunded = change.newXp
+        for (level in (committed + 1)..change.newLevel) {
+            val cost = pass.curve.xpToReach(level)
+
+            // Every level in this range was affordable a moment ago, so its cost is finite.
+            // Guard anyway: banking an infinite value would persist Infinity to the player
+            // profile and render as "Infinity" in every placeholder from then on.
+            if (!cost.isFinite()) {
+                break
+            }
+
+            refunded += cost
+        }
+        this.setPassExp(pass, refunded)
     }
 }
 
 fun Player.giveExactBPTiers(pass: BattlePass, amount: Int) {
     repeat(amount) {
         val currentTier = this.getTier(pass)
-        val nextTier = currentTier + 1
-        if (pass.getTier(nextTier) == null) {
+        val nextTier = (currentTier + 1).coerceAtMost(pass.maxLevel)
+
+        if (nextTier == currentTier || pass.getTier(nextTier) == null) {
             return
         }
+
         this.setTier(pass, nextTier)
         this.setPassExp(pass, 0.0) // Reset XP when tier goes up
         val levelUpEvent = PlayerTierLevelUpEvent(this, pass, nextTier)

@@ -18,6 +18,9 @@ import com.willfp.eco.core.data.Profile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.data.profile
+import com.willfp.eco.core.progression.LevelCurve
+import com.willfp.eco.core.progression.LevelCurves
+import com.willfp.eco.core.progression.LevelProgression
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.evaluateExpression
 import com.willfp.eco.util.toNiceString
@@ -76,6 +79,44 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
         LocalDateTime.parse(dateTimeString, formatter)
     }
 
+    // Declared before `tiers` below, which reads `maxLevel` during its own construction.
+    private val parsedCurve = LevelCurves.parse(
+        config.getStringOrNull("battlepass.xp-formula"),
+        config.getDoublesOrNull("battlepass.xp-requirements"),
+        config.getIntOrNull("battlepass.max-tier"),
+        // Tiers start at 0 and there is no free tier. Confirmed against Task 0 recording.
+        startLevel = 0,
+        freeFirstLevel = false
+    ) { expression, level ->
+        evaluateExpression(expression.replace("%level%", level.toString()))
+    }
+
+    val curve: LevelCurve = parsedCurve.curve
+
+    val maxLevel: Int
+        get() = curve.maxLevel
+
+    init {
+        // Logged once at load, not per XP gain: a broken formula recurs on every grant.
+        for (problem in parsedCurve.problems) {
+            plugin.logger.warning("Battle pass $_id: ${problem.path} - ${problem.message}")
+        }
+    }
+
+    private val brokenCurveLevelsWarned = mutableSetOf<Int>()
+
+    /** Warn about an unusable curve requirement once per pass per level, not once per grant. */
+    fun warnBrokenCurveOnce(level: Int) {
+        if (brokenCurveLevelsWarned.add(level)) {
+            plugin.logger.warning(
+                "Battle pass $_id: the xp requirement for tier $level is not usable - " +
+                        "progression will stop there until the config is fixed"
+            )
+        }
+    }
+
+    fun getExpForLevel(level: Int): Double = curve.xpToReach(level)
+
     val tiers = config.getSubsections("tiers").map { BPTier(it, this) }.toMutableList().apply {
         val registeredTiers = this.map { tier -> tier.number }
 
@@ -91,26 +132,15 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
         )
     }
 
-    val xpFormula = config.getString("battlepass.xp-formula")
-
-    val maxLevel: Int
-        get() = config.getInt("battlepass.max-tier")
-
     val categories: List<Category>
         get() = Categories.values().filter { it.battlepass == this }
             .sortedWith(compareBy<Category> { it.config.getInt("priority") }.thenBy { it.id })
 
-    fun getExpForLevel(level: Int): Double {
-        return if (level <= 0) {
-            0.0
-        } else evaluateExpression(
-            xpFormula.replace("%level%", level.toString()),
-        )
-    }
-
-    fun getProgress(player: Player): Double {
-        return player.getPassExp(this) / getExpForLevel(player.getTier(this) + 1)
-    }
+    fun getProgress(player: Player): Double = LevelProgression.progressFraction(
+        player.getPassExp(this),
+        curve.xpToReach(player.getTier(this) + 1),
+        player.getTier(this) >= maxLevel
+    )
 
     fun getFormattedProgress(player: Player): String {
         return (getProgress(player) * 100.0).toNiceString()
