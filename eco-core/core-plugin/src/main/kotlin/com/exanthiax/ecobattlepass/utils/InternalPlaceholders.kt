@@ -12,6 +12,7 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.willfp.eco.core.placeholder.PlayerDynamicPlaceholder
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
+import com.willfp.eco.core.progression.ProgressionPlaceholders
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.formatWithCommas
@@ -24,8 +25,6 @@ import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 object InternalPlaceholders {
-
-    private val regex by lazy { Regex("%tier_(-?\\d+)(_numeral)?%") }
 
     object BattlePassPlaceholders {
         fun register(battlepass: BattlePass) {
@@ -175,7 +174,7 @@ object InternalPlaceholders {
 
         fun replace(input: String, battlepass: BattlePass, player: Player): String {
             val tier = player.getTier(battlepass)
-            var result = applyBattlePassReplacements(
+            val result = applyBattlePassReplacements(
                 input = input,
                 battlepass = battlepass,
                 player = player,
@@ -184,14 +183,11 @@ object InternalPlaceholders {
             )
                 .formatEco(player = player, formatPlaceholders = true)
 
-            result = regex.replace(result) { match ->
-                val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-                val isNumeral = match.groupValues[2].isNotEmpty()
-                val newTier = tier + offset
-                if (isNumeral) newTier.toNumeral() else newTier.toNiceString()
-            }
-
-            return result
+            // Runs after formatEco, as the hand-rolled block it replaces did: a placeholder
+            // resolved by formatEco can itself contain a %tier_N%, and moving this earlier
+            // would stop resolving those. Also brings %previous_tier% and
+            // %previous_tier_numeral%, which battle passes never had.
+            return ProgressionPlaceholders.inject(result, "tier", tier)
         }
 
         fun replaceAll(inputs: List<String>, battlepass: BattlePass, player: Player) =
@@ -200,7 +196,7 @@ object InternalPlaceholders {
 
     object TierPlaceholders {
         fun replace(input: String, tier: BPTier, battlepass: BattlePass, player: Player): String {
-            var result = applyBattlePassReplacements(
+            val result = applyBattlePassReplacements(
                 input = input,
                 battlepass = battlepass,
                 player = player,
@@ -209,14 +205,7 @@ object InternalPlaceholders {
             )
                 .formatEco(player = player, formatPlaceholders = true)
 
-            result = regex.replace(result) { match ->
-                val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-                val isNumeral = match.groupValues[2].isNotEmpty()
-                val newTier = tier.number + offset
-                if (isNumeral) newTier.toNumeral() else newTier.toNiceString()
-            }
-
-            return result
+            return ProgressionPlaceholders.inject(result, "tier", tier.number)
         }
 
         fun replaceAll(inputs: List<String>, tier: BPTier, battlepass: BattlePass, player: Player) =
