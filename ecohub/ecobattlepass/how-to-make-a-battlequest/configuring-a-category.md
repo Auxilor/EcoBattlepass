@@ -83,6 +83,8 @@ timer-format: # Wording for %time%, by category state
   none: "One-Time quest (does not end or reset)"
 ```
 
+Resets are counted from `start-date`, so a `reset-time` of `1440` resets at the same time every day. A reset that falls while the server is offline runs on the next start, and each quest picks a new set of tasks when it resets.
+
 ### Quests
 
 The `quests:` list is the quest IDs in the category. List order is GUI order.
