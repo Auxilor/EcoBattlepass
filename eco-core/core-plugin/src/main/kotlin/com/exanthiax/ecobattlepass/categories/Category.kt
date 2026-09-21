@@ -7,12 +7,17 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.data.PlayerProfile
+import com.willfp.eco.core.data.ServerProfile
+import com.willfp.eco.core.data.forEachSavedProfile
+import com.willfp.eco.core.data.keys.PersistentDataKey
+import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.registry.Registrable
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -50,15 +55,21 @@ class Category(private val _id: String, val config: Config) : Registrable {
 
     val resetTimer = config.getInt("reset-time").toLong() * 60000L
 
+    private val lastResetIntervalKey = PersistentDataKey(
+        plugin.createNamespacedKey("${_id}_last_reset_interval"),
+        PersistentDataKeyType.INT, 0
+    )
+
     fun getCompleted(player: Player): Int = this.quests.count { player.hasCompletedQuest(it) }
 
     fun getNextResetDate(): LocalDateTime? {
         if (resetTimer <= 0) return null
-        var current = startDate
-        while (true) {
-            current = current.plusNanos(resetTimer * 1_000_000L)
-            if (current.isAfter(LocalDateTime.now())) return current
-        }
+        return startDate.plus(Duration.ofMillis((elapsedIntervals() + 1) * resetTimer))
+    }
+
+    private fun elapsedIntervals(): Long {
+        val elapsed = Duration.between(startDate, LocalDateTime.now()).toMillis()
+        return if (elapsed <= 0) 0 else elapsed / resetTimer
     }
 
     fun getDisplayItem(player: Player): ItemStack {
@@ -98,19 +109,21 @@ class Category(private val _id: String, val config: Config) : Registrable {
 
     fun isToReset(): Boolean {
         if (resetTimer <= 0) return false
-        val nextReset = getNextResetDate()!!
-        return nextReset.isBefore(LocalDateTime.now()) || nextReset == LocalDateTime.now()
+        return elapsedIntervals() > ServerProfile.load().read(lastResetIntervalKey)
     }
 
     fun reset() {
-        for (player in Bukkit.getOfflinePlayers()) {
-            for (quest in this.quests) {
-                quest.reset(player)
-            }
-        }
+        ServerProfile.load().write(lastResetIntervalKey, elapsedIntervals().toInt())
 
         for (quest in this.quests) {
             quest.regenerate()
+        }
+
+        forEachSavedProfile(plugin) { uuid ->
+            val profile = PlayerProfile.load(uuid)
+            for (quest in this.quests) {
+                quest.reset(profile)
+            }
         }
     }
 
