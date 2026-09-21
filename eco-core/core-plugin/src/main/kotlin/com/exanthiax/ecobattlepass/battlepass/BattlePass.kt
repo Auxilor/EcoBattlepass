@@ -12,16 +12,16 @@ import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
-import com.willfp.eco.core.Eco
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.data.PlayerProfile
 import com.willfp.eco.core.data.Profile
+import com.willfp.eco.core.data.forEachSavedProfile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
 import com.willfp.eco.core.data.profile
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.evaluateExpression
 import com.willfp.eco.util.toNiceString
-import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
@@ -148,19 +148,25 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
     }
 
     fun resetAll() {
-        for (offlinePlayer in Bukkit.getOfflinePlayers()) {
-            reset(offlinePlayer)
+        forEachSavedProfile(plugin) { uuid ->
+            reset(PlayerProfile.load(uuid))
         }
     }
 
-    @Suppress("UnstableApiUsage")
     fun reset(player: OfflinePlayer) {
-        val profile = player.profile
-        val keys = Eco.get().registeredPersistentDataKeys.filter { it.key.namespace == "ecobattlepass" }
-        for (persistentDataKey in keys) {
-            persistentDataKey.type
-            writeToProfile(profile, persistentDataKey)
+        reset(player.profile)
+    }
+
+    fun reset(profile: Profile) {
+        for (category in categories) {
+            for (quest in category.quests) {
+                quest.reset(profile)
+            }
         }
+
+        writeToProfile(profile, tierKey)
+        writeToProfile(profile, passExpKey)
+        writeToProfile(profile, receivedTiersKey)
     }
 
     fun getTier(level: Int): BPTier? {
