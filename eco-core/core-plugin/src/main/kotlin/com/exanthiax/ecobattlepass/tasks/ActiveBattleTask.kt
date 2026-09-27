@@ -4,14 +4,14 @@ import com.exanthiax.ecobattlepass.api.events.PlayerTaskExpGainEvent
 import com.exanthiax.ecobattlepass.api.giveTaskExperience
 import com.exanthiax.ecobattlepass.api.hasCompletedQuest
 import com.exanthiax.ecobattlepass.api.hasCompletedTask
-import com.exanthiax.ecobattlepass.api.setCompletedTask
-import com.exanthiax.ecobattlepass.api.setTaskProgress
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.data.Profile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
+import com.willfp.eco.core.data.profile
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.util.formatEco
 import com.willfp.libreforge.counters.Accumulator
@@ -66,8 +66,12 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
     }
 
     fun reset(player: OfflinePlayer) {
-        player.setCompletedTask(this, false)
-        player.setTaskProgress(this, 0.0)
+        reset(player.profile)
+    }
+
+    fun reset(profile: Profile) {
+        profile.write(completedKey, false)
+        profile.write(progressKey, 0.0)
     }
 
     fun getDisplayItem(player: Player): ItemStack {

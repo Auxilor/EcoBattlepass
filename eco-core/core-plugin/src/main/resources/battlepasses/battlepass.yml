@@ -6,7 +6,7 @@ battlepass:
   command: 'battlepass' # The command to open the battle pass GUI
   premium-permission: "ecobattlepass.pass.premium" # The permission required to access the premium path
   battlepass-start: 2025-01-01 00:00 # The date the battle pass starts, used for scheduling start. This must match the date format in config.yml, otherise you will get errors.
-  battlepass-end: 2026-01-01 00:00 # The date the battle pass starts, used for scheduling start. This must match the date format in config.yml, otherise you will get errors.
+  battlepass-end: 2099-12-31 23:59 # The date the battle pass ends. This must match the date format in config.yml, otherise you will get errors.
 
 # Below are the tier rewards for the battlepass.
 # The tier is the level the player needs to reach to unlock the rewards.

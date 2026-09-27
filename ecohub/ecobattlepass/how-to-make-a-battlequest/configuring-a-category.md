@@ -76,12 +76,9 @@ priority: 0 # Sort order; 0 is highest priority and shows first
 start-date: 2025-03-23 00:00 # When it starts; format YYYY-MM-DD HH:MM
 duration: 100000 # Minutes the category stays open; -1 for no end
 reset-time: 1440 # Minutes between resets; 1440 = daily, -1 for no reset
-timer-format: # Wording for %time%, by category state
-  start: "Starts in %time%"
-  end: "Ends in %time%"
-  reset: "Resets in %time%"
-  none: "One-Time quest (does not end or reset)"
 ```
+
+Resets are counted from `start-date`, so a `reset-time` of `1440` resets at the same time every day. A reset that falls while the server is offline runs on the next start, and each quest picks a new set of tasks when it resets.
 
 ### Quests
 

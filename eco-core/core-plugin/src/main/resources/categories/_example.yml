@@ -20,12 +20,6 @@ start-date: 2025-03-23 00:00 # The date the category starts %ecobattlepass_categ
 duration: 100000 # The duration of the category in minutes, set to -1 for no end. This allows you to end/lock categories after a time frame.
 reset-time: 1440 # The amount of minutes between resets. # Set to 1440 for daily resets, set to -1 for no reset.
 
-timer-format: # The format of the timer in the GUI.
-  start: "Starts in %time%"
-  end: "Ends in %time%"
-  reset: "Resets in %time%"
-  none: "One-Time quest (does not end or reset)"
-
 # The list of Quest ID(s) to be completed.
 # The order of this list is what determines the order within the Category GUI.
 quests:
