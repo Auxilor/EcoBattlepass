@@ -292,7 +292,7 @@ object InternalPlaceholders {
                 .replace("%pass_id%", category.battlepass.id)
                 .replace("%completed%", category.getCompleted(player).toString())
                 .replace("%total%", category.quests.size.toString())
-                .replace("%time%", msToString(category.getDisplayableMs()))
+                .replace("%time%", category.getDisplayableTime())
                 .formatEco(player = player, formatPlaceholders = true)
         }
 

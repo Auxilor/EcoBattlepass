@@ -6,6 +6,7 @@ import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.exanthiax.ecobattlepass.utils.msToString
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.data.PlayerProfile
 import com.willfp.eco.core.data.ServerProfile
@@ -97,6 +98,10 @@ class Category(private val _id: String, val config: Config) : Registrable {
             nextDate - System.currentTimeMillis()
         }
     }
+
+    fun getDisplayableTime(): String =
+        if (getDisplayableStatusKey() == "none") plugin.langYml.getFormattedString("infinity")
+        else msToString(getDisplayableMs())
 
     fun getDisplayableStatusKey(): String {
         return if (this.isActive) {
