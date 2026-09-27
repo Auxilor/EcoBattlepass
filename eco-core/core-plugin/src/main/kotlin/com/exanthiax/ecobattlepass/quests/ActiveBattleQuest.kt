@@ -1,14 +1,14 @@
 package com.exanthiax.ecobattlepass.quests
 
-import com.exanthiax.ecobattlepass.api.setCompletedQuest
 import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
-import com.exanthiax.ecobattlepass.utils.msToString
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.data.Profile
 import com.willfp.eco.core.data.ServerProfile
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
+import com.willfp.eco.core.data.profile
 import com.willfp.eco.util.formatEco
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -84,9 +84,13 @@ class ActiveBattleQuest(val config: Config, val category: Category) {
     }
 
     fun reset(player: OfflinePlayer) {
-        player.setCompletedQuest(this, false)
+        reset(player.profile)
+    }
+
+    fun reset(profile: Profile) {
+        profile.write(completedKey, false)
         this._tasks.forEach {
-            it.reset(player)
+            it.reset(profile)
         }
     }
 
@@ -110,12 +114,11 @@ class ActiveBattleQuest(val config: Config, val category: Category) {
                 result.add(line.replace("%quest_tier%", this.parent.formattedName))
             } else if (line.contains("%quest_timer%")) {
                 val key = this.category.getDisplayableStatusKey()
-                val formattedTime = msToString(this.category.getDisplayableMs())
                 result.add(
                     line.replace(
                         "%quest_timer%", plugin.configYml
                             .getString("quests-icon.timer-format.$key")
-                            .replace("%time%", formattedTime)
+                            .replace("%time%", this.category.getDisplayableTime())
                     ),
                 )
             } else {
