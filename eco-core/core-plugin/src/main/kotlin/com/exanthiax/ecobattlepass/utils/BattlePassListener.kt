@@ -17,11 +17,9 @@ object BattlePassListener : Listener {
     fun handleBPLevelUp(event: PlayerTierLevelUpEvent) {
         val player = event.player
 
-        if (event.player.getTier(event.battlepass) >= event.battlepass.maxLevel) {
-            event.isCancelled = true
-            return
-        }
-
+        // The max-tier cap is now enforced inside LevelProgression.progress (XP path) and
+        // giveExactBPTiers (tier path), so a listener reverting after the fact is redundant
+        // and was the source of the two paths disagreeing.
         event.player.sendMessage(
             InternalPlaceholders.BattlePassPlaceholders
                 .replace(plugin.langYml.getMessage("tier-up"), event.battlepass, player)
