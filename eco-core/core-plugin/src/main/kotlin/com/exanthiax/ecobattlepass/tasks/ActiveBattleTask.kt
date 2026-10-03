@@ -48,7 +48,7 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
 
     private val accumulator = object : Accumulator {
         override fun accept(player: Player, count: Double) {
-            if (!this@ActiveBattleTask.isActive(player) || !isBound) {
+            if (!this@ActiveBattleTask.isActive(player) || !isBound || plugin.isDisabledIn(player.world)) {
                 return
             }
 

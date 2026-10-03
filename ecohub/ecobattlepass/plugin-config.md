@@ -8,6 +8,9 @@ The main config file is `config.yml`, found at `/plugins/EcoBattlepass/config.ym
 ## Default config.yml
 
 ```yaml
+# Worlds that EcoBattlepass should be disabled in
+disabled-in-worlds: []
+
 # The amount of time (in milliseconds) that the GUI icons should be cached for
 # Prevents spamming the GUI to cause lag
 gui-cache-ttl: 1000
