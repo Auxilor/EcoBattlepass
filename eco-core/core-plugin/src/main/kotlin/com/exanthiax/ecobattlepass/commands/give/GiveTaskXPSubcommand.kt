@@ -10,6 +10,7 @@ import com.exanthiax.ecobattlepass.commands.helpers.replacePlaceholders
 import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.runOwned
 import com.willfp.eco.core.command.impl.Subcommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -68,30 +69,32 @@ object GiveTaskXPSubcommand : Subcommand(
         }
 
         for (player in players) {
-            player.giveTaskExperience(activeTask, amount)
+            player.runOwned {
+                player.giveTaskExperience(activeTask, amount)
 
-            val baseGiven = Messages.getGivenTaskProgress()
-            val baseReceived = Messages.getReceivedTaskProgress()
+                val baseGiven = Messages.getGivenTaskProgress()
+                val baseReceived = Messages.getReceivedTaskProgress()
 
-            sender.sendMessage(
-                baseGiven.replacePlaceholders(
-                    player = player,
-                    amount = amount,
-                    pass = pass,
-                    task = activeTask,
-                    taskName = activeTask.parent.name
+                sender.sendMessage(
+                    baseGiven.replacePlaceholders(
+                        player = player,
+                        amount = amount,
+                        pass = pass,
+                        task = activeTask,
+                        taskName = activeTask.parent.name
+                    )
                 )
-            )
 
-            player.sendMessage(
-                baseReceived.replacePlaceholders(
-                    player = player,
-                    amount = amount,
-                    pass = pass,
-                    task = activeTask,
-                    taskName = activeTask.parent.name
+                player.sendMessage(
+                    baseReceived.replacePlaceholders(
+                        player = player,
+                        amount = amount,
+                        pass = pass,
+                        task = activeTask,
+                        taskName = activeTask.parent.name
+                    )
                 )
-            )
+            }
         }
     }
 

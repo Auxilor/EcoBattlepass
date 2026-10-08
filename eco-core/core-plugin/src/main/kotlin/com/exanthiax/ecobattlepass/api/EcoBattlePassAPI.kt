@@ -19,6 +19,7 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionAttachment
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 fun OfflinePlayer.getTier(pass: BattlePass): Int {
     return this.profile.read(pass.tierKey)
@@ -48,11 +49,11 @@ fun Player.hasPremium(pass: BattlePass): Boolean {
     return this.hasPermission(pass.premiumPerm)
 }
 
-private val playerAttachments = mutableMapOf<UUID, PermissionAttachment>()
+private val playerAttachments = ConcurrentHashMap<UUID, PermissionAttachment>()
 
 fun Player.setPremium(pass: BattlePass, premium: Boolean) {
     val perm = pass.premiumPerm
-    val attachment = playerAttachments.getOrPut(this.uniqueId) { this.addAttachment(plugin) }
+    val attachment = playerAttachments.computeIfAbsent(this.uniqueId) { this.addAttachment(plugin) }
     attachment.setPermission(perm, premium)
     this.recalculatePermissions()
 }

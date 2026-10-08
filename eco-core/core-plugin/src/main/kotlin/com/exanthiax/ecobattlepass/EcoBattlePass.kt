@@ -87,7 +87,7 @@ class EcoBattlePass : LibreforgePlugin() {
     }
 
     override fun createTasks() {
-        this.scheduler.runAsyncTimer(1L, 100L) {
+        this.scheduler.async().runTimer(1L, 100L) {
             Categories.values().forEach { category -> if (category.isToReset()) category.reset() }
             BattlePasses.tickUpdates()
         }

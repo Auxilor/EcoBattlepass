@@ -49,6 +49,7 @@ class ActiveBattleQuest(val config: Config, val category: Category) {
         ServerProfile.load().write(savedTasksKey, picked.map { it.parent.id })
     }
 
+    @Volatile
     var tasks: List<ActiveBattleTask> = run {
         val loaded = loadSavedTasks()
         if (loaded != null) {

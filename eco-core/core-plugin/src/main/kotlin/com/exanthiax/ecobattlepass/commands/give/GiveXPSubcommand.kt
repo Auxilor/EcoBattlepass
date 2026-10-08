@@ -8,6 +8,7 @@ import com.exanthiax.ecobattlepass.commands.helpers.replacePlaceholders
 import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.runOwned
 import com.willfp.eco.core.command.impl.Subcommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -39,21 +40,33 @@ object GiveXPSubcommand : Subcommand(
         val isAll = players.size > 1
         val displayName = if (isAll) "all players" else players.first().name
 
-        for (player in players) {
-            player.giveExactBPExperience(pass, amount)
-
-            player.sendMessage(
-                baseReceived.replacePlaceholders(player, amount, pass)
+        fun sendGiven() {
+            sender.sendMessage(
+                baseGiven.replacePlaceholders(
+                    player = players.first(),
+                    amount = amount,
+                    pass = pass
+                ).replace("%playername%", displayName)
             )
         }
 
-        sender.sendMessage(
-            baseGiven.replacePlaceholders(
-                player = players.first(),
-                amount = amount,
-                pass = pass
-            ).replace("%playername%", displayName)
-        )
+        for (player in players) {
+            player.runOwned {
+                player.giveExactBPExperience(pass, amount)
+
+                player.sendMessage(
+                    baseReceived.replacePlaceholders(player, amount, pass)
+                )
+
+                if (!isAll) {
+                    sendGiven()
+                }
+            }
+        }
+
+        if (isAll) {
+            sendGiven()
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

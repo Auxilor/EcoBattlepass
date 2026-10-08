@@ -2,17 +2,20 @@ package com.exanthiax.ecobattlepass.commands
 
 import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.api.setPremium
+import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
 import com.exanthiax.ecobattlepass.commands.helpers.replacePlaceholders
 import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.runOwned
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 object SetPremiumCommand : PluginCommand(
@@ -21,7 +24,6 @@ object SetPremiumCommand : PluginCommand(
     "ecobattlepass.command.setpremium",
     false
 ) {
-    @Suppress("DEPRECATION")
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             Messages.sendSetPremiumUsage(sender)
@@ -48,6 +50,17 @@ object SetPremiumCommand : PluginCommand(
 
         val silent = arg4 == "silent" || arg3 == "silent"
 
+        player.runOwned { applyPremium(sender, player, pass, setToPremium, silent) }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun applyPremium(
+        sender: CommandSender,
+        player: Player,
+        pass: BattlePass,
+        setToPremium: Boolean,
+        silent: Boolean
+    ) {
         val currentlyHasPremium = player.hasPremium(pass)
 
         if (setToPremium && currentlyHasPremium) {
