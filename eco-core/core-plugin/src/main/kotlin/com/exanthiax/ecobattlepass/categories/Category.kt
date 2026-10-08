@@ -136,6 +136,7 @@ class Category(private val _id: String, val config: Config) : Registrable {
         get() = this.battlepass.isActive && LocalDateTime.now().isAfter(startDate) &&
                 (endDate == null || LocalDateTime.now().isBefore(endDate))
 
+    @Volatile
     var consideredActive: Boolean = isActive
 
     override fun equals(other: Any?): Boolean {

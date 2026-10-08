@@ -24,16 +24,19 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 object BattleTiersGUI {
-
+    @Volatile
     lateinit var layoutMode: LayoutMode
         private set
 
+    @Volatile
     lateinit var emptyDisplayMode: EmptyDisplayMode
         private set
 
+    @Volatile
     var openAtCurrentTier: Boolean = true
         private set
 
+    @Volatile
     var maxItemAmount: Int = 64
         private set
 

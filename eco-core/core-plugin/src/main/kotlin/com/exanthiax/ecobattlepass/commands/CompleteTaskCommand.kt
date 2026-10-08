@@ -11,6 +11,7 @@ import com.exanthiax.ecobattlepass.commands.helpers.replacePlaceholders
 import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.runOwned
 import com.willfp.eco.core.command.impl.PluginCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -71,8 +72,10 @@ object CompleteTaskCommand : PluginCommand(
                 continue  // Skip if already completed
             }
 
-            player.setCompletedTask(activeTask, true)
-            player.checkCompletedQuest(activeTask)
+            player.runOwned {
+                player.setCompletedTask(activeTask, true)
+                player.checkCompletedQuest(activeTask)
+            }
             anyCompleted = true
         }
 

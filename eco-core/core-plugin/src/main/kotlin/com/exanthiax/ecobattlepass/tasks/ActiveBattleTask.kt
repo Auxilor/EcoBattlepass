@@ -39,6 +39,7 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
         0.0
     )
 
+    @Volatile
     var isBound = false
 
     fun isActive(player: Player): Boolean {

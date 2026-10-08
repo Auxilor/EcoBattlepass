@@ -29,6 +29,7 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.ConcurrentHashMap
 
 class BattlePass(private val _id: String, val config: Config) : Registrable {
     init {
@@ -103,7 +104,7 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
         }
     }
 
-    private val brokenCurveLevelsWarned = mutableSetOf<Int>()
+    private val brokenCurveLevelsWarned: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
     /** Warn about an unusable curve requirement once per pass per level, not once per grant. */
     fun warnBrokenCurveOnce(level: Int) {
