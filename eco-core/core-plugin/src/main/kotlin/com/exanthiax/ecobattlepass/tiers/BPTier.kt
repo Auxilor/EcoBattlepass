@@ -4,6 +4,7 @@ import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.rewards.Reward
 import com.exanthiax.ecobattlepass.rewards.Rewards
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.config.interfaces.Config
@@ -17,7 +18,14 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
     )
 
     val number = config.getInt("tier")
-    val rewards = config.getSubsections("rewards").map { BPReward(it) }
+    val rewards = config.getSubsections("rewards").mapNotNull { rewardConfig ->
+        val rewardId = rewardConfig.getString("id")
+        val reward = Rewards.getByID(rewardId)
+        if (reward == null) {
+            plugin.logger.warning("Battle pass ${battlepass.getID()} tier $number has an unknown reward '$rewardId', skipping it.")
+        }
+        reward?.let { BPReward(rewardConfig, it) }
+    }
     val saveId = "bptier_$number"
     val saveIdFree = "bptier_${number}_free"
     val saveIdPremium = "bptier_${number}_premium"
@@ -159,10 +167,7 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
     override fun toString(): String = "BPTier(number=$number, battlepass='${battlepass.getID()}')"
 }
 
-class BPReward(val config: Config) : Tiered {
-    val reward
-        get() = Rewards.getByID(config.getString("id"))
-            ?: throw IllegalArgumentException("Could not find reward with id ${config.getString("id")}")
+class BPReward(val config: Config, val reward: Reward) : Tiered {
     override val tier = TierType.entries.first {
         it.name.equals(config.getString("tier"), true)
     }
