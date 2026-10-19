@@ -7,10 +7,9 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -20,7 +19,6 @@ import org.bukkit.entity.Player
 object BattlePassGUI {
     fun createAndOpen(player: Player, pass: BattlePass) {
         val maskPattern = plugin.configYml.getStrings("battlepass-gui.mask.pattern").toTypedArray()
-        val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("battlepass-gui.mask.materials"))
         val level = player.getTier(pass)
 
         fun String.withBattlePassPlaceholders(): String =
@@ -35,7 +33,7 @@ object BattlePassGUI {
                 .replace("%pass%", pass.name)
                 .formatEco()
 
-            setMask(FillerMask(maskItems, *maskPattern))
+            setMask(plugin.configYml, "battlepass-gui")
 
             // Tiers button — supports item OR material, + name
             for (location in plugin.configYml.getSlotLocations("battlepass-gui.buttons.tiers")) {

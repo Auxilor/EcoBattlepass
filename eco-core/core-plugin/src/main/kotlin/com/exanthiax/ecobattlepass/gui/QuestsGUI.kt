@@ -10,10 +10,9 @@ import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -85,12 +84,7 @@ class QuestsGUI(
 
             for (page in 1..maxPage) {
                 addPage(page) {
-                    setMask(
-                        FillerMask(
-                            MaskItems.fromItemNames(plugin.configYml.getStrings("quests-gui.mask.materials")),
-                            *pattern.toTypedArray()
-                        )
-                    )
+                    setMask(plugin.configYml, "quests-gui")
 
                     var num = (page - 1) * perPage
                     var row = 1

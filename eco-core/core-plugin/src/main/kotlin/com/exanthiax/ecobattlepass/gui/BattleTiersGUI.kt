@@ -13,10 +13,9 @@ import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -71,7 +70,6 @@ object BattleTiersGUI {
 
     fun createAndOpen(player: Player, pass: BattlePass, backButton: Boolean = false) {
         val maskPattern = plugin.configYml.getStrings("tiers-gui.mask.pattern").toTypedArray()
-        val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("tiers-gui.mask.materials"))
 
         fun String.withBattlePassPlaceholders(): String =
             InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
@@ -154,7 +152,7 @@ object BattleTiersGUI {
 
             maxPages(totalPages)
 
-            setMask(FillerMask(maskItems, *maskPattern))
+            setMask(plugin.configYml, "tiers-gui")
 
             components.forEach { addComponent(1, 1, it) }
 
