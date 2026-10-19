@@ -10,7 +10,6 @@ import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.component.ConfigButton
 import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
@@ -21,7 +20,6 @@ import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 class QuestsGUI(
     private val player: Player, val category: Category,
@@ -54,33 +52,22 @@ class QuestsGUI(
 
             maxPages(maxPage)
 
-            buildPageItem(prevPagePath, "active")?.let { active ->
-                val inactive = if (wasBack) null else buildPageItem(prevPagePath, "inactive")
-                for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
-                    addPageChanger(
-                        PageChanger.Direction.BACKWARDS,
-                        active,
-                        inactive,
-                        pageChangeSound,
-                        location.row,
-                        location.column
-                    )
-                }
-            }
+            addPageChanger(
+                plugin.configYml,
+                prevPagePath,
+                PageChanger.Direction.BACKWARDS,
+                pageChangeSound,
+                format = { it.withCategoryPlaceholders() },
+                hideInactive = wasBack
+            )
 
-            buildPageItem(nextPagePath, "active")?.let { active ->
-                val inactive = buildPageItem(nextPagePath, "inactive")
-                for (location in plugin.configYml.getSlotLocations(nextPagePath)) {
-                    addPageChanger(
-                        PageChanger.Direction.FORWARDS,
-                        active,
-                        inactive,
-                        pageChangeSound,
-                        location.row,
-                        location.column
-                    )
-                }
-            }
+            addPageChanger(
+                plugin.configYml,
+                nextPagePath,
+                PageChanger.Direction.FORWARDS,
+                pageChangeSound,
+                format = { it.withCategoryPlaceholders() }
+            )
 
             for (page in 1..maxPage) {
                 addPage(page) {
@@ -161,30 +148,6 @@ class QuestsGUI(
         val perPage = getPerPage()
         if (perPage <= 0) return 1
         return ((total + perPage - 1) / perPage).coerceAtLeast(1)
-    }
-
-    private fun buildPageItem(basePath: String, state: String): ItemStack? {
-        val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
-            ?: plugin.configYml.getStringOrNull("$basePath.item")
-            ?: plugin.configYml.getStringOrNull("$basePath.material")
-            ?: return null
-
-        val itemBuilder = ItemStackBuilder(
-            Items.lookup(itemString.withCategoryPlaceholders())
-        )
-
-        val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
-            ?: plugin.configYml.getStringOrNull("$basePath.name")
-        if (name != null) {
-            itemBuilder.setDisplayName(name.withCategoryPlaceholders())
-        }
-
-        val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
-            ?: plugin.configYml.getStringsOrNull("$basePath.lore")
-            ?: emptyList()
-        itemBuilder.addLoreLines(lore.map { it.withCategoryPlaceholders() })
-
-        return itemBuilder.build()
     }
 
     private fun questSlot(quest: ActiveBattleQuest) =

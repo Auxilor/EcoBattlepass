@@ -13,17 +13,13 @@ import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.component.ConfigButton
 import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 object BattleTiersGUI {
     @Volatile
@@ -75,30 +71,6 @@ object BattleTiersGUI {
 
         fun String.withBattlePassPlaceholders(): String =
             InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
-
-        fun pageButtonItem(basePath: String, state: String): ItemStack? {
-            val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
-                ?: plugin.configYml.getStringOrNull("$basePath.item")
-                ?: plugin.configYml.getStringOrNull("$basePath.material")
-                ?: return null
-
-            val builder = ItemStackBuilder(
-                Items.lookup(itemString.withBattlePassPlaceholders())
-            )
-
-            val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
-                ?: plugin.configYml.getStringOrNull("$basePath.name")
-            if (name != null) {
-                builder.setDisplayName(name.withBattlePassPlaceholders())
-            }
-
-            val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
-                ?: plugin.configYml.getStringsOrNull("$basePath.lore")
-                ?: emptyList()
-            builder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
-
-            return builder.build()
-        }
 
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("sound.page-turn"))
 
@@ -177,33 +149,22 @@ object BattleTiersGUI {
                 )
             }
 
-            pageButtonItem(prevPagePath, "active")?.let { active ->
-                val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
-                for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
-                    addPageChanger(
-                        PageChanger.Direction.BACKWARDS,
-                        active,
-                        inactive,
-                        pageChangeSound,
-                        location.row,
-                        location.column
-                    )
-                }
-            }
+            addPageChanger(
+                plugin.configYml,
+                prevPagePath,
+                PageChanger.Direction.BACKWARDS,
+                pageChangeSound,
+                format = { it.withBattlePassPlaceholders() },
+                hideInactive = backButton
+            )
 
-            pageButtonItem(nextPagePath, "active")?.let { active ->
-                val inactive = pageButtonItem(nextPagePath, "inactive")
-                for (location in plugin.configYml.getSlotLocations(nextPagePath)) {
-                    addPageChanger(
-                        PageChanger.Direction.FORWARDS,
-                        active,
-                        inactive,
-                        pageChangeSound,
-                        location.row,
-                        location.column
-                    )
-                }
-            }
+            addPageChanger(
+                plugin.configYml,
+                nextPagePath,
+                PageChanger.Direction.FORWARDS,
+                pageChangeSound,
+                format = { it.withBattlePassPlaceholders() }
+            )
 
             addComponent(
                 closeButton(
