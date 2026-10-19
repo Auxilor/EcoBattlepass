@@ -6,6 +6,8 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.setMask
@@ -95,32 +97,13 @@ object BattlePassGUI {
                 )
             }
 
-            // Close button — supports item OR material, + name
-            if (plugin.configYml.getBool("battlepass-gui.buttons.close.enabled")) {
-                val closePath = "battlepass-gui.buttons.close"
-                val closeItemString = (plugin.configYml.getStringOrNull("$closePath.item")
-                    ?: plugin.configYml.getString("$closePath.material"))
-                    .withBattlePassPlaceholders()
-                val closeBuilder = ItemStackBuilder(Items.lookup(closeItemString))
-                plugin.configYml.getStringOrNull("$closePath.name")?.let {
-                    closeBuilder.setDisplayName(it.withBattlePassPlaceholders())
-                }
-                val closeLore = plugin.configYml.getStringsOrNull("$closePath.lore")
-                    ?: emptyList()
-                closeBuilder.addLoreLines(closeLore.withBattlePassPlaceholders())
-
-                for (location in plugin.configYml.getSlotLocations(closePath)) {
-                    setSlot(
-                        location.row,
-                        location.column,
-                        slot(closeBuilder.build()) {
-                            onLeftClick { event, _ ->
-                                event.whoClicked.closeInventory()
-                            }
-                        }
-                    )
-                }
-            }
+            addComponent(
+                closeButton(
+                    plugin.configYml.getSubsection("battlepass-gui.buttons.close"),
+                    enabledByDefault = false,
+                    format = { it.withBattlePassPlaceholders() }
+                )
+            )
 
             // Custom slots — supports name as separate key
             for (slotConfig in plugin.configYml.getSubsections("battlepass-gui.buttons.custom-slots")) {

@@ -7,6 +7,8 @@ import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
@@ -26,9 +28,6 @@ class QuestsGUI(
 ) {
     private fun String.withCategoryPlaceholders(): String =
         InternalPlaceholders.CategoryPlaceholders.replace(this, category = category, player = player)
-
-    private fun List<String>.withCategoryPlaceholders(): List<String> =
-        InternalPlaceholders.CategoryPlaceholders.replaceAll(this, category = category, player = player)
 
     fun open() {
         val pattern = plugin.configYml.getStrings("quests-gui.mask.pattern")
@@ -135,12 +134,13 @@ class QuestsGUI(
                         addCustomSlot(resolved)
                     }
 
-                    if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {
-                        val closeSlot = buildCloseSlot("quests-gui.buttons.close")
-                        for (location in plugin.configYml.getSlotLocations("quests-gui.buttons.close")) {
-                            setSlot(location.row, location.column, closeSlot)
-                        }
-                    }
+                    addComponent(
+                        closeButton(
+                            plugin.configYml.getSubsection("quests-gui.buttons.close"),
+                            enabledByDefault = false,
+                            format = { it.withCategoryPlaceholders() }
+                        )
+                    )
                 }
             }
         }
@@ -182,30 +182,6 @@ class QuestsGUI(
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
         itemBuilder.addLoreLines(lore.map { it.withCategoryPlaceholders() })
-
-        return itemBuilder.build()
-    }
-
-    private fun buildCloseSlot(basePath: String) =
-        slot(buildCloseItem(basePath)) {
-            onLeftClick { event, _ ->
-                event.whoClicked.closeInventory()
-            }
-        }
-
-    private fun buildCloseItem(basePath: String): ItemStack {
-        val itemString = plugin.configYml.getStringOrNull("$basePath.item")
-            ?: plugin.configYml.getString("$basePath.material")
-
-        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withCategoryPlaceholders()))
-
-        plugin.configYml.getStringOrNull("$basePath.name")?.let {
-            itemBuilder.setDisplayName(it.withCategoryPlaceholders())
-        }
-
-        val lore = plugin.configYml.getStringsOrNull("$basePath.lore")
-            ?: emptyList()
-        itemBuilder.addLoreLines(lore.withCategoryPlaceholders())
 
         return itemBuilder.build()
     }

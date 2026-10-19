@@ -10,6 +10,8 @@ import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
@@ -203,22 +205,14 @@ object BattleTiersGUI {
                 }
             }
 
-            if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {
-                val closePath = "tiers-gui.buttons.close"
-                val closeMaterial = plugin.configYml.getStringOrNull("$closePath.material") ?: "barrier"
-                val closeName = plugin.configYml.getStringOrNull("$closePath.name")
-                val closeBuilder = ItemStackBuilder(Items.lookup(closeMaterial.withBattlePassPlaceholders()))
-                if (closeName != null) closeBuilder.setDisplayName(closeName.withBattlePassPlaceholders())
-
-                val closeSlot = slot(closeBuilder.build()) {
-                    onLeftClick { event, _ ->
-                        event.whoClicked.closeInventory()
-                    }
-                }
-                for (location in plugin.configYml.getSlotLocations(closePath)) {
-                    setSlot(location.row, location.column, closeSlot)
-                }
-            }
+            addComponent(
+                closeButton(
+                    plugin.configYml.getSubsection("tiers-gui.buttons.close"),
+                    defaultItem = "barrier",
+                    enabledByDefault = false,
+                    format = { it.withBattlePassPlaceholders() }
+                )
+            )
 
             for (slotConfig in plugin.configYml.getSubsections("tiers-gui.buttons.custom-slots")) {
                 val resolved = slotConfig.clone().apply {

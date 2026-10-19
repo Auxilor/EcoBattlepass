@@ -7,6 +7,8 @@ import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
@@ -27,9 +29,6 @@ class CategoriesGUI(
 
     private fun String.withBattlePassPlaceholders(): String =
         InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
-
-    private fun List<String>.withBattlePassPlaceholders(): List<String> =
-        InternalPlaceholders.BattlePassPlaceholders.replaceAll(this, battlepass = pass, player = player)
 
     fun open() {
         val pattern = plugin.configYml.getStrings("categories-gui.mask.pattern")
@@ -132,12 +131,13 @@ class CategoriesGUI(
                         addCustomSlot(resolved)
                     }
 
-                    if (plugin.configYml.getBool("categories-gui.buttons.close.enabled")) {
-                        val closeSlot = buildCloseSlot("categories-gui.buttons.close")
-                        for (location in plugin.configYml.getSlotLocations("categories-gui.buttons.close")) {
-                            setSlot(location.row, location.column, closeSlot)
-                        }
-                    }
+                    addComponent(
+                        closeButton(
+                            plugin.configYml.getSubsection("categories-gui.buttons.close"),
+                            enabledByDefault = false,
+                            format = { it.withBattlePassPlaceholders() }
+                        )
+                    )
                 }
             }
         }
@@ -179,30 +179,6 @@ class CategoriesGUI(
             ?: plugin.configYml.getStringsOrNull("$basePath.lore")
             ?: emptyList()
         itemBuilder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
-
-        return itemBuilder.build()
-    }
-
-    private fun buildCloseSlot(basePath: String) =
-        slot(buildCloseItem(basePath)) {
-            onLeftClick { event, _ ->
-                event.whoClicked.closeInventory()
-            }
-        }
-
-    private fun buildCloseItem(basePath: String): ItemStack {
-        val itemString = plugin.configYml.getStringOrNull("$basePath.item")
-            ?: plugin.configYml.getString("$basePath.material")
-
-        val itemBuilder = ItemStackBuilder(Items.lookup(itemString.withBattlePassPlaceholders()))
-
-        plugin.configYml.getStringOrNull("$basePath.name")?.let {
-            itemBuilder.setDisplayName(it.withBattlePassPlaceholders())
-        }
-
-        val lore = plugin.configYml.getStringsOrNull("$basePath.lore")
-            ?: emptyList()
-        itemBuilder.addLoreLines(lore.withBattlePassPlaceholders())
 
         return itemBuilder.build()
     }
