@@ -6,6 +6,7 @@ import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
@@ -49,14 +50,6 @@ class QuestsGUI(
         val prevPagePath = "quests-gui.buttons.prev-page"
         val nextPagePath = "quests-gui.buttons.next-page"
 
-        fun loc(path: String, key: String): Int =
-            plugin.configYml.getIntOrNull("$path.location.$key") ?: plugin.configYml.getInt("$path.$key")
-
-        val prevRow = loc(prevPagePath, "row")
-        val prevCol = loc(prevPagePath, "column")
-        val nextRow = loc(nextPagePath, "row")
-        val nextCol = loc(nextPagePath, "column")
-
         val menu = menu(pattern.size) {
             title = rawTitle
 
@@ -64,25 +57,30 @@ class QuestsGUI(
 
             buildPageItem(prevPagePath, "active")?.let { active ->
                 val inactive = if (wasBack) null else buildPageItem(prevPagePath, "inactive")
-                addPageChanger(
-                    PageChanger.Direction.BACKWARDS,
-                    active,
-                    inactive,
-                    pageChangeSound,
-                    prevRow,
-                    prevCol
-                )
+                for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
+                    addPageChanger(
+                        PageChanger.Direction.BACKWARDS,
+                        active,
+                        inactive,
+                        pageChangeSound,
+                        location.row,
+                        location.column
+                    )
+                }
             }
 
             buildPageItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(
-                    PageChanger.Direction.FORWARDS,
-                    active,
-                    buildPageItem(nextPagePath, "inactive"),
-                    pageChangeSound,
-                    nextRow,
-                    nextCol
-                )
+                val inactive = buildPageItem(nextPagePath, "inactive")
+                for (location in plugin.configYml.getSlotLocations(nextPagePath)) {
+                    addPageChanger(
+                        PageChanger.Direction.FORWARDS,
+                        active,
+                        inactive,
+                        pageChangeSound,
+                        location.row,
+                        location.column
+                    )
+                }
             }
 
             for (page in 1..maxPage) {
@@ -112,15 +110,14 @@ class QuestsGUI(
 
                     if (wasBack) {
                         buildPageItem(prevPagePath, "active")?.let { active ->
-                            addComponent(
-                                MenuLayer.LOWER,
-                                prevRow, prevCol,
-                                slot(active) {
-                                    onLeftClick { _, _ ->
-                                        CategoriesGUI(player, category.battlepass, backButton = true).open()
-                                    }
+                            val backSlot = slot(active) {
+                                onLeftClick { _, _ ->
+                                    CategoriesGUI(player, category.battlepass, backButton = true).open()
                                 }
-                            )
+                            }
+                            for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
+                                addComponent(MenuLayer.LOWER, location.row, location.column, backSlot)
+                            }
                         }
                     }
 
@@ -141,19 +138,16 @@ class QuestsGUI(
                             }
                         }
 
-                        setSlot(
-                            resolved.getInt("row"),
-                            resolved.getInt("column"),
-                            ConfigSlot(resolved)
-                        )
+                        for (location in resolved.getSlotLocations()) {
+                            setSlot(location.row, location.column, ConfigSlot(resolved))
+                        }
                     }
 
                     if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {
-                        setSlot(
-                            loc("quests-gui.buttons.close", "row"),
-                            loc("quests-gui.buttons.close", "column"),
-                            buildCloseSlot("quests-gui.buttons.close")
-                        )
+                        val closeSlot = buildCloseSlot("quests-gui.buttons.close")
+                        for (location in plugin.configYml.getSlotLocations("quests-gui.buttons.close")) {
+                            setSlot(location.row, location.column, closeSlot)
+                        }
                     }
                 }
             }

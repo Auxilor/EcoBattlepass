@@ -9,6 +9,7 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
@@ -143,11 +144,6 @@ object BattleTiersGUI {
         val prevPagePath = "tiers-gui.buttons.prev-page"
         val nextPagePath = "tiers-gui.buttons.next-page"
 
-        val prevRow = plugin.configYml.getInt("$prevPagePath.location.row")
-        val prevCol = plugin.configYml.getInt("$prevPagePath.location.column")
-        val nextRow = plugin.configYml.getInt("$nextPagePath.location.row")
-        val nextCol = plugin.configYml.getInt("$nextPagePath.location.column")
-
         val rawTitle = plugin.configYml.getString("tiers-gui.title")
             .withBattlePassPlaceholders()
             .replace("%pass%", pass.name)
@@ -170,39 +166,43 @@ object BattleTiersGUI {
 
             if (backButton) {
                 pageButtonItem(prevPagePath, "active")?.let { active ->
-                    addComponent(
-                        MenuLayer.LOWER,
-                        prevRow, prevCol,
-                        slot(active) {
-                            onLeftClick { _, _ ->
-                                BattlePassGUI.createAndOpen(player, pass)
-                            }
+                    val backSlot = slot(active) {
+                        onLeftClick { _, _ ->
+                            BattlePassGUI.createAndOpen(player, pass)
                         }
-                    )
+                    }
+                    for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
+                        addComponent(MenuLayer.LOWER, location.row, location.column, backSlot)
+                    }
                 }
             }
 
             pageButtonItem(prevPagePath, "active")?.let { active ->
                 val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
-                addPageChanger(
-                    PageChanger.Direction.BACKWARDS,
-                    active,
-                    inactive,
-                    pageChangeSound,
-                    prevRow,
-                    prevCol
-                )
+                for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
+                    addPageChanger(
+                        PageChanger.Direction.BACKWARDS,
+                        active,
+                        inactive,
+                        pageChangeSound,
+                        location.row,
+                        location.column
+                    )
+                }
             }
 
             pageButtonItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(
-                    PageChanger.Direction.FORWARDS,
-                    active,
-                    pageButtonItem(nextPagePath, "inactive"),
-                    pageChangeSound,
-                    nextRow,
-                    nextCol
-                )
+                val inactive = pageButtonItem(nextPagePath, "inactive")
+                for (location in plugin.configYml.getSlotLocations(nextPagePath)) {
+                    addPageChanger(
+                        PageChanger.Direction.FORWARDS,
+                        active,
+                        inactive,
+                        pageChangeSound,
+                        location.row,
+                        location.column
+                    )
+                }
             }
 
             if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {
@@ -212,15 +212,14 @@ object BattleTiersGUI {
                 val closeBuilder = ItemStackBuilder(Items.lookup(closeMaterial.withBattlePassPlaceholders()))
                 if (closeName != null) closeBuilder.setDisplayName(closeName.withBattlePassPlaceholders())
 
-                setSlot(
-                    plugin.configYml.getInt("$closePath.location.row"),
-                    plugin.configYml.getInt("$closePath.location.column"),
-                    slot(closeBuilder.build()) {
-                        onLeftClick { event, _ ->
-                            event.whoClicked.closeInventory()
-                        }
+                val closeSlot = slot(closeBuilder.build()) {
+                    onLeftClick { event, _ ->
+                        event.whoClicked.closeInventory()
                     }
-                )
+                }
+                for (location in plugin.configYml.getSlotLocations(closePath)) {
+                    setSlot(location.row, location.column, closeSlot)
+                }
             }
 
             for (slotConfig in plugin.configYml.getSubsections("tiers-gui.buttons.custom-slots")) {
@@ -240,11 +239,9 @@ object BattleTiersGUI {
                     }
                 }
 
-                setSlot(
-                    resolved.getInt("row"),
-                    resolved.getInt("column"),
-                    ConfigSlot(resolved)
-                )
+                for (location in resolved.getSlotLocations()) {
+                    setSlot(location.row, location.column, ConfigSlot(resolved))
+                }
             }
         }
 
