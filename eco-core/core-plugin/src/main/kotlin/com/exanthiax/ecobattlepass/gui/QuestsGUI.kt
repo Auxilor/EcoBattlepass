@@ -4,6 +4,7 @@ import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.getSlotLocations
@@ -12,7 +13,6 @@ import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -132,9 +132,7 @@ class QuestsGUI(
                             }
                         }
 
-                        for (location in resolved.getSlotLocations()) {
-                            setSlot(location.row, location.column, ConfigSlot(resolved))
-                        }
+                        addCustomSlot(resolved)
                     }
 
                     if (plugin.configYml.getBool("quests-gui.buttons.close.enabled")) {

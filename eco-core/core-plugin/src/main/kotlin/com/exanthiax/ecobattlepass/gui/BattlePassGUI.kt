@@ -5,11 +5,11 @@ import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -139,9 +139,7 @@ object BattlePassGUI {
                     }
                 }
 
-                for (location in resolved.getSlotLocations()) {
-                    setSlot(location.row, location.column, ConfigSlot(resolved))
-                }
+                addCustomSlot(resolved)
             }
         }
 
