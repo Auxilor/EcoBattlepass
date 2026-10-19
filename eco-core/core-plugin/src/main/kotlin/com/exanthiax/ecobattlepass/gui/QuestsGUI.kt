@@ -7,6 +7,7 @@ import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPage
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.ConfigButton
 import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
@@ -102,16 +103,16 @@ class QuestsGUI(
                     }
 
                     if (wasBack) {
-                        buildPageItem(prevPagePath, "active")?.let { active ->
-                            val backSlot = slot(active) {
-                                onLeftClick { _, _ ->
-                                    CategoriesGUI(player, category.battlepass, backButton = true).open()
-                                }
+                        addComponent(
+                            ConfigButton(
+                                plugin.configYml.getSubsection(prevPagePath),
+                                state = "active",
+                                layer = MenuLayer.LOWER,
+                                format = { it.withCategoryPlaceholders() }
+                            ) { _, _, _, _ ->
+                                CategoriesGUI(player, category.battlepass, backButton = true).open()
                             }
-                            for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
-                                addComponent(MenuLayer.LOWER, location.row, location.column, backSlot)
-                            }
-                        }
+                        )
                     }
 
                     for (slotConfig in plugin.configYml.getSubsections("quests-gui.buttons.custom-slots")) {

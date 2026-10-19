@@ -10,6 +10,7 @@ import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.ConfigButton
 import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
@@ -17,7 +18,6 @@ import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -165,16 +165,16 @@ object BattleTiersGUI {
             }
 
             if (backButton) {
-                pageButtonItem(prevPagePath, "active")?.let { active ->
-                    val backSlot = slot(active) {
-                        onLeftClick { _, _ ->
-                            BattlePassGUI.createAndOpen(player, pass)
-                        }
+                addComponent(
+                    ConfigButton(
+                        plugin.configYml.getSubsection(prevPagePath),
+                        state = "active",
+                        layer = MenuLayer.LOWER,
+                        format = { it.withBattlePassPlaceholders() }
+                    ) { _, _, _, _ ->
+                        BattlePassGUI.createAndOpen(player, pass)
                     }
-                    for (location in plugin.configYml.getSlotLocations(prevPagePath)) {
-                        addComponent(MenuLayer.LOWER, location.row, location.column, backSlot)
-                    }
-                }
+                )
             }
 
             pageButtonItem(prevPagePath, "active")?.let { active ->
