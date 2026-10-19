@@ -4,15 +4,35 @@ import com.exanthiax.ecobattlepass.api.events.PlayerBPExpGainEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerPostRewardEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerQuestCompleteEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent
+import com.exanthiax.ecobattlepass.api.applyPremiumPermission
+import com.exanthiax.ecobattlepass.api.clearPremiumAttachment
+import com.exanthiax.ecobattlepass.api.getPremiumFlag
 import com.exanthiax.ecobattlepass.api.getTier
 import com.exanthiax.ecobattlepass.api.giveBPExperience
+import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.plugin
 import com.willfp.eco.core.sound.PlayableSound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 object BattlePassListener : Listener {
+    @EventHandler
+    fun applyPremiumOnJoin(event: PlayerJoinEvent) {
+        for (pass in BattlePasses.values()) {
+            if (event.player.getPremiumFlag(pass)) {
+                event.player.applyPremiumPermission(pass, true)
+            }
+        }
+    }
+
+    @EventHandler
+    fun clearPremiumOnQuit(event: PlayerQuitEvent) {
+        event.player.clearPremiumAttachment()
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     fun handleBPLevelUp(event: PlayerTierLevelUpEvent) {
         val player = event.player

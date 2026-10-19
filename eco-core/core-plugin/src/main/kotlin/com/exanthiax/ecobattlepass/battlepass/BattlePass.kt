@@ -51,6 +51,11 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
         PersistentDataKeyType.STRING_LIST, emptyList()
     )
 
+    val premiumKey = PersistentDataKey(
+        plugin.createNamespacedKey("bp_premium_$_id"),
+        PersistentDataKeyType.BOOLEAN, false
+    )
+
     override fun getID(): String {
         return this._id
     }
