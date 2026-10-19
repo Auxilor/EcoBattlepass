@@ -45,17 +45,35 @@ fun OfflinePlayer.setReceivedTiers(pass: BattlePass, tiers: List<String>) {
     this.profile.write(pass.receivedTiersKey, tiers.distinct())
 }
 
+fun OfflinePlayer.getPremiumFlag(pass: BattlePass): Boolean {
+    return this.profile.read(pass.premiumKey)
+}
+
+fun OfflinePlayer.setPremiumFlag(pass: BattlePass, premium: Boolean) {
+    this.profile.write(pass.premiumKey, premium)
+}
+
 fun Player.hasPremium(pass: BattlePass): Boolean {
-    return this.hasPermission(pass.premiumPerm)
+    return this.hasPermission(pass.premiumPerm) || this.getPremiumFlag(pass)
 }
 
 private val playerAttachments = ConcurrentHashMap<UUID, PermissionAttachment>()
 
 fun Player.setPremium(pass: BattlePass, premium: Boolean) {
-    val perm = pass.premiumPerm
-    val attachment = playerAttachments.computeIfAbsent(this.uniqueId) { this.addAttachment(plugin) }
-    attachment.setPermission(perm, premium)
+    this.setPremiumFlag(pass, premium)
+    this.applyPremiumPermission(pass, premium)
+}
+
+internal fun Player.applyPremiumPermission(pass: BattlePass, premium: Boolean) {
+    val attachment = playerAttachments.compute(this.uniqueId) { _, existing ->
+        existing?.takeIf { it.permissible === this } ?: this.addAttachment(plugin)
+    } ?: return
+    attachment.setPermission(pass.premiumPerm, premium)
     this.recalculatePermissions()
+}
+
+internal fun Player.clearPremiumAttachment() {
+    playerAttachments.remove(this.uniqueId)
 }
 
 fun Player.receiveTier(tier: BPTier) {
