@@ -106,7 +106,6 @@ allprojects {
 
         compileOnly("com.willfp:eco:$ecoVersion")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
-        implementation("com.willfp:ecomponent:1.5.0")
 
         compileOnly (fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
     }
@@ -118,7 +117,6 @@ allprojects {
     tasks {
         shadowJar {
             exclude("META-INF/**")
-            relocate("com.willfp.ecomponent", "com.exanthiax.ecobattlepass.ecomponent")
             relocate("com.willfp.libreforge.loader", "com.exanthiax.ecobattlepass.libreforge.loader")
             relocate("kotlin", "com.willfp.eco.libs.kotlin")
             relocate("kotlin.jvm", "com.willfp.eco.libs.kotlin.jvm")
