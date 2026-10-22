@@ -1,5 +1,6 @@
 package com.exanthiax.ecobattlepass.tasks
 
+import com.exanthiax.ecobattlepass.api.checkCompletedQuest
 import com.exanthiax.ecobattlepass.api.events.PlayerTaskExpGainEvent
 import com.exanthiax.ecobattlepass.api.giveTaskExperience
 import com.exanthiax.ecobattlepass.api.hasCompletedQuest
@@ -49,7 +50,15 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
 
     private val accumulator = object : Accumulator {
         override fun accept(player: Player, count: Double) {
-            if (!this@ActiveBattleTask.isActive(player) || !isBound || plugin.isDisabledIn(player.world)) {
+            if (!isBound || plugin.isDisabledIn(player.world)) {
+                return
+            }
+
+            if (quest.category.isActive && quest.parent.isAllowed(player, quest.category.battlepass)) {
+                player.checkCompletedQuest(quest)
+            }
+
+            if (!this@ActiveBattleTask.isActive(player)) {
                 return
             }
 
