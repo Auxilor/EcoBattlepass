@@ -135,9 +135,8 @@ fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean {
     return this.profile.read(task.completedKey)
 }
 
-fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean {
-    return this.profile.read(quest.completedKey) || quest.tasks.all { this.hasCompletedTask(it) }
-}
+fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean =
+    this.profile.read(quest.completedKey) || quest.tasks.all { this.hasCompletedTask(it) }
 
 fun OfflinePlayer.setCompletedQuest(quest: ActiveBattleQuest, value: Boolean) {
     this.profile.write(quest.completedKey, value)
