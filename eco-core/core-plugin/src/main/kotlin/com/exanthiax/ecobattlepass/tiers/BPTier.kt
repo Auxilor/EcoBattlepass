@@ -11,10 +11,11 @@ import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
 
-class BPTier(val config: Config, val battlepass: BattlePass) {
+class BPTier(val config: Config, val battlepass: BattlePass, val transient: Boolean = false) {
     constructor(num: Int, battlepass: BattlePass) : this(
         Config.builder().add("tier", num),
-        battlepass
+        battlepass,
+        true
     )
 
     val number = config.getInt("tier")
@@ -29,7 +30,6 @@ class BPTier(val config: Config, val battlepass: BattlePass) {
     val saveId = "bptier_$number"
     val saveIdFree = "bptier_${number}_free"
     val saveIdPremium = "bptier_${number}_premium"
-    val transient = false
 
     fun getRewardsFormatted(tierType: TierType, player: Player): List<String> {
         val result = mutableListOf<String>()
