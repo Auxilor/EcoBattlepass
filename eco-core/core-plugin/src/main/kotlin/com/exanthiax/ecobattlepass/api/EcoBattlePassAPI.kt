@@ -134,9 +134,8 @@ fun Player.receiveTierFreeOnly(tier: BPTier) {
     }
 }
 
-fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean {
-    return this.profile.readMigrated(task.completedKey, task.legacyCompletedKey)
-}
+fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean =
+    this.profile.readMigrated(key = task.completedKey, legacyKey = task.legacyCompletedKey)
 
 fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean {
     if (this.profile.read(quest.completedKey)) {
@@ -170,9 +169,8 @@ fun OfflinePlayer.setTaskProgress(task: ActiveBattleTask, progress: Double) {
     this.profile.write(task.progressKey, progress)
 }
 
-fun OfflinePlayer.taskProgress(task: ActiveBattleTask): Double {
-    return this.profile.readMigrated(task.progressKey, task.legacyProgressKey)
-}
+fun OfflinePlayer.taskProgress(task: ActiveBattleTask): Double =
+    this.profile.readMigrated(key = task.progressKey, legacyKey = task.legacyProgressKey)
 
 internal fun Profile.retireLegacyTaskData(task: ActiveBattleTask) {
     if (!this.read(task.legacyCompletedKey) && this.read(task.legacyProgressKey) == 0.0) {
@@ -180,13 +178,14 @@ internal fun Profile.retireLegacyTaskData(task: ActiveBattleTask) {
     }
 
     val sharingTasks = Categories.values()
+        .asSequence()
         .flatMap { category -> category.quests }
         .flatMap { quest -> quest.tasks }
         .filter { it.legacyCompletedKey.key == task.legacyCompletedKey.key }
 
     for (sharingTask in sharingTasks) {
-        this.readMigrated(sharingTask.completedKey, sharingTask.legacyCompletedKey)
-        this.readMigrated(sharingTask.progressKey, sharingTask.legacyProgressKey)
+        this.readMigrated(key = sharingTask.completedKey, legacyKey = sharingTask.legacyCompletedKey)
+        this.readMigrated(key = sharingTask.progressKey, legacyKey = sharingTask.legacyProgressKey)
     }
 
     this.write(task.legacyCompletedKey, false)
