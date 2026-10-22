@@ -212,25 +212,11 @@ class BattleTierComponent(
     override fun onLevelClick(player: Player, menu: Menu, level: Int, levelState: LevelState) {
         when (val key = resolveKey(player, level, levelState)) {
             "unlocked", "unlocked-free", "premium-required" -> {
-                val tier = pass.getTier(level)
-                if (tier != null) {
-                    if (key == "premium-required") {
-                        player.sendPremiumRequiredMessage(level, tier)
-                    } else {
-                        levelItemCache.invalidate(Triple(player.uniqueId, level, null))
-                        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.FREE))
-                        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.PREMIUM))
-                        itemCache[levelState].remove(level)
-                        when (tierType) {
-                            TierType.FREE -> player.receiveTierFreeOnly(tier)
-                            TierType.PREMIUM -> player.receiveTierPremiumOnly(tier)
-                            null -> {
-                                if (key == "unlocked") player.receiveTier(tier)
-                                else player.receiveTierPremiumOnly(tier)
-                            }
-                        }
-                        player.openMenu?.refresh(player)
-                    }
+                val tier = pass.getTier(level) ?: return
+                if (key == "premium-required") {
+                    player.sendPremiumRequiredMessage(level, tier)
+                } else {
+                    claimTier(player, level, levelState, tier, key == "unlocked")
                 }
             }
 
@@ -238,6 +224,19 @@ class BattleTierComponent(
                 PlayableSound.create(plugin.configYml.getSubsection("sound.reward-locked"))?.playTo(player)
             }
         }
+    }
+
+    private fun claimTier(player: Player, level: Int, levelState: LevelState, tier: BPTier, unlocked: Boolean) {
+        levelItemCache.invalidate(Triple(player.uniqueId, level, null))
+        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.FREE))
+        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.PREMIUM))
+        itemCache[levelState].remove(level)
+        when (tierType) {
+            TierType.FREE -> player.receiveTierFreeOnly(tier)
+            TierType.PREMIUM -> player.receiveTierPremiumOnly(tier)
+            null -> if (unlocked) player.receiveTier(tier) else player.receiveTierPremiumOnly(tier)
+        }
+        player.openMenu?.refresh(player)
     }
 }
 
