@@ -1,5 +1,6 @@
 package com.exanthiax.ecobattlepass.categories
 
+import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.LegacyLocation
@@ -9,6 +10,13 @@ object Categories: RegistrableCategory<Category>("categories", "categories") {
     override val legacyLocation = LegacyLocation("categories.yml", "categories")
 
     override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+        val battlepassId = config.getString("battlepass")
+
+        if (BattlePasses.getByID(battlepassId) == null) {
+            plugin.logger.warning("Category $id has an unknown battlepass '$battlepassId', skipping it.")
+            return
+        }
+
         registry.register(
             Category(id, config)
         )
