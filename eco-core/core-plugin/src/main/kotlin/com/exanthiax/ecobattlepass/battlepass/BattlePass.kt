@@ -132,6 +132,8 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
             )
         }
 
+        this.sortBy { tier -> tier.number }
+
         plugin.logger.info(
             "Registered ${this.size} tiers (${this.filter { it.transient }.size} transient)" +
                     " for pass ${this@BattlePass.name}"
