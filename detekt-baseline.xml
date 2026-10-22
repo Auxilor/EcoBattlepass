@@ -1,0 +1,412 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BracesOnIfStatements:BPTier.kt:BPTier$else</ID>
+    <ID>BracesOnIfStatements:BPTier.kt:BPTier$if</ID>
+    <ID>BracesOnIfStatements:BattleTierComponent.kt:BattleTierComponent$else</ID>
+    <ID>BracesOnIfStatements:BattleTierComponent.kt:BattleTierComponent$if</ID>
+    <ID>BracesOnIfStatements:Category.kt:Category$else</ID>
+    <ID>BracesOnIfStatements:Category.kt:Category$if</ID>
+    <ID>BracesOnIfStatements:DynamicPassCommand.kt:DynamicPassCommand$else</ID>
+    <ID>BracesOnIfStatements:GuiItemHelper.kt:GuiItemHelper$else</ID>
+    <ID>BracesOnWhenStatements:BPTier.kt:BPTier$when</ID>
+    <ID>BracesOnWhenStatements:BattleTierComponent.kt:BattleTierComponent$when</ID>
+    <ID>BracesOnWhenStatements:ClaimHandler.kt:ClaimHandler$when</ID>
+    <ID>BracesOnWhenStatements:DynamicPassCommand.kt:DynamicPassCommand$when</ID>
+    <ID>BracesOnWhenStatements:EcoBattlePassAPI.kt:when</ID>
+    <ID>BracesOnWhenStatements:QuestsCommand.kt:QuestsCommand$when</ID>
+    <ID>BracesOnWhenStatements:SetPremiumCommand.kt:SetPremiumCommand$when</ID>
+    <ID>C002:BattlePass.kt:BattlePass$forEachSavedProfile(plugin) { uuid -&gt; reset(PlayerProfile.load(uuid)) }</ID>
+    <ID>C002:Category.kt:Category$forEachSavedProfile(plugin) { uuid -&gt; val profile = PlayerProfile.load(uuid) for (quest in this.quests) { quest.reset(profile) } }</ID>
+    <ID>CascadingCallWrapping:BattlePasses.kt:BattlePasses$flatten()</ID>
+    <ID>CascadingCallWrapping:BattleTierComponent.kt:BattleTierComponent$getDisplayName(this)</ID>
+    <ID>CascadingCallWrapping:EcoBattlePassXPMultipliers.kt:build { it.cacheBPExperienceMultiplier() }</ID>
+    <ID>CascadingCallWrapping:InternalPlaceholders.kt:InternalPlaceholders$toNiceString()</ID>
+    <ID>CascadingCallWrapping:InternalPlaceholders.kt:InternalPlaceholders.CategoryPlaceholders$toNiceString()</ID>
+    <ID>CognitiveComplexMethod:BPTier.kt:BPTier$fun format: List&lt;String&gt;</ID>
+    <ID>CognitiveComplexMethod:BattleTierComponent.kt:BattleTierComponent$override fun getLeftClickAction: () -&gt; Unit</ID>
+    <ID>CognitiveComplexMethod:BattleTierComponent.kt:BattleTierComponent$override fun getLevelItem: ItemStack</ID>
+    <ID>CognitiveComplexMethod:BattleTierComponent.kt:BattleTierComponent$private fun resolveKey: String</ID>
+    <ID>CognitiveComplexMethod:BattleTiersGUI.kt:BattleTiersGUI$fun createAndOpen</ID>
+    <ID>CognitiveComplexMethod:CategoriesGUI.kt:CategoriesGUI$fun open</ID>
+    <ID>CognitiveComplexMethod:ClaimHandler.kt:ClaimHandler$fun handleClaimAll</ID>
+    <ID>CognitiveComplexMethod:InternalPlaceholders.kt:InternalPlaceholders.CategoryPlaceholders$fun register</ID>
+    <ID>CognitiveComplexMethod:QuestsGUI.kt:QuestsGUI$fun open</ID>
+    <ID>ConstructorParameterNaming:BattlePass.kt:BattlePass$private val _id: String</ID>
+    <ID>ConstructorParameterNaming:BattleQuest.kt:BattleQuest$private val _id: String</ID>
+    <ID>ConstructorParameterNaming:BattleTask.kt:BattleTask$private val _id: String</ID>
+    <ID>ConstructorParameterNaming:Category.kt:Category$private val _id: String</ID>
+    <ID>ConstructorParameterNaming:PlayerBPExpGainEvent.kt:PlayerBPExpGainEvent$private var _amount: Double</ID>
+    <ID>ConstructorParameterNaming:PlayerTaskExpGainEvent.kt:PlayerTaskExpGainEvent$private var _amount: Double</ID>
+    <ID>ConstructorParameterNaming:Reward.kt:Reward$private val _id: String</ID>
+    <ID>CouldBeSequence:ActiveBattleQuest.kt:ActiveBattleQuest$shuffled()</ID>
+    <ID>CouldBeSequence:BattlePasses.kt:BattlePasses$filter { it.isActive }</ID>
+    <ID>CyclomaticComplexMethod:BPTier.kt:BPTier$fun format: List&lt;String&gt;</ID>
+    <ID>CyclomaticComplexMethod:BattlePassGUI.kt:BattlePassGUI$fun createAndOpen</ID>
+    <ID>CyclomaticComplexMethod:BattleTierComponent.kt:BattleTierComponent$override fun getLevelItem: ItemStack</ID>
+    <ID>CyclomaticComplexMethod:BattleTierComponent.kt:BattleTierComponent$private fun resolveKey: String</ID>
+    <ID>CyclomaticComplexMethod:BattleTiersGUI.kt:BattleTiersGUI$fun createAndOpen</ID>
+    <ID>CyclomaticComplexMethod:CategoriesGUI.kt:CategoriesGUI$fun open</ID>
+    <ID>CyclomaticComplexMethod:ClaimHandler.kt:ClaimHandler$fun handleClaimAll</ID>
+    <ID>CyclomaticComplexMethod:ClaimHandler.kt:ClaimHandler$fun handleClaimSingle</ID>
+    <ID>CyclomaticComplexMethod:CompleteTaskCommand.kt:CompleteTaskCommand$override fun onExecute</ID>
+    <ID>CyclomaticComplexMethod:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$override fun onExecute</ID>
+    <ID>CyclomaticComplexMethod:QuestsGUI.kt:QuestsGUI$fun open</ID>
+    <ID>CyclomaticComplexMethod:ResetTaskSubcommand.kt:ResetTaskSubcommand$override fun onExecute</ID>
+    <ID>ElseCaseInsteadOfExhaustiveWhen:BattleTierComponent.kt:BattleTierComponent$when (receivedState) { ReceivedTierState.RECEIVED -&gt; "claimed" ReceivedTierState.RECEIVED_FREE -&gt; { if (player.hasPremium(pass)) "unlocked-free" else "premium-required" } ReceivedTierState.RECEIVED_PREMIUM -&gt; "unlocked" else -&gt; levelState.key }</ID>
+    <ID>ExpressionBodySyntax:ActiveBattleQuest.kt:ActiveBattleQuest$return parent.tasks.shuffled().take(parent.taskAmount).map { it.toActiveBattleTask(this) }</ID>
+    <ID>ExpressionBodySyntax:BPTier.kt:BPTier$return format(listOf(singleString), player, filterTierType)</ID>
+    <ID>ExpressionBodySyntax:BPTier.kt:BPTier$return line.startsWith("&amp;") || line.startsWith("§")</ID>
+    <ID>ExpressionBodySyntax:BattlePass.kt:BattlePass$return (getProgress(player) * 100.0).toNiceString()</ID>
+    <ID>ExpressionBodySyntax:BattlePass.kt:BattlePass$return getFormattedExpForLevel(player.getTier(this) + 1)</ID>
+    <ID>ExpressionBodySyntax:BattlePass.kt:BattlePass$return this._id</ID>
+    <ID>ExpressionBodySyntax:BattleQuest.kt:BattleQuest$return _id</ID>
+    <ID>ExpressionBodySyntax:BattleQuest.kt:PreparedBattleTask$return ActiveBattleTask(config, quest)</ID>
+    <ID>ExpressionBodySyntax:BattleTask.kt:BattleTask$return this._id</ID>
+    <ID>ExpressionBodySyntax:Categories.kt:Categories$return this.values().sortedBy { if (it.isActive) 1 else 0 }.toSet()</ID>
+    <ID>ExpressionBodySyntax:CommandHelpers.kt:TaskTabCompleter$return StringUtil.copyPartialMatches(arg, Categories.values().map { it.id }, mutableListOf())</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.hasPermission(pass.premiumPerm) || this.getPremiumFlag(pass)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(pass.passExpKey)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(pass.premiumKey)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(pass.receivedTiersKey)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(pass.tierKey)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(task.completedKey)</ID>
+    <ID>ExpressionBodySyntax:EcoBattlePassAPI.kt:return this.profile.read(task.progressKey)</ID>
+    <ID>ExpressionBodySyntax:EffectBPExpMultiplier.kt:EffectBPExpMultiplier$return BattlePasses.getByID(key)</ID>
+    <ID>ExpressionBodySyntax:EffectBPExpMultiplier.kt:EffectBPExpMultiplier$return BattlePasses.values()</ID>
+    <ID>ExpressionBodySyntax:EffectTaskExpMultiplier.kt:EffectTaskExpMultiplier$return BattleTasks.getByID(key)</ID>
+    <ID>ExpressionBodySyntax:EffectTaskExpMultiplier.kt:EffectTaskExpMultiplier$return BattleTasks.values()</ID>
+    <ID>ExpressionBodySyntax:FilterReward.kt:FilterReward$return config.getStrings(key)</ID>
+    <ID>ExpressionBodySyntax:FilterTask.kt:FilterTask$return config.getStrings(key)</ID>
+    <ID>ExpressionBodySyntax:InternalPlaceholders.kt:InternalPlaceholders$return DateTimeFormatter.ofPattern(plugin.configYml.getString("date-format"))</ID>
+    <ID>ExpressionBodySyntax:PlayerBPExpGainEvent.kt:PlayerBPExpGainEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerBPExpGainEvent.kt:PlayerBPExpGainEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerBPExpGainEvent.kt:PlayerBPExpGainEvent$return this._amount</ID>
+    <ID>ExpressionBodySyntax:PlayerBPExpGainEvent.kt:PlayerBPExpGainEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPostRewardEvent.kt:PlayerPostRewardEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPostRewardEvent.kt:PlayerPostRewardEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPostRewardEvent.kt:PlayerPostRewardEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPreRewardEvent.kt:PlayerPreRewardEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPreRewardEvent.kt:PlayerPreRewardEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPreRewardEvent.kt:PlayerPreRewardEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerQuestCompleteEvent.kt:PlayerQuestCompleteEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerQuestCompleteEvent.kt:PlayerQuestCompleteEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskCompleteEvent.kt:PlayerTaskCompleteEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskCompleteEvent.kt:PlayerTaskCompleteEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskCompleteEvent.kt:PlayerTaskCompleteEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskExpGainEvent.kt:PlayerTaskExpGainEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskExpGainEvent.kt:PlayerTaskExpGainEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskExpGainEvent.kt:PlayerTaskExpGainEvent$return this._amount</ID>
+    <ID>ExpressionBodySyntax:PlayerTaskExpGainEvent.kt:PlayerTaskExpGainEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTierLevelUpEvent.kt:PlayerTierLevelUpEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerTierLevelUpEvent.kt:PlayerTierLevelUpEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerTierLevelUpEvent.kt:PlayerTierLevelUpEvent.Companion$return handlerList</ID>
+    <ID>ExpressionBodySyntax:Reward.kt:Reward$return this._id</ID>
+    <ID>ExpressionBodySyntax:Reward.kt:Reward$return this.config.getString("display.name").formatEco(player, true)</ID>
+    <ID>F001:ProperLevelComponent.kt:ProperLevelComponent$mutableMapOf&lt;GUIPosition, Int&gt;()</ID>
+    <ID>F006:CompleteTaskCommand.kt:CompleteTaskCommand$for (player in players) { if (player.hasCompletedTask(activeTask)) { continue // Skip if already completed } player.runOwned { player.setCompletedTask(activeTask, true) player.checkCompletedQuest(activeTask) } anyCompleted = true }</ID>
+    <ID>FunctionNameMaxLength:InternalPlaceholders.kt:InternalPlaceholders$private fun getFormattedRequiredXpForDisplay: String</ID>
+    <ID>IC001:CompleteTaskCommand.kt:CompleteTaskCommand$// Skip if already completed</ID>
+    <ID>IC001:EcoBattlePassAPI.kt:// Reset XP when tier goes up</ID>
+    <ID>IC001:QuestsCommand.kt:QuestsCommand$// player-only</ID>
+    <ID>IC002:BattlePass.kt:BattlePass$// Logged once at load, not per XP gain: a broken formula recurs on every grant.</ID>
+    <ID>IC002:BattlePassGUI.kt:BattlePassGUI$// Close button — supports item OR material, + name</ID>
+    <ID>IC002:BattlePassGUI.kt:BattlePassGUI$// Custom slots — supports name as separate key</ID>
+    <ID>IC002:BattlePassGUI.kt:BattlePassGUI$// Quests button — supports item OR material, + name</ID>
+    <ID>IC002:BattlePassGUI.kt:BattlePassGUI$// Tiers button — supports item OR material, + name</ID>
+    <ID>IC002:BattlePassListener.kt:BattlePassListener$// The max-tier cap is now enforced inside LevelProgression.progress (XP path) and</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// 1. Null tier — always handle here (there is no BPTier to check hasReceivedTier)</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// 2. Tier with no relevant rewards + NOT normal mode → apply special display mode</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// 3. If the tier is locked, we don’t waste time calculating rewards</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// 4. Rewards Logic</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// Case for mixed or generic tiers (combined mode)</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// Determine the base config path based on tierType (split mode) or combined mode</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// Determine the track-specific path for per-level overrides</ID>
+    <ID>IC002:BattleTierComponent.kt:BattleTierComponent$// Try per-level override first (tier-specific config)</ID>
+    <ID>IC002:EcoBattlePass.kt:EcoBattlePass$// Libreforge register</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// A cancelled tier stops the climb. Bank the XP that was not spent on the tiers we</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Both sides claimed → consolidate to saveId</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Consolidate save IDs</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Every level in this range was affordable a moment ago, so its cost is finite.</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Fire per level, committing as we go. Nothing is written before the event that can veto</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Only grant rewards that haven't been claimed separately</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Only premium claimed</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Previously abs() turned a negative amount into a gain, hiding the misconfiguration.</ID>
+    <ID>IC002:EcoBattlePassAPI.kt:// Previously abs() turned a negative into a gain, hiding the misconfiguration.</ID>
+    <ID>IC002:EcoBattlePassXPMultipliers.kt:// Delegates to eco so the four copies of this loop cannot drift apart again. Two</ID>
+    <ID>IC002:GuiItemHelper.kt:GuiItemHelper$// 1. Item string: try item.&lt;state&gt;, fallback to material</ID>
+    <ID>IC002:GuiItemHelper.kt:GuiItemHelper$// 2. Name: try name.&lt;state&gt;, fallback to name (single string)</ID>
+    <ID>IC002:GuiItemHelper.kt:GuiItemHelper$// 3. Lore: try lore.&lt;state&gt;, fallback to lore (single list)</ID>
+    <ID>IC002:InternalPlaceholders.kt:InternalPlaceholders.BattlePassPlaceholders$// Runs after formatEco, as the hand-rolled block it replaces did: a placeholder</ID>
+    <ID>IM002:QuestsGUI.kt:QuestsGUI$org.bukkit.ChatColor.stripColor(category.title)</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendAmountRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendCategoryRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendClaimAllSuccess</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendClaimNoPremium</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendCompleteTaskUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendDynamicPassUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendGiveUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendInvalidAmount</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendInvalidCategory</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendInvalidQuest</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendInvalidTask</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendNoRewardsToClaim</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendPassNotFound</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendPassRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendPlayerNotFound</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendPlayerRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendQuestRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendQuestsUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendResetUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendSetPremiumUsage</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendTaskRequired</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendTierAlreadyClaimed</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendTierNotFound</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendTierNotUnlocked</ID>
+    <ID>ImplicitUnitReturnType:LangHelper.kt:Messages$fun sendTiersUsage</ID>
+    <ID>LabeledExpression:Category.kt:Category$@run</ID>
+    <ID>LabeledExpression:InternalPlaceholders.kt:InternalPlaceholders.BattlePassPlaceholders$@PlayerDynamicPlaceholder</ID>
+    <ID>LongMethod:BPTier.kt:BPTier$fun format: List&lt;String&gt;</ID>
+    <ID>LongMethod:BattlePassGUI.kt:BattlePassGUI$fun createAndOpen</ID>
+    <ID>LongMethod:BattleTiersGUI.kt:BattleTiersGUI$fun createAndOpen</ID>
+    <ID>LongMethod:CategoriesGUI.kt:CategoriesGUI$fun open</ID>
+    <ID>LongMethod:ClaimHandler.kt:ClaimHandler$fun handleClaimAll</ID>
+    <ID>LongMethod:ClaimHandler.kt:ClaimHandler$fun handleClaimSingle</ID>
+    <ID>LongMethod:CompleteTaskCommand.kt:CompleteTaskCommand$override fun onExecute</ID>
+    <ID>LongMethod:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$override fun onExecute</ID>
+    <ID>LongMethod:InternalPlaceholders.kt:InternalPlaceholders.BattlePassPlaceholders$fun register</ID>
+    <ID>LongMethod:QuestsGUI.kt:QuestsGUI$fun open</ID>
+    <ID>LongParameterList:BPTier.kt:BPTier$private fun handleRewards</ID>
+    <ID>LongParameterList:BattleTierComponent.kt:BattleTierComponent</ID>
+    <ID>LoopWithTooManyJumpStatements:BPTier.kt:BPTier$for</ID>
+    <ID>LoopWithTooManyJumpStatements:ClaimHandler.kt:ClaimHandler$for</ID>
+    <ID>LoopWithTooManyJumpStatements:ProperLevelComponent.kt:ProperLevelComponent$for</ID>
+    <ID>MagicNumber:BattlePass.kt:BattlePass$100.0</ID>
+    <ID>MagicNumber:BattleTierComponent.kt:BattleTierComponent$64</ID>
+    <ID>MagicNumber:BattleTierComponent.kt:BattleTierComponent$99</ID>
+    <ID>MagicNumber:BattleTiersGUI.kt:BattleTiersGUI$64</ID>
+    <ID>MagicNumber:BattleTiersGUI.kt:BattleTiersGUI$99</ID>
+    <ID>MagicNumber:CompleteTaskCommand.kt:CompleteTaskCommand$3</ID>
+    <ID>MagicNumber:CompleteTaskCommand.kt:CompleteTaskCommand$4</ID>
+    <ID>MagicNumber:CompleteTaskCommand.kt:CompleteTaskCommand$5</ID>
+    <ID>MagicNumber:DynamicPassCommand.kt:DynamicPassCommand$3</ID>
+    <ID>MagicNumber:EcoBattlePass.kt:EcoBattlePass$100L</ID>
+    <ID>MagicNumber:EcoBattlePassXPMultipliers.kt:100</ID>
+    <ID>MagicNumber:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$3</ID>
+    <ID>MagicNumber:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$4</ID>
+    <ID>MagicNumber:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$5</ID>
+    <ID>MagicNumber:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$6</ID>
+    <ID>MagicNumber:GiveTiersSubcommand.kt:GiveTiersSubcommand$3</ID>
+    <ID>MagicNumber:GiveXPSubcommand.kt:GiveXPSubcommand$3</ID>
+    <ID>MagicNumber:ResetTaskSubcommand.kt:ResetTaskSubcommand$3</ID>
+    <ID>MagicNumber:ResetTaskSubcommand.kt:ResetTaskSubcommand$4</ID>
+    <ID>MagicNumber:ResetTaskSubcommand.kt:ResetTaskSubcommand$5</ID>
+    <ID>MagicNumber:SetPremiumCommand.kt:SetPremiumCommand$3</ID>
+    <ID>MagicNumber:SetPremiumCommand.kt:SetPremiumCommand$4</ID>
+    <ID>MatchingDeclarationName:Configs.kt:CategoriesYml : BaseConfig</ID>
+    <ID>MatchingDeclarationName:LangHelper.kt:Messages</ID>
+    <ID>MaxLineLength:BPTier.kt:BPTier$plugin.logger.warning("Battle pass ${battlepass.getID()} tier $number has an unknown reward '$rewardId', skipping it.")</ID>
+    <ID>MaxLineLength:BattleTierComponent.kt:BattleTierComponent$EmptyDisplayMode.HIDDEN_BEHIND_LEVEL -&gt; if (levelState == LevelState.UNLOCKED) "hidden" else levelState.key</ID>
+    <ID>MaxLineLength:CategoriesGUI.kt:CategoriesGUI$listOf("left-click", "right-click", "shift-left-click", "shift-right-click")</ID>
+    <ID>MaxLineLength:CompleteTaskCommand.kt:CompleteTaskCommand$1 -&gt; StringUtil.copyPartialMatches(args[0], Bukkit.getOnlinePlayers().map { it.name } + "all", mutableListOf())</ID>
+    <ID>MaxLineLength:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$1 -&gt; StringUtil.copyPartialMatches(args[0], Bukkit.getOnlinePlayers().map { it.name } + "all", mutableListOf())</ID>
+    <ID>MaxLineLength:GiveTiersSubcommand.kt:GiveTiersSubcommand$1 -&gt; StringUtil.copyPartialMatches(args[0], Bukkit.getOnlinePlayers().map { it.name } + "all", mutableListOf())</ID>
+    <ID>MaxLineLength:QuestsGUI.kt:QuestsGUI$listOf("left-click", "right-click", "shift-left-click", "shift-right-click")</ID>
+    <ID>MultilineLambdaItParameter:BattlePass.kt:BattlePass${ player.getTier(this) &gt;= it.number &amp;&amp; player.hasReceivedTier(this, it.number) != ReceivedTierState.RECEIVED }</ID>
+    <ID>MultilineLambdaItParameter:BattleQuest.kt:BattleQuest${ PreparedBattleTask( it ) }</ID>
+    <ID>NestedBlockDepth:BattleTierComponent.kt:BattleTierComponent$override fun getLeftClickAction: () -&gt; Unit</ID>
+    <ID>NestedScopeFunctions:BattlePassGUI.kt:BattlePassGUI$let { " name:\"$it\"" }</ID>
+    <ID>NestedScopeFunctions:BattlePassGUI.kt:BattlePassGUI$let { builder.setDisplayName(it.withBattlePassPlaceholders()) }</ID>
+    <ID>NewLineAtEndOfFile:ActiveBattleTask.kt:com.exanthiax.ecobattlepass.tasks.ActiveBattleTask.kt</ID>
+    <ID>NewLineAtEndOfFile:BattlePassListener.kt:com.exanthiax.ecobattlepass.utils.BattlePassListener.kt</ID>
+    <ID>NewLineAtEndOfFile:BattlePasses.kt:com.exanthiax.ecobattlepass.battlepass.BattlePasses.kt</ID>
+    <ID>NewLineAtEndOfFile:BattleQuest.kt:com.exanthiax.ecobattlepass.quests.BattleQuest.kt</ID>
+    <ID>NewLineAtEndOfFile:BattleQuests.kt:com.exanthiax.ecobattlepass.quests.BattleQuests.kt</ID>
+    <ID>NewLineAtEndOfFile:BattleTask.kt:com.exanthiax.ecobattlepass.tasks.BattleTask.kt</ID>
+    <ID>NewLineAtEndOfFile:BattleTasks.kt:com.exanthiax.ecobattlepass.tasks.BattleTasks.kt</ID>
+    <ID>NewLineAtEndOfFile:Categories.kt:com.exanthiax.ecobattlepass.categories.Categories.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoriesGUI.kt:com.exanthiax.ecobattlepass.gui.CategoriesGUI.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandHelpers.kt:com.exanthiax.ecobattlepass.commands.helpers.CommandHelpers.kt</ID>
+    <ID>NewLineAtEndOfFile:CompleteTaskCommand.kt:com.exanthiax.ecobattlepass.commands.CompleteTaskCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:ConditionHasBPPremium.kt:com.exanthiax.ecobattlepass.libreforge.conditions.ConditionHasBPPremium.kt</ID>
+    <ID>NewLineAtEndOfFile:ConditionHasBPTier.kt:com.exanthiax.ecobattlepass.libreforge.conditions.ConditionHasBPTier.kt</ID>
+    <ID>NewLineAtEndOfFile:EcoBattlePassCommand.kt:com.exanthiax.ecobattlepass.commands.EcoBattlePassCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:EcoBattlePassXPMultipliers.kt:com.exanthiax.ecobattlepass.api.EcoBattlePassXPMultipliers.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectBPExpMultiplier.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectBPExpMultiplier.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectGiveBPExp.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectGiveBPExp.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectGiveBPTier.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectGiveBPTier.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectGiveTaskExp.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectGiveTaskExp.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectSetBPTier.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectSetBPTier.kt</ID>
+    <ID>NewLineAtEndOfFile:EffectTaskExpMultiplier.kt:com.exanthiax.ecobattlepass.libreforge.effects.EffectTaskExpMultiplier.kt</ID>
+    <ID>NewLineAtEndOfFile:FilterReward.kt:com.exanthiax.ecobattlepass.libreforge.filters.FilterReward.kt</ID>
+    <ID>NewLineAtEndOfFile:FilterTask.kt:com.exanthiax.ecobattlepass.libreforge.filters.FilterTask.kt</ID>
+    <ID>NewLineAtEndOfFile:GiveCommand.kt:com.exanthiax.ecobattlepass.commands.give.GiveCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:GiveTaskXPSubcommand.kt:com.exanthiax.ecobattlepass.commands.give.GiveTaskXPSubcommand.kt</ID>
+    <ID>NewLineAtEndOfFile:GiveTiersSubcommand.kt:com.exanthiax.ecobattlepass.commands.give.GiveTiersSubcommand.kt</ID>
+    <ID>NewLineAtEndOfFile:GiveXPSubcommand.kt:com.exanthiax.ecobattlepass.commands.give.GiveXPSubcommand.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerBPExpGainEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerBPExpGainEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerPostRewardEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerPostRewardEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerPreRewardEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerPreRewardEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerQuestCompleteEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerQuestCompleteEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerTaskCompleteEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerTaskCompleteEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerTaskExpGainEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerTaskExpGainEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerTierLevelUpEvent.kt:com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:QuestsCommand.kt:com.exanthiax.ecobattlepass.commands.QuestsCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:QuestsGUI.kt:com.exanthiax.ecobattlepass.gui.QuestsGUI.kt</ID>
+    <ID>NewLineAtEndOfFile:ReloadCommand.kt:com.exanthiax.ecobattlepass.commands.ReloadCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:ResetBattlepassSubcommand.kt:com.exanthiax.ecobattlepass.commands.reset.ResetBattlepassSubcommand.kt</ID>
+    <ID>NewLineAtEndOfFile:ResetCommand.kt:com.exanthiax.ecobattlepass.commands.reset.ResetCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:ResetTaskSubcommand.kt:com.exanthiax.ecobattlepass.commands.reset.ResetTaskSubcommand.kt</ID>
+    <ID>NewLineAtEndOfFile:Reward.kt:com.exanthiax.ecobattlepass.rewards.Reward.kt</ID>
+    <ID>NewLineAtEndOfFile:Rewards.kt:com.exanthiax.ecobattlepass.rewards.Rewards.kt</ID>
+    <ID>NewLineAtEndOfFile:SetPremiumCommand.kt:com.exanthiax.ecobattlepass.commands.SetPremiumCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:TierType.kt:com.exanthiax.ecobattlepass.tiers.TierType.kt</ID>
+    <ID>NewLineAtEndOfFile:Tiered.kt:com.exanthiax.ecobattlepass.tiers.Tiered.kt</ID>
+    <ID>NewLineAtEndOfFile:TiersCommand.kt:com.exanthiax.ecobattlepass.commands.TiersCommand.kt</ID>
+    <ID>NewLineAtEndOfFile:TriggerBPExpGain.kt:com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPExpGain.kt</ID>
+    <ID>NewLineAtEndOfFile:TriggerBPRewardClaim.kt:com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPRewardClaim.kt</ID>
+    <ID>NewLineAtEndOfFile:TriggerBPTaskComplete.kt:com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPTaskComplete.kt</ID>
+    <ID>NewLineAtEndOfFile:TriggerBPTierUp.kt:com.exanthiax.ecobattlepass.libreforge.triggers.TriggerBPTierUp.kt</ID>
+    <ID>NoNameShadowing:BattleTierComponent.kt:BattleTierComponent${ tier.config.getStringOrNull("display.$it.$key.item") }</ID>
+    <ID>NoNameShadowing:BattleTierComponent.kt:BattleTierComponent${ tier.config.getStringOrNull("display.$it.$key.name") }</ID>
+    <ID>PF012:BattlePassListener.kt:BattlePassListener$values()</ID>
+    <ID>PropertyUsedBeforeDeclaration:BattlePass.kt:BattlePass$endDate</ID>
+    <ID>PropertyUsedBeforeDeclaration:BattlePass.kt:BattlePass$startDate</ID>
+    <ID>PropertyUsedBeforeDeclaration:Category.kt:Category$isActive</ID>
+    <ID>PropertyUsedBeforeDeclaration:ProperLevelComponent.kt:ProperLevelComponent$levelsPerPage</ID>
+    <ID>ReplaceSafeCallChainWithRun:BattlePassGUI.kt:BattlePassGUI$nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" }</ID>
+    <ID>ReplaceSafeCallChainWithRun:BattleTierComponent.kt:BattleTierComponent$tier.rewards .firstOrNull { it.tier.name.equals("premium", true) } ?.reward?.getDisplayName(this)</ID>
+    <ID>ReplaceSafeCallChainWithRun:InternalPlaceholders.kt:InternalPlaceholders$lastEndedWeek?.config?.getInt("priority")?.toString()</ID>
+    <ID>ReplaceSafeCallChainWithRun:QuestsCommand.kt:QuestsCommand$pass?.categories?.map { it.id }</ID>
+    <ID>ReturnCount:ActiveBattleQuest.kt:ActiveBattleQuest$private fun loadSavedTasks: List&lt;ActiveBattleTask&gt;?</ID>
+    <ID>ReturnCount:BattleTierComponent.kt:BattleTierComponent$private fun resolveKey: String</ID>
+    <ID>ReturnCount:ClaimHandler.kt:ClaimHandler$fun handleClaimAll</ID>
+    <ID>ReturnCount:ClaimHandler.kt:ClaimHandler$fun handleClaimSingle</ID>
+    <ID>ReturnCount:CommandHelpers.kt:TaskTabCompleter$fun forTask: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandHelpers.kt:fun CommandSender.resolveBattlePass: BattlePass?</ID>
+    <ID>ReturnCount:CommandHelpers.kt:fun CommandSender.resolvePlayers: List&lt;Player&gt;?</ID>
+    <ID>ReturnCount:CompleteTaskCommand.kt:CompleteTaskCommand$override fun onExecute</ID>
+    <ID>ReturnCount:ConditionHasBPPremium.kt:ConditionHasBPPremium$override fun isMet: Boolean</ID>
+    <ID>ReturnCount:ConditionHasBPTier.kt:ConditionHasBPTier$override fun isMet: Boolean</ID>
+    <ID>ReturnCount:EcoBattlePassAPI.kt:fun OfflinePlayer.hasCompletedQuest: Boolean</ID>
+    <ID>ReturnCount:EcoBattlePassXPMultipliers.kt:private fun Player.cacheBPExperienceMultiplier: Double</ID>
+    <ID>ReturnCount:EffectGiveBPExp.kt:EffectGiveBPExp$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EffectGiveBPTier.kt:EffectGiveBPTier$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EffectGiveTaskExp.kt:EffectGiveTaskExp$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EffectSetBPTier.kt:EffectSetBPTier$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EmptyDisplayMode.kt:EmptyDisplayMode.Companion$fun fromConfig: EmptyDisplayMode</ID>
+    <ID>ReturnCount:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$override fun onExecute</ID>
+    <ID>ReturnCount:GiveTiersSubcommand.kt:GiveTiersSubcommand$override fun onExecute</ID>
+    <ID>ReturnCount:GiveXPSubcommand.kt:GiveXPSubcommand$override fun onExecute</ID>
+    <ID>ReturnCount:InternalPlaceholders.kt:InternalPlaceholders$private fun getTimeToNextWeekPlaceholder: String</ID>
+    <ID>ReturnCount:InternalPlaceholders.kt:InternalPlaceholders$private fun getTimeToSeasonEndPlaceholder: String</ID>
+    <ID>ReturnCount:InternalPlaceholders.kt:InternalPlaceholders$private fun getWeekPlaceholder: String</ID>
+    <ID>ReturnCount:LayoutMode.kt:LayoutMode.Companion$fun fromConfig: LayoutMode</ID>
+    <ID>ReturnCount:QuestsCommand.kt:QuestsCommand$override fun onExecute</ID>
+    <ID>ReturnCount:ResetTaskSubcommand.kt:ResetTaskSubcommand$override fun onExecute</ID>
+    <ID>ReturnCount:SetPremiumCommand.kt:SetPremiumCommand$override fun onExecute</ID>
+    <ID>SpreadOperator:BattlePassGUI.kt:BattlePassGUI$(maskItems, *maskPattern)</ID>
+    <ID>SpreadOperator:BattleTiersGUI.kt:BattleTiersGUI$(maskItems, *maskPattern)</ID>
+    <ID>SpreadOperator:CategoriesGUI.kt:CategoriesGUI$( MaskItems.fromItemNames(plugin.configYml.getStrings("categories-gui.mask.materials")), *pattern.toTypedArray() )</ID>
+    <ID>SpreadOperator:QuestsGUI.kt:QuestsGUI$( MaskItems.fromItemNames(plugin.configYml.getStrings("quests-gui.mask.materials")), *pattern.toTypedArray() )</ID>
+    <ID>TooManyFunctions:BattlePass.kt:BattlePass : Registrable</ID>
+    <ID>TooManyFunctions:Category.kt:Category : Registrable</ID>
+    <ID>TooManyFunctions:EcoBattlePassAPI.kt:com.exanthiax.ecobattlepass.api.EcoBattlePassAPI.kt</ID>
+    <ID>TooManyFunctions:LangHelper.kt:Messages</ID>
+    <ID>UnderscoresInNumericLiterals:Category.kt:Category$60000L</ID>
+    <ID>UnderscoresInNumericLiterals:TimeUtil.kt:86400</ID>
+    <ID>UnnamedParameterUse:ActiveBattleQuest.kt:ActiveBattleQuest$replace</ID>
+    <ID>UnnamedParameterUse:ActiveBattleTask.kt:ActiveBattleTask$replace</ID>
+    <ID>UnnamedParameterUse:BPTier.kt:BPTier$handleRewards</ID>
+    <ID>UnnamedParameterUse:BPTier.kt:BPTier$replace</ID>
+    <ID>UnnamedParameterUse:BattlePass.kt:BattlePass$progressFraction</ID>
+    <ID>UnnamedParameterUse:BattlePass.kt:BattlePass$replace</ID>
+    <ID>UnnamedParameterUse:BattlePassGUI.kt:BattlePassGUI$replace</ID>
+    <ID>UnnamedParameterUse:BattlePassListener.kt:BattlePassListener$replace</ID>
+    <ID>UnnamedParameterUse:BattleTierComponent.kt:BattleTierComponent$coerceIn</ID>
+    <ID>UnnamedParameterUse:BattleTierComponent.kt:BattleTierComponent$replace</ID>
+    <ID>UnnamedParameterUse:BattleTiersGUI.kt:BattleTiersGUI$addPageChanger</ID>
+    <ID>UnnamedParameterUse:BattleTiersGUI.kt:BattleTiersGUI$maxOf</ID>
+    <ID>UnnamedParameterUse:BattleTiersGUI.kt:BattleTiersGUI$pageButtonItem</ID>
+    <ID>UnnamedParameterUse:BattleTiersGUI.kt:BattleTiersGUI$replace</ID>
+    <ID>UnnamedParameterUse:Categories.kt:Categories$LegacyLocation</ID>
+    <ID>UnnamedParameterUse:CategoriesGUI.kt:CategoriesGUI$addPageChanger</ID>
+    <ID>UnnamedParameterUse:CategoriesGUI.kt:CategoriesGUI$buildPageItem</ID>
+    <ID>UnnamedParameterUse:CategoriesGUI.kt:CategoriesGUI$loc</ID>
+    <ID>UnnamedParameterUse:Category.kt:Category$min</ID>
+    <ID>UnnamedParameterUse:CompleteTaskCommand.kt:CompleteTaskCommand$forQuest</ID>
+    <ID>UnnamedParameterUse:CompleteTaskCommand.kt:CompleteTaskCommand$forTask</ID>
+    <ID>UnnamedParameterUse:CompleteTaskCommand.kt:CompleteTaskCommand$replace</ID>
+    <ID>UnnamedParameterUse:ConditionHasBPPremium.kt:ConditionHasBPPremium$require</ID>
+    <ID>UnnamedParameterUse:ConditionHasBPTier.kt:ConditionHasBPTier$require</ID>
+    <ID>UnnamedParameterUse:EcoBattlePassAPI.kt:progress</ID>
+    <ID>UnnamedParameterUse:EffectBPExpMultiplier.kt:EffectBPExpMultiplier$require</ID>
+    <ID>UnnamedParameterUse:EffectGiveBPExp.kt:EffectGiveBPExp$require</ID>
+    <ID>UnnamedParameterUse:EffectGiveBPTier.kt:EffectGiveBPTier$require</ID>
+    <ID>UnnamedParameterUse:EffectGiveTaskExp.kt:EffectGiveTaskExp$require</ID>
+    <ID>UnnamedParameterUse:EffectSetBPTier.kt:EffectSetBPTier$require</ID>
+    <ID>UnnamedParameterUse:EffectTaskExpMultiplier.kt:EffectTaskExpMultiplier$require</ID>
+    <ID>UnnamedParameterUse:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$forQuest</ID>
+    <ID>UnnamedParameterUse:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$forTask</ID>
+    <ID>UnnamedParameterUse:GiveTiersSubcommand.kt:GiveTiersSubcommand$replace</ID>
+    <ID>UnnamedParameterUse:GiveXPSubcommand.kt:GiveXPSubcommand$replace</ID>
+    <ID>UnnamedParameterUse:InternalPlaceholders.kt:InternalPlaceholders$replace</ID>
+    <ID>UnnamedParameterUse:InternalPlaceholders.kt:InternalPlaceholders.BattlePassPlaceholders$inject</ID>
+    <ID>UnnamedParameterUse:InternalPlaceholders.kt:InternalPlaceholders.CategoryPlaceholders$replace</ID>
+    <ID>UnnamedParameterUse:InternalPlaceholders.kt:InternalPlaceholders.TaskPlaceholders$replace</ID>
+    <ID>UnnamedParameterUse:InternalPlaceholders.kt:InternalPlaceholders.TierPlaceholders$inject</ID>
+    <ID>UnnamedParameterUse:LangHelper.kt:Messages$replace</ID>
+    <ID>UnnamedParameterUse:LangHelper.kt:replace</ID>
+    <ID>UnnamedParameterUse:ProperLevelComponent.kt:ProperLevelComponent$GUIPosition</ID>
+    <ID>UnnamedParameterUse:QuestsGUI.kt:QuestsGUI$addPageChanger</ID>
+    <ID>UnnamedParameterUse:QuestsGUI.kt:QuestsGUI$buildPageItem</ID>
+    <ID>UnnamedParameterUse:QuestsGUI.kt:QuestsGUI$loc</ID>
+    <ID>UnnamedParameterUse:QuestsGUI.kt:QuestsGUI$replace</ID>
+    <ID>UnnamedParameterUse:ReloadCommand.kt:ReloadCommand$replace</ID>
+    <ID>UnnamedParameterUse:ResetBattlepassSubcommand.kt:ResetBattlepassSubcommand$replace</ID>
+    <ID>UnnamedParameterUse:ResetTaskSubcommand.kt:ResetTaskSubcommand$forQuest</ID>
+    <ID>UnnamedParameterUse:ResetTaskSubcommand.kt:ResetTaskSubcommand$forTask</ID>
+    <ID>UnnamedParameterUse:ResetTaskSubcommand.kt:ResetTaskSubcommand$replace</ID>
+    <ID>UnnamedParameterUse:TimeUtil.kt:replace</ID>
+    <ID>UnnecessaryFilter:BattlePass.kt:BattlePass$filter { it.transient }</ID>
+    <ID>UnnecessaryFilter:BattlePass.kt:BattlePass$filter { tier -&gt; player.getTier(this) &gt;= tier.number &amp;&amp; when (player.hasReceivedTier(this, tier.number)) { ReceivedTierState.RECEIVED -&gt; false ReceivedTierState.RECEIVED_FREE -&gt; player.hasPremium(this) ReceivedTierState.RECEIVED_PREMIUM -&gt; true ReceivedTierState.NOT_RECEIVED -&gt; true } }</ID>
+    <ID>UnnecessaryFilter:CategoriesGUI.kt:CategoriesGUI$filter { it1 -&gt; it1.equals('c', true) }</ID>
+    <ID>UnnecessaryFilter:QuestsGUI.kt:QuestsGUI$filter { it1 -&gt; it1.equals('q', true) }</ID>
+    <ID>UnnecessaryParentheses:BattleTierComponent.kt:BattleTierComponent$(trackPath?.let { tier.config.getStringOrNull("display.$it.$key.item") })</ID>
+    <ID>UnnecessaryParentheses:BattleTierComponent.kt:BattleTierComponent$(trackPath?.let { tier.config.getStringOrNull("display.$it.$key.name") })</ID>
+    <ID>UnnecessaryParentheses:EcoBattlePass.kt:EcoBattlePass$(online.size - premium)</ID>
+    <ID>UnnecessaryParentheses:EcoBattlePassAPI.kt:(committed + 1)</ID>
+    <ID>UnnecessaryParentheses:TimeUtil.kt:(totalSeconds % secondsInDay)</ID>
+    <ID>UnnecessaryParentheses:TimeUtil.kt:(totalSeconds % secondsInHour)</ID>
+    <ID>UnsafeCallOnNullableType:ActiveBattleQuest.kt:ActiveBattleQuest$BattleQuests.getByID(config.getString("id"))!!</ID>
+    <ID>UnsafeCallOnNullableType:ActiveBattleTask.kt:ActiveBattleTask$BattleTasks.getByID(config.getString("id"))!!</ID>
+    <ID>UnsafeCallOnNullableType:Category.kt:Category$BattlePasses.getByID(config.getString("battlepass"))!!</ID>
+    <ID>UnsafeCallOnNullableType:Category.kt:Category$getNextResetDate()!!</ID>
+    <ID>UnusedImport:InternalPlaceholders.kt:import com.exanthiax.ecobattlepass.tiers.TierType</ID>
+    <ID>UnusedImport:ReloadCommand.kt:import com.exanthiax.ecobattlepass.categories.Categories</ID>
+    <ID>UnusedImport:ReloadCommand.kt:import com.exanthiax.ecobattlepass.quests.BattleQuests</ID>
+    <ID>UnusedImport:ReloadCommand.kt:import com.exanthiax.ecobattlepass.rewards.Rewards</ID>
+    <ID>UnusedImport:ReloadCommand.kt:import com.exanthiax.ecobattlepass.tasks.BattleTasks</ID>
+    <ID>UnusedImport:ReloadCommand.kt:import com.willfp.eco.util.NumberUtils</ID>
+    <ID>UseIfInsteadOfWhen:LangHelper.kt:when (amount) { is Double -&gt; message.replace("%amount%", amount.toNiceString()) else -&gt; message.replace("%amount%", amount.toString()) }</ID>
+    <ID>UseIfInsteadOfWhen:TiersCommand.kt:TiersCommand$when (args.size) { 1 -&gt; StringUtil.copyPartialMatches( args[0], BattlePasses.values().map { it.id }, mutableListOf() ) else -&gt; emptyList() }</ID>
+    <ID>UseOrEmpty:BattlePassGUI.kt:BattlePassGUI$nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" } ?: ""</ID>
+    <ID>UseOrEmpty:BattlePassGUI.kt:BattlePassGUI$plugin.configYml.getStringsOrNull("$closePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:BattleTierComponent.kt:BattleTierComponent$legacyPatternPath?.let { plugin.configYml.getStrings(it) } ?: emptyList()</ID>
+    <ID>UseOrEmpty:BattleTierComponent.kt:BattleTierComponent$tier.format(displayName, player, tierType).firstOrNull() ?: ""</ID>
+    <ID>UseOrEmpty:BattleTiersGUI.kt:BattleTiersGUI$plugin.configYml.getStringsOrNull("$basePath.lore.$state") ?: plugin.configYml.getStringsOrNull("$basePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:CategoriesGUI.kt:CategoriesGUI$plugin.configYml.getStringsOrNull("$basePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:CategoriesGUI.kt:CategoriesGUI$plugin.configYml.getStringsOrNull("$basePath.lore.$state") ?: plugin.configYml.getStringsOrNull("$basePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:CompleteTaskCommand.kt:CompleteTaskCommand$args.getOrNull(2) ?: ""</ID>
+    <ID>UseOrEmpty:CompleteTaskCommand.kt:CompleteTaskCommand$args.getOrNull(3) ?: ""</ID>
+    <ID>UseOrEmpty:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$args.getOrNull(2) ?: ""</ID>
+    <ID>UseOrEmpty:GiveTaskXPSubcommand.kt:GiveTaskXPSubcommand$args.getOrNull(3) ?: ""</ID>
+    <ID>UseOrEmpty:QuestsCommand.kt:QuestsCommand$args.getOrNull(0) ?: ""</ID>
+    <ID>UseOrEmpty:QuestsCommand.kt:QuestsCommand$pass?.categories?.map { it.id } ?: emptyList()</ID>
+    <ID>UseOrEmpty:QuestsGUI.kt:QuestsGUI$plugin.configYml.getStringsOrNull("$basePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:QuestsGUI.kt:QuestsGUI$plugin.configYml.getStringsOrNull("$basePath.lore.$state") ?: plugin.configYml.getStringsOrNull("$basePath.lore") ?: emptyList()</ID>
+    <ID>UseOrEmpty:ResetTaskSubcommand.kt:ResetTaskSubcommand$args.getOrNull(2) ?: ""</ID>
+    <ID>UseOrEmpty:ResetTaskSubcommand.kt:ResetTaskSubcommand$args.getOrNull(3) ?: ""</ID>
+  </CurrentIssues>
+</SmellBaseline>
