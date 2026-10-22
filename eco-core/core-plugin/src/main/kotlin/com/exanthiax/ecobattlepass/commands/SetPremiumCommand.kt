@@ -43,9 +43,12 @@ object SetPremiumCommand : PluginCommand(
         val arg4 = args.getOrNull(3)?.lowercase()
 
         val setToPremium = when (arg3) {
-            null, "silent" -> true
-            "true", "yes", "1" -> true
-            else -> false
+            null, "silent", "true", "yes", "1" -> true
+            "false", "no", "0" -> false
+            else -> {
+                Messages.sendSetPremiumUsage(sender)
+                return
+            }
         }
 
         val silent = arg4 == "silent" || arg3 == "silent"

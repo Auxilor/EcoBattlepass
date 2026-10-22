@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "findings": [
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/api/EcoBattlePassAPI.kt",
+      "message": "Unused function `setCompletedQuest`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/api/EcoBattlePassAPI.kt",
+      "message": "Unused function `setTaskProgress`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/api/events/PlayerBPExpGainEvent.kt",
+      "message": "Unused property `isMultiply`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/battlepass/BattlePass.kt",
+      "message": "Unused function `getClaimableTiers`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/battlepass/BattlePass.kt",
+      "message": "Unused property `openCommand`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/categories/Categories.kt",
+      "message": "Unused function `valuesSorted`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/gui/GuiItemHelper.kt",
+      "message": "Unused object `GuiItemHelper`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/gui/components/EmptyDisplayMode.kt",
+      "message": "Unused property `configKey`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/gui/components/LayoutMode.kt",
+      "message": "Unused property `configKey`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/tasks/ActiveBattleTask.kt",
+      "message": "Unused function `getDisplayItem`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/exanthiax/ecobattlepass/utils/InternalPlaceholders.kt",
+      "message": "Unused object `InternalPlaceholders`"
+    }
+  ]
+}
