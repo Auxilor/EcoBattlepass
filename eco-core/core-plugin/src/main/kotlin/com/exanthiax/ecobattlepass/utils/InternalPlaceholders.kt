@@ -172,8 +172,12 @@ object InternalPlaceholders {
             }.register()
         }
 
-        fun replace(input: String, battlepass: BattlePass, player: Player): String {
-            val tier = player.getTier(battlepass)
+        fun replace(
+            input: String,
+            battlepass: BattlePass,
+            player: Player,
+            tier: Int = player.getTier(battlepass)
+        ): String {
             val result = applyBattlePassReplacements(
                 input = input,
                 battlepass = battlepass,

@@ -41,9 +41,12 @@ object BattlePassListener : Listener {
         // giveExactBPTiers (tier path), so a listener reverting after the fact is redundant
         // and was the source of the two paths disagreeing.
         event.player.sendMessage(
-            InternalPlaceholders.BattlePassPlaceholders
-                .replace(plugin.langYml.getMessage("tier-up"), event.battlepass, player)
-                .replace("%tier%", event.level.toString())
+            InternalPlaceholders.BattlePassPlaceholders.replace(
+                input = plugin.langYml.getMessage("tier-up"),
+                battlepass = event.battlepass,
+                player = player,
+                tier = event.level
+            )
         )
         PlayableSound.create(plugin.configYml.getSubsection("sound.tier-up"))?.playTo(player)
     }
