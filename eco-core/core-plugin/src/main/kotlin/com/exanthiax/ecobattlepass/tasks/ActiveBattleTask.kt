@@ -5,6 +5,7 @@ import com.exanthiax.ecobattlepass.api.events.PlayerTaskExpGainEvent
 import com.exanthiax.ecobattlepass.api.giveTaskExperience
 import com.exanthiax.ecobattlepass.api.hasCompletedQuest
 import com.exanthiax.ecobattlepass.api.hasCompletedTask
+import com.exanthiax.ecobattlepass.api.retireLegacyTaskData
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
@@ -29,12 +30,24 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
     val xpGainMethods = parent.xpGainMethods.map { it.clone() }
 
     val completedKey = PersistentDataKey(
-        plugin.createNamespacedKey("${parent.id}_${quest.parent.id}_task_completed"),
+        plugin.createNamespacedKey("${parent.id}_${quest.parent.id}_${quest.category.id}_task_completed"),
         PersistentDataKeyType.BOOLEAN,
         false
     )
 
     val progressKey = PersistentDataKey(
+        plugin.createNamespacedKey("${parent.id}_${quest.parent.id}_${quest.category.id}_task_progress"),
+        PersistentDataKeyType.DOUBLE,
+        0.0
+    )
+
+    internal val legacyCompletedKey = PersistentDataKey(
+        plugin.createNamespacedKey("${parent.id}_${quest.parent.id}_task_completed"),
+        PersistentDataKeyType.BOOLEAN,
+        false
+    )
+
+    internal val legacyProgressKey = PersistentDataKey(
         plugin.createNamespacedKey("${parent.id}_${quest.parent.id}_progress"),
         PersistentDataKeyType.DOUBLE,
         0.0
@@ -80,6 +93,7 @@ class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
     }
 
     fun reset(profile: Profile) {
+        profile.retireLegacyTaskData(this)
         profile.write(completedKey, false)
         profile.write(progressKey, 0.0)
     }

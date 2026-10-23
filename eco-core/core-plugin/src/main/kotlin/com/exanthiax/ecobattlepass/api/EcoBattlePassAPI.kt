@@ -5,12 +5,15 @@ import com.exanthiax.ecobattlepass.api.events.PlayerQuestCompleteEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerTaskCompleteEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
+import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
+import com.willfp.eco.core.data.Profile
+import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.profile
 import com.willfp.eco.core.progression.LevelProgression
 import com.willfp.eco.core.progression.StopReason
@@ -131,9 +134,8 @@ fun Player.receiveTierFreeOnly(tier: BPTier) {
     }
 }
 
-fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean {
-    return this.profile.read(task.completedKey)
-}
+fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean =
+    this.profile.readMigrated(key = task.completedKey, legacyKey = task.legacyCompletedKey)
 
 fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean =
     this.profile.read(quest.completedKey) || quest.tasks.all { this.hasCompletedTask(it) }
@@ -143,15 +145,58 @@ fun OfflinePlayer.setCompletedQuest(quest: ActiveBattleQuest, value: Boolean) {
 }
 
 fun OfflinePlayer.setCompletedTask(task: ActiveBattleTask, value: Boolean) {
+    if (!value) {
+        this.profile.retireLegacyTaskData(task)
+    }
+
     this.profile.write(task.completedKey, value)
 }
 
 fun OfflinePlayer.setTaskProgress(task: ActiveBattleTask, progress: Double) {
+    if (progress == 0.0) {
+        this.profile.retireLegacyTaskData(task)
+    }
+
     this.profile.write(task.progressKey, progress)
 }
 
-fun OfflinePlayer.taskProgress(task: ActiveBattleTask): Double {
-    return this.profile.read(task.progressKey)
+fun OfflinePlayer.taskProgress(task: ActiveBattleTask): Double =
+    this.profile.readMigrated(key = task.progressKey, legacyKey = task.legacyProgressKey)
+
+internal fun Profile.retireLegacyTaskData(task: ActiveBattleTask) {
+    if (!this.read(task.legacyCompletedKey) && this.read(task.legacyProgressKey) == 0.0) {
+        return
+    }
+
+    val sharingTasks = Categories.values()
+        .asSequence()
+        .flatMap { category -> category.quests }
+        .flatMap { quest -> quest.tasks }
+        .filter { it.legacyCompletedKey.key == task.legacyCompletedKey.key }
+
+    for (sharingTask in sharingTasks) {
+        this.readMigrated(key = sharingTask.completedKey, legacyKey = sharingTask.legacyCompletedKey)
+        this.readMigrated(key = sharingTask.progressKey, legacyKey = sharingTask.legacyProgressKey)
+    }
+
+    this.write(task.legacyCompletedKey, false)
+    this.write(task.legacyProgressKey, 0.0)
+}
+
+private fun <T : Any> Profile.readMigrated(key: PersistentDataKey<T>, legacyKey: PersistentDataKey<T>): T {
+    val value = this.read(key)
+
+    if (value != key.defaultValue) {
+        return value
+    }
+
+    val legacyValue = this.read(legacyKey)
+
+    if (legacyValue != legacyKey.defaultValue) {
+        this.write(key, legacyValue)
+    }
+
+    return legacyValue
 }
 
 fun Player.giveTaskExperience(task: ActiveBattleTask, amount: Double) {
