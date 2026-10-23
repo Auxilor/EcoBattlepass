@@ -135,17 +135,8 @@ fun OfflinePlayer.hasCompletedTask(task: ActiveBattleTask): Boolean {
     return this.profile.read(task.completedKey)
 }
 
-fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean {
-    if (this.profile.read(quest.completedKey)) {
-        return true
-    } else {
-        if (quest.tasks.all { this.hasCompletedTask(it) }) {
-            this.profile.write(quest.completedKey, true)
-            return true
-        }
-    }
-    return false
-}
+fun OfflinePlayer.hasCompletedQuest(quest: ActiveBattleQuest): Boolean =
+    this.profile.read(quest.completedKey) || quest.tasks.all { this.hasCompletedTask(it) }
 
 fun OfflinePlayer.setCompletedQuest(quest: ActiveBattleQuest, value: Boolean) {
     this.profile.write(quest.completedKey, value)
@@ -178,10 +169,16 @@ fun Player.giveTaskExperience(task: ActiveBattleTask, amount: Double) {
 }
 
 fun Player.checkCompletedQuest(task: ActiveBattleTask) {
-    if (this.hasCompletedQuest(task.quest)) {
-        val event = PlayerQuestCompleteEvent(this, task.quest)
-        Bukkit.getPluginManager().callEvent(event)
+    this.checkCompletedQuest(task.quest)
+}
+
+fun Player.checkCompletedQuest(quest: ActiveBattleQuest) {
+    if (this.profile.read(quest.completedKey) || !quest.tasks.all { this.hasCompletedTask(it) }) {
+        return
     }
+
+    this.profile.write(quest.completedKey, true)
+    Bukkit.getPluginManager().callEvent(PlayerQuestCompleteEvent(this, quest))
 }
 
 fun Player.giveBPExperience(pass: BattlePass, experience: Double, withMultipliers: Boolean = true) {

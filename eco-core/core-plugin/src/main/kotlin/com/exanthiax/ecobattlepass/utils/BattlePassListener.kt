@@ -58,7 +58,7 @@ object BattlePassListener : Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGH)
     fun handleQuest(event: PlayerQuestCompleteEvent) {
         val player = event.player
 
