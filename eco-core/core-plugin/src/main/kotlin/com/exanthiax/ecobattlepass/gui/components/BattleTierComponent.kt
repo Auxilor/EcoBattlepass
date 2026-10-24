@@ -15,6 +15,8 @@ import com.exanthiax.ecobattlepass.utils.ReceivedTierState
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.cache.EcoCache
+import com.willfp.eco.core.gui.component.LevelComponent
+import com.willfp.eco.core.gui.component.LevelState
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
@@ -23,7 +25,6 @@ import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.NumberUtils.evaluateExpression
 import com.willfp.eco.util.openMenu
-import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.time.Duration
@@ -39,10 +40,11 @@ class BattleTierComponent(
     private val emptyTierDisplayMode: EmptyDisplayMode = EmptyDisplayMode.NORMAL,
     private val maxItemAmount: Int =
         (plugin.configYml.getIntOrNull("tiers-gui.buttons.max-item-amount") ?: 64).coerceIn(1, 99)
-) : ProperLevelComponent() {
+) : LevelComponent() {
     override val pattern: List<String> = plugin.configYml.getStrings(patternPath)
         .ifEmpty { legacyPatternPath?.let { plugin.configYml.getStrings(it) } ?: emptyList() }
     override val maxLevel = pass.maxLevel
+    override val updatesLive = true
     private val itemCache = nestedMap<LevelState, Int, ItemStack>()
 
     private fun hasRelevantRewards(tier: BPTier): Boolean {
@@ -207,41 +209,34 @@ class BattleTierComponent(
         PlayableSound.create(plugin.configYml.getSubsection("sound.premium-required"))?.playTo(this)
     }
 
-    override fun getLeftClickAction(player: Player, level: Int, levelState: LevelState): () -> Unit {
-        return when (val key = resolveKey(player, level, levelState)) {
+    override fun onLevelClick(player: Player, menu: Menu, level: Int, levelState: LevelState) {
+        when (val key = resolveKey(player, level, levelState)) {
             "unlocked", "unlocked-free", "premium-required" -> {
-                {
-                    val tier = pass.getTier(level)
-                    if (tier != null) {
-                        if (key == "premium-required") {
-                            player.sendPremiumRequiredMessage(level, tier)
-                        } else {
-                            levelItemCache.invalidate(Triple(player.uniqueId, level, null))
-                            levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.FREE))
-                            levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.PREMIUM))
-                            itemCache[levelState].remove(level)
-                            when (tierType) {
-                                TierType.FREE -> player.receiveTierFreeOnly(tier)
-                                TierType.PREMIUM -> player.receiveTierPremiumOnly(tier)
-                                null -> {
-                                    if (key == "unlocked") player.receiveTier(tier)
-                                    else player.receiveTierPremiumOnly(tier)
-                                }
-                            }
-                            player.openMenu?.refresh(player)
-                        }
-                    }
+                val tier = pass.getTier(level) ?: return
+                if (key == "premium-required") {
+                    player.sendPremiumRequiredMessage(level, tier)
+                } else {
+                    claimTier(player, level, levelState, tier, key == "unlocked")
                 }
             }
 
             "locked", "in-progress" -> {
-                { PlayableSound.create(plugin.configYml.getSubsection("sound.reward-locked"))?.playTo(player) }
-            }
-
-            else -> {
-                {}
+                PlayableSound.create(plugin.configYml.getSubsection("sound.reward-locked"))?.playTo(player)
             }
         }
+    }
+
+    private fun claimTier(player: Player, level: Int, levelState: LevelState, tier: BPTier, unlocked: Boolean) {
+        levelItemCache.invalidate(Triple(player.uniqueId, level, null))
+        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.FREE))
+        levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.PREMIUM))
+        itemCache[levelState].remove(level)
+        when (tierType) {
+            TierType.FREE -> player.receiveTierFreeOnly(tier)
+            TierType.PREMIUM -> player.receiveTierPremiumOnly(tier)
+            null -> if (unlocked) player.receiveTier(tier) else player.receiveTierPremiumOnly(tier)
+        }
+        player.openMenu?.refresh(player)
     }
 }
 

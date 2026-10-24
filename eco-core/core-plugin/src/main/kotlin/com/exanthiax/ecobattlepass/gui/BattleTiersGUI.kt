@@ -8,20 +8,18 @@ import com.exanthiax.ecobattlepass.gui.components.LayoutMode
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
+import com.willfp.eco.core.gui.addCustomSlot
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.ConfigButton
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.PageChanger
-import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 object BattleTiersGUI {
     @Volatile
@@ -70,34 +68,9 @@ object BattleTiersGUI {
 
     fun createAndOpen(player: Player, pass: BattlePass, backButton: Boolean = false) {
         val maskPattern = plugin.configYml.getStrings("tiers-gui.mask.pattern").toTypedArray()
-        val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("tiers-gui.mask.materials"))
 
         fun String.withBattlePassPlaceholders(): String =
             InternalPlaceholders.BattlePassPlaceholders.replace(this, battlepass = pass, player = player)
-
-        fun pageButtonItem(basePath: String, state: String): ItemStack? {
-            val itemString = plugin.configYml.getStringOrNull("$basePath.item.$state")
-                ?: plugin.configYml.getStringOrNull("$basePath.item")
-                ?: plugin.configYml.getStringOrNull("$basePath.material")
-                ?: return null
-
-            val builder = ItemStackBuilder(
-                Items.lookup(itemString.withBattlePassPlaceholders())
-            )
-
-            val name = plugin.configYml.getStringOrNull("$basePath.name.$state")
-                ?: plugin.configYml.getStringOrNull("$basePath.name")
-            if (name != null) {
-                builder.setDisplayName(name.withBattlePassPlaceholders())
-            }
-
-            val lore = plugin.configYml.getStringsOrNull("$basePath.lore.$state")
-                ?: plugin.configYml.getStringsOrNull("$basePath.lore")
-                ?: emptyList()
-            builder.addLoreLines(lore.map { it.withBattlePassPlaceholders() })
-
-            return builder.build()
-        }
 
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("sound.page-turn"))
 
@@ -143,11 +116,6 @@ object BattleTiersGUI {
         val prevPagePath = "tiers-gui.buttons.prev-page"
         val nextPagePath = "tiers-gui.buttons.next-page"
 
-        val prevRow = plugin.configYml.getInt("$prevPagePath.location.row")
-        val prevCol = plugin.configYml.getInt("$prevPagePath.location.column")
-        val nextRow = plugin.configYml.getInt("$nextPagePath.location.row")
-        val nextCol = plugin.configYml.getInt("$nextPagePath.location.column")
-
         val rawTitle = plugin.configYml.getString("tiers-gui.title")
             .withBattlePassPlaceholders()
             .replace("%pass%", pass.name)
@@ -158,7 +126,7 @@ object BattleTiersGUI {
 
             maxPages(totalPages)
 
-            setMask(FillerMask(maskItems, *maskPattern))
+            setMask(plugin.configYml, "tiers-gui")
 
             components.forEach { addComponent(1, 1, it) }
 
@@ -169,59 +137,43 @@ object BattleTiersGUI {
             }
 
             if (backButton) {
-                pageButtonItem(prevPagePath, "active")?.let { active ->
-                    addComponent(
-                        MenuLayer.LOWER,
-                        prevRow, prevCol,
-                        slot(active) {
-                            onLeftClick { _, _ ->
-                                BattlePassGUI.createAndOpen(player, pass)
-                            }
-                        }
-                    )
-                }
-            }
-
-            pageButtonItem(prevPagePath, "active")?.let { active ->
-                val inactive = if (backButton) null else pageButtonItem(prevPagePath, "inactive")
-                addPageChanger(
-                    PageChanger.Direction.BACKWARDS,
-                    active,
-                    inactive,
-                    pageChangeSound,
-                    prevRow,
-                    prevCol
-                )
-            }
-
-            pageButtonItem(nextPagePath, "active")?.let { active ->
-                addPageChanger(
-                    PageChanger.Direction.FORWARDS,
-                    active,
-                    pageButtonItem(nextPagePath, "inactive"),
-                    pageChangeSound,
-                    nextRow,
-                    nextCol
-                )
-            }
-
-            if (plugin.configYml.getBool("tiers-gui.buttons.close.enabled")) {
-                val closePath = "tiers-gui.buttons.close"
-                val closeMaterial = plugin.configYml.getStringOrNull("$closePath.material") ?: "barrier"
-                val closeName = plugin.configYml.getStringOrNull("$closePath.name")
-                val closeBuilder = ItemStackBuilder(Items.lookup(closeMaterial.withBattlePassPlaceholders()))
-                if (closeName != null) closeBuilder.setDisplayName(closeName.withBattlePassPlaceholders())
-
-                setSlot(
-                    plugin.configYml.getInt("$closePath.location.row"),
-                    plugin.configYml.getInt("$closePath.location.column"),
-                    slot(closeBuilder.build()) {
-                        onLeftClick { event, _ ->
-                            event.whoClicked.closeInventory()
-                        }
+                addComponent(
+                    ConfigButton(
+                        plugin.configYml.getSubsection(prevPagePath),
+                        state = "active",
+                        layer = MenuLayer.LOWER,
+                        format = { it.withBattlePassPlaceholders() }
+                    ) { _, _, _, _ ->
+                        BattlePassGUI.createAndOpen(player, pass)
                     }
                 )
             }
+
+            addPageChanger(
+                plugin.configYml,
+                prevPagePath,
+                PageChanger.Direction.BACKWARDS,
+                pageChangeSound,
+                format = { it.withBattlePassPlaceholders() },
+                hideInactive = backButton
+            )
+
+            addPageChanger(
+                plugin.configYml,
+                nextPagePath,
+                PageChanger.Direction.FORWARDS,
+                pageChangeSound,
+                format = { it.withBattlePassPlaceholders() }
+            )
+
+            addComponent(
+                closeButton(
+                    plugin.configYml.getSubsection("tiers-gui.buttons.close"),
+                    defaultItem = "barrier",
+                    enabledByDefault = false,
+                    format = { it.withBattlePassPlaceholders() }
+                )
+            )
 
             for (slotConfig in plugin.configYml.getSubsections("tiers-gui.buttons.custom-slots")) {
                 val resolved = slotConfig.clone().apply {
@@ -240,11 +192,7 @@ object BattleTiersGUI {
                     }
                 }
 
-                setSlot(
-                    resolved.getInt("row"),
-                    resolved.getInt("column"),
-                    ConfigSlot(resolved)
-                )
+                addCustomSlot(resolved)
             }
         }
 

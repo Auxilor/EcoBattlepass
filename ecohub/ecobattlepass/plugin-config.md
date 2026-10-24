@@ -67,6 +67,7 @@ battlepass-gui:
       location:
         row: 2
         column: 4
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     # List of available placeholders:
     # https://hub.auxilor.io/wiki/ecobattlepass/internalplaceholders#battlepass-and-category-gui
@@ -83,6 +84,7 @@ battlepass-gui:
       location:
         row: 2
         column: 6
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     close:
       enabled: true
@@ -91,6 +93,7 @@ battlepass-gui:
       location:
         row: 3
         column: 5
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     # Custom GUI slots; see here for a how-to: https://hub.auxilor.io/wiki/eco/pages
     custom-slots: []
@@ -187,6 +190,7 @@ tiers-gui:
       location:
         row: 6
         column: 4
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     next-page:
       item:
@@ -198,6 +202,7 @@ tiers-gui:
       location:
         row: 6
         column: 6
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     close:
       enabled: true
@@ -208,6 +213,7 @@ tiers-gui:
       location:
         row: 6
         column: 5
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     # Reward placeholders documentation:
     # These placeholders are used in tier button lore to display rewards
@@ -431,6 +437,7 @@ categories-gui:
       location:
         row: 5
         column: 6
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
     prev-page:
       item:
         active: orange_stained_glass_pane name:"&aPrevious page"
@@ -441,6 +448,7 @@ categories-gui:
       location:
         row: 5
         column: 4
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
     close:
       enabled: true
       item: barrier
@@ -448,6 +456,7 @@ categories-gui:
       location:
         row: 5
         column: 5
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     # List of available placeholders:
     # https://hub.auxilor.io/wiki/ecobattlepass/internalplaceholders#battlepass-and-category-gui
@@ -491,6 +500,7 @@ quests-gui:
       location:
         row: 5
         column: 6
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
     prev-page:
       item:
         active: orange_stained_glass_pane name:"&aPrevious page"
@@ -501,6 +511,7 @@ quests-gui:
       location:
         row: 5
         column: 4
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
     close:
       enabled: true
       item: barrier
@@ -508,6 +519,7 @@ quests-gui:
       location:
         row: 5
         column: 5
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     # List of available placeholders:
     # https://hub.auxilor.io/wiki/ecobattlepass/internalplaceholders#quest-gui

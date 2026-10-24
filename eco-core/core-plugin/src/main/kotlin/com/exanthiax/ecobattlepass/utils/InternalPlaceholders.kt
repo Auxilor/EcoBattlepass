@@ -193,9 +193,6 @@ object InternalPlaceholders {
             // %previous_tier_numeral%, which battle passes never had.
             return ProgressionPlaceholders.inject(result, "tier", tier)
         }
-
-        fun replaceAll(inputs: List<String>, battlepass: BattlePass, player: Player) =
-            inputs.map { replace(it, battlepass, player) }
     }
 
     object TierPlaceholders {
