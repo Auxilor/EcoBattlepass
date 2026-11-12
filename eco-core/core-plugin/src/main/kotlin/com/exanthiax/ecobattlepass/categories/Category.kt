@@ -29,6 +29,9 @@ class Category(private val _id: String, val config: Config) : Registrable {
         InternalPlaceholders.CategoryPlaceholders.register(this)
     }
 
+    val id: String
+        get() = _id
+
     override fun getID(): String = _id
 
     val battlepass: BattlePass
@@ -75,7 +78,7 @@ class Category(private val _id: String, val config: Config) : Registrable {
 
     fun getDisplayItem(player: Player): ItemStack {
         val resolvedItem = InternalPlaceholders.CategoryPlaceholders.replace(itemString, this, player)
-        return ItemStackBuilder(Items.lookup(resolvedItem).item.clone())
+        return ItemStackBuilder(Items.lookup(resolvedItem).getItem().clone())
             .setDisplayName(InternalPlaceholders.CategoryPlaceholders.replace(name, this, player))
             .addLoreLines(InternalPlaceholders.CategoryPlaceholders.replaceAll(unformattedLore, this, player))
             .build()
