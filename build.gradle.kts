@@ -1,4 +1,5 @@
 ﻿import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import wiki.ecohub.gradle.modules.EcoModulesExtension
 
 plugins {
     kotlin("jvm") version "2.3.0"
@@ -6,12 +7,12 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("com.gradleup.shadow") version "9.3.1"
+    id("wiki.ecohub.eco-modules") version "1.0.0"
 }
 
 group = "com.exanthiax"
 version = findProperty("version")!!
 val ecoApiVersion = findProperty("eco-api-version")
-val ecoVersion = findProperty("eco-version")
 
 base {
     archivesName.set(project.name)
@@ -87,6 +88,11 @@ allprojects {
     apply(plugin = "kotlin")
     apply(plugin = "maven-publish")
     apply(plugin = "com.gradleup.shadow")
+    apply(plugin = "wiki.ecohub.eco-modules")
+
+    configure<EcoModulesExtension> {
+        use("menus", "effects-system", "progression")
+    }
 
     repositories {
         mavenCentral()
@@ -102,7 +108,6 @@ allprojects {
     dependencies {
         compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
 
-        compileOnly("wiki.ecohub:eco:$ecoVersion")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
 
         compileOnly (fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
