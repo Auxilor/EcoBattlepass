@@ -2,42 +2,30 @@ package com.exanthiax.ecobattlepass.commands
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
-import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
-import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.command.impl.PluginCommand
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandBuilder
 
-object TiersCommand : PluginCommand(
-    plugin,
-    "tiers",
-    "ecobattlepass.command.tier",
-    true
+/**
+ * An unknown pass sends `pass-not-found` and then the usage, as before.
+ */
+internal fun CommandBuilder<CommandSender>.tiersCommand() = playerSubcommand(
+    name = "tiers",
+    permission = "ecobattlepass.command.tier"
 ) {
-    override fun onExecute(sender: Player, args: MutableList<String>) {
-        if (args.isEmpty()) {
-            Messages.sendTiersUsage(sender)
-            return
-        }
+    executes {
+        replying {
+            val passId = args.firstOrNull() ?: reject(Messages::sendTiersUsage)
+            val pass = BattlePasses.getByID(passId) ?: reject { target ->
+                target.sendMessage(plugin.langYml.getMessage("pass-not-found"))
+                Messages.sendTiersUsage(target)
+            }
 
-        val pass = (sender as CommandSender).resolveBattlePass(args.getOrNull(0)) ?: run {
-            Messages.sendTiersUsage(sender)
-            return
+            BattleTiersGUI.createAndOpen(sender, pass)
         }
-
-        BattleTiersGUI.createAndOpen(sender, pass)
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        return when (args.size) {
-            1 -> StringUtil.copyPartialMatches(
-                args[0],
-                BattlePasses.values().map { it.id },
-                mutableListOf()
-            )
-            else -> emptyList()
-        }
+    completes {
+        if (args.size == 1) passIds() else emptyList()
     }
 }

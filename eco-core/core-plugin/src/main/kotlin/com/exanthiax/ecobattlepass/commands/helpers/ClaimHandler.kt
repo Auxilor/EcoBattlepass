@@ -14,7 +14,7 @@ import wiki.ecohub.modules.menus.openMenu
 
 object ClaimHandler {
 
-    fun handleClaim(player: Player, pass: BattlePass, args: MutableList<String>) {
+    fun handleClaim(player: Player, pass: BattlePass, args: List<String>) {
         val tierArg = args.getOrNull(1)?.lowercase() ?: run {
             Messages.sendDynamicPassUsage(player)
             return
