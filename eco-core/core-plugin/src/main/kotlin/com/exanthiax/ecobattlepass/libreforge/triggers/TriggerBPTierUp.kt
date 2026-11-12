@@ -1,11 +1,11 @@
 package com.exanthiax.ecobattlepass.libreforge.triggers
 
 import com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerBPTierUp: Trigger("tier_up_battlepass") {
     override val description = "Fires when the player advances to a new battlepass tier."

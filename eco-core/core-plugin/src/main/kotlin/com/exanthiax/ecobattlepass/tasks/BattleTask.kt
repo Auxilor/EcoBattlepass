@@ -1,11 +1,11 @@
 package com.exanthiax.ecobattlepass.tasks
 
 import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.registry.Registrable
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.counters.Counters
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.registry.Registrable
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.rules.counter.Counters
 
 class BattleTask(private val _id: String, val config: Config) : Registrable {
     override fun getID(): String {

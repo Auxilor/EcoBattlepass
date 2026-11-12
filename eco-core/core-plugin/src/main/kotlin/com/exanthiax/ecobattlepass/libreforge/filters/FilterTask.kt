@@ -1,12 +1,12 @@
 package com.exanthiax.ecobattlepass.libreforge.filters
 
 import com.exanthiax.ecobattlepass.api.events.PlayerTaskCompleteEvent
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.util.containsIgnoreCase
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.filters.Filter
-import com.willfp.libreforge.triggers.TriggerData
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.filter.Filter
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.ui.text.containsIgnoreCase
 
 object FilterTask: Filter<NoCompileData, Collection<String>>("battlepass_task") {
     override val description = "Matches when the completed task's ID is in the given list."

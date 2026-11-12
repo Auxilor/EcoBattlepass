@@ -12,23 +12,23 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
-import com.willfp.eco.core.EcoPlugin
-import com.willfp.eco.core.Prerequisite
-import com.willfp.eco.core.cache.EcoCache
-import com.willfp.eco.core.gui.component.LevelComponent
-import com.willfp.eco.core.gui.component.LevelState
-import com.willfp.eco.core.gui.menu.Menu
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.core.map.nestedMap
-import com.willfp.eco.core.placeholder.context.placeholderContext
-import com.willfp.eco.core.sound.PlayableSound
-import com.willfp.eco.util.NumberUtils.evaluateExpression
-import com.willfp.eco.util.openMenu
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.core.plugin.EcoPlugin
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.data.cache.EcoCache
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.builder.ItemStackBuilder
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.math.evaluateExpression
+import wiki.ecohub.modules.menus.component.LevelComponent
+import wiki.ecohub.modules.menus.component.LevelState
+import wiki.ecohub.modules.menus.menu.Menu
+import wiki.ecohub.modules.menus.openMenu
+import wiki.ecohub.ui.placeholder.placeholderContext
 import java.time.Duration
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
 class BattleTierComponent(
@@ -45,7 +45,7 @@ class BattleTierComponent(
         .ifEmpty { legacyPatternPath?.let { plugin.configYml.getStrings(it) } ?: emptyList() }
     override val maxLevel = pass.maxLevel
     override val updatesLive = true
-    private val itemCache = nestedMap<LevelState, Int, ItemStack>()
+    private val itemCache = ConcurrentHashMap<LevelState, MutableMap<Int, ItemStack>>()
 
     private fun hasRelevantRewards(tier: BPTier): Boolean {
         return when (tierType) {
@@ -182,7 +182,7 @@ class BattleTierComponent(
         }
 
         return if (levelState != LevelState.IN_PROGRESS) {
-            itemCache[levelState].getOrPut(level) { item() }
+            itemCache.getOrPut(levelState) { ConcurrentHashMap() }.getOrPut(level) { item() }
         } else {
             item()
         }
@@ -230,7 +230,7 @@ class BattleTierComponent(
         levelItemCache.invalidate(Triple(player.uniqueId, level, null))
         levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.FREE))
         levelItemCache.invalidate(Triple(player.uniqueId, level, TierType.PREMIUM))
-        itemCache[levelState].remove(level)
+        itemCache[levelState]?.remove(level)
         when (tierType) {
             TierType.FREE -> player.receiveTierFreeOnly(tier)
             TierType.PREMIUM -> player.receiveTierPremiumOnly(tier)

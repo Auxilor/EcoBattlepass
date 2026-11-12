@@ -1,11 +1,11 @@
 package com.exanthiax.ecobattlepass.libreforge.triggers
 
 import com.exanthiax.ecobattlepass.api.events.PlayerBPExpGainEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerBPExpGain: Trigger("gain_battlepass_xp") {
     override val description = "Fires when the player gains battlepass experience."

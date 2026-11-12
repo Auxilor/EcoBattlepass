@@ -4,15 +4,15 @@ import com.exanthiax.ecobattlepass.api.events.PlayerTierLevelUpEvent
 import com.exanthiax.ecobattlepass.api.getTier
 import com.exanthiax.ecobattlepass.api.setTier
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.ConfigArguments
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.effects.Effect
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.Bukkit
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigArguments
+import wiki.ecohub.config.arguments
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.effect.Effect
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object EffectGiveBPTier: Effect<NoCompileData>("give_battlepass_tiers") {
     override val description = "Gives the player additional battlepass tiers on top of their current tier."

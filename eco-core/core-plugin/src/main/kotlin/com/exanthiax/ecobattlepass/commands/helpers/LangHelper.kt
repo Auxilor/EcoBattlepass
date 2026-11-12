@@ -1,12 +1,12 @@
 package com.exanthiax.ecobattlepass.commands.helpers
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
-import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.util.toNiceString
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import wiki.ecohub.core.stdlib.toNiceString
 
 object Messages {
 

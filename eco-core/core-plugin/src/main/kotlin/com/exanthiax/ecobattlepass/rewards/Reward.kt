@@ -3,15 +3,15 @@ package com.exanthiax.ecobattlepass.rewards
 import com.exanthiax.ecobattlepass.api.events.PlayerPostRewardEvent
 import com.exanthiax.ecobattlepass.api.events.PlayerPreRewardEvent
 import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.registry.Registrable
-import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.registry.Registrable
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.effect.Effects
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.ui.text.formatEco
 
 class Reward(private val _id: String, val config: Config) : Registrable {
     override fun getID(): String {

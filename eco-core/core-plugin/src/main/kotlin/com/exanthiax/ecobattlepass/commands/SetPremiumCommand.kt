@@ -11,12 +11,12 @@ import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.runOwned
 import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.core.sound.PlayableSound
-import com.willfp.eco.util.formatEco
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.ui.text.formatEco
 
 object SetPremiumCommand : PluginCommand(
     plugin,

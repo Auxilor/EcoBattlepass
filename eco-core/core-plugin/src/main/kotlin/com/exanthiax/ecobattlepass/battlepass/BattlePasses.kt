@@ -4,9 +4,9 @@ import com.exanthiax.ecobattlepass.categories.Categories
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.tiers.TierType
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 
 object BattlePasses: RegistrableCategory<BattlePass>("battlepasses", "battlepasses") {
     val activeTasks: List<ActiveBattleTask>

@@ -1,8 +1,8 @@
 package com.exanthiax.ecobattlepass.tasks
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 
 object BattleTasks : RegistrableCategory<BattleTask>("task", "tasks") {
     override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {

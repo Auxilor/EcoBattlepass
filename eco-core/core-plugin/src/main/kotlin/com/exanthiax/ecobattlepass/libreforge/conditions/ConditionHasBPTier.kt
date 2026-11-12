@@ -2,16 +2,16 @@ package com.exanthiax.ecobattlepass.libreforge.conditions
 
 import com.exanthiax.ecobattlepass.api.getTier
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.ConfigArguments
-import com.willfp.libreforge.Dispatcher
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.ProvidedHolder
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.conditions.Condition
-import com.willfp.libreforge.get
 import org.bukkit.entity.Player
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigArguments
+import wiki.ecohub.config.arguments
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.condition.Condition
+import wiki.ecohub.rules.holder.Dispatcher
+import wiki.ecohub.rules.holder.ProvidedHolder
+import wiki.ecohub.rules.holder.get
 
 object ConditionHasBPTier: Condition<NoCompileData>("has_battlepass_tier") {
     override val description = "Passes when the player's battlepass tier is at or above the given tier."

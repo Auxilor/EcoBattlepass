@@ -6,13 +6,13 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.BattleQuests
 import com.exanthiax.ecobattlepass.rewards.Rewards
 import com.exanthiax.ecobattlepass.tasks.BattleTasks
-import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.util.NumberUtils
-import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.toNiceString
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.math.NumberUtils
+import wiki.ecohub.ui.text.StringUtils
 
 object ReloadCommand: PluginCommand(
     plugin,

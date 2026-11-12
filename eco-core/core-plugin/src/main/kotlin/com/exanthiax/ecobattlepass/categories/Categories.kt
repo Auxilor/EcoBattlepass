@@ -1,10 +1,10 @@
 package com.exanthiax.ecobattlepass.categories
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.LegacyLocation
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.LegacyLocation
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 
 object Categories: RegistrableCategory<Category>("categories", "categories") {
     override val legacyLocation = LegacyLocation("categories.yml", "categories")
