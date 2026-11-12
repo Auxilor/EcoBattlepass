@@ -122,7 +122,7 @@ object BattleTiersGUI {
             .formatEco()
 
         val menu = menu(maskPattern.size) {
-            title = rawTitle
+            setTitle(rawTitle)
 
             maxPages(totalPages)
 
@@ -180,14 +180,14 @@ object BattleTiersGUI {
                     val itemStr = getString("item").withBattlePassPlaceholders()
                     val nameStr = getStringOrNull("name")
                     if (nameStr != null && !itemStr.lowercase().contains("name:")) {
-                        set("item", "$itemStr name:\"${nameStr.withBattlePassPlaceholders()}\"")
+                        this["item"] = "$itemStr name:\"${nameStr.withBattlePassPlaceholders()}\""
                     } else {
-                        set("item", itemStr)
+                        this["item"] = itemStr
                     }
-                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                    this["lore"] = getStrings("lore").map { it.withBattlePassPlaceholders() }
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                            this[click] = this.getStrings(click).map { it.withBattlePassPlaceholders() }
                         }
                     }
                 }

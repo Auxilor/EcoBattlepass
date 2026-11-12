@@ -43,7 +43,7 @@ class CategoriesGUI(
         val nextPagePath = "categories-gui.buttons.next-page"
 
         val menu = menu(pattern.size) {
-            title = rawTitle
+            setTitle(rawTitle)
 
             maxPages(maxPage)
 
@@ -102,14 +102,14 @@ class CategoriesGUI(
                             val nameKey = getStringOrNull("name")
                             val itemStr = getString("item").withBattlePassPlaceholders()
                             if (nameKey != null && !itemStr.contains("name:")) {
-                                set("item", "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\"")
+                                this["item"] = "$itemStr name:\"${nameKey.withBattlePassPlaceholders()}\""
                             } else {
-                                set("item", itemStr)
+                                this["item"] = itemStr
                             }
-                            set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                            this["lore"] = getStrings("lore").map { it.withBattlePassPlaceholders() }
                             listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                                 if (this.has(click)) {
-                                    this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                                    this[click] = this.getStrings(click).map { it.withBattlePassPlaceholders() }
                                 }
                             }
                         }

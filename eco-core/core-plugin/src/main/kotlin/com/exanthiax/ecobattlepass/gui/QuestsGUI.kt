@@ -48,7 +48,7 @@ class QuestsGUI(
         val nextPagePath = "quests-gui.buttons.next-page"
 
         val menu = menu(pattern.size) {
-            title = rawTitle
+            setTitle(rawTitle)
 
             maxPages(maxPage)
 
@@ -107,14 +107,14 @@ class QuestsGUI(
                             val nameKey = getStringOrNull("name")
                             val itemStr = getString("item").withCategoryPlaceholders()
                             if (nameKey != null && !itemStr.contains("name:")) {
-                                set("item", "$itemStr name:\"${nameKey.withCategoryPlaceholders()}\"")
+                                this["item"] = "$itemStr name:\"${nameKey.withCategoryPlaceholders()}\""
                             } else {
-                                set("item", itemStr)
+                                this["item"] = itemStr
                             }
-                            set("lore", getStrings("lore").map { it.withCategoryPlaceholders() })
+                            this["lore"] = getStrings("lore").map { it.withCategoryPlaceholders() }
                             listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                                 if (this.has(click)) {
-                                    this.set(click, this.getStrings(click).map { it.withCategoryPlaceholders() })
+                                    this[click] = this.getStrings(click).map { it.withCategoryPlaceholders() }
                                 }
                             }
                         }
@@ -153,7 +153,7 @@ class QuestsGUI(
     private fun questSlot(quest: ActiveBattleQuest) =
         slot(
             ItemStackBuilder(
-                Items.lookup(quest.parent.itemString.replace("%player%", player.name)).item.clone()
+                Items.lookup(quest.parent.itemString.replace("%player%", player.name)).getItem().clone()
             ).setDisplayName(
                 quest.getFormattedName(player)
             ).addLoreLines(

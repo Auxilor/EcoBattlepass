@@ -26,10 +26,12 @@ object BattlePassGUI {
         val clickSound = PlayableSound.create(plugin.configYml.getSubsection("sound.gui-click-sound"))
 
         val menu = menu(maskPattern.size) {
-            title = plugin.configYml.getString("battlepass-gui.title")
-                .withBattlePassPlaceholders()
-                .replace("%pass%", pass.name)
-                .formatEco()
+            setTitle(
+                plugin.configYml.getString("battlepass-gui.title")
+                    .withBattlePassPlaceholders()
+                    .replace("%pass%", pass.name)
+                    .formatEco()
+            )
 
             setMask(plugin.configYml, "battlepass-gui")
 
@@ -73,11 +75,11 @@ object BattlePassGUI {
                     val formattedName = nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" } ?: ""
                     val finalItemStr = if (!itemStr.contains("name:")) "$itemStr$formattedName" else itemStr
 
-                    set("item", finalItemStr)
-                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                    this["item"] = finalItemStr
+                    this["lore"] = getStrings("lore").map { it.withBattlePassPlaceholders() }
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                            this[click] = this.getStrings(click).map { it.withBattlePassPlaceholders() }
                         }
                     }
                 }
