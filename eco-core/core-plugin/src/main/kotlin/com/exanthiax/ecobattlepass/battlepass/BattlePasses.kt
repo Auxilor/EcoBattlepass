@@ -13,13 +13,13 @@ object BattlePasses: RegistrableCategory<BattlePass>("battlepasses", "battlepass
         get() = Categories.values().filter { it.isActive }
             .map { category -> category.quests.map { it.tasks }.flatten() }.flatten()
 
-    override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+    override fun acceptConfig(plugin: EcoPlugin, id: String, config: Config) {
         registry.register(
             BattlePass(id, config)
         )
     }
 
-    override fun clear(plugin: LibreforgePlugin) {
+    override fun clear(plugin: EcoPlugin) {
         registry.clear()
     }
 

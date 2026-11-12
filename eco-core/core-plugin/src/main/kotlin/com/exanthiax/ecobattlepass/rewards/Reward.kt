@@ -14,6 +14,9 @@ import wiki.ecohub.rules.trigger.TriggerData
 import wiki.ecohub.ui.text.formatEco
 
 class Reward(private val _id: String, val config: Config) : Registrable {
+    val id: String
+        get() = _id
+
     override fun getID(): String {
         return this._id
     }

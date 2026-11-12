@@ -56,6 +56,9 @@ class BattlePass(private val _id: String, val config: Config) : Registrable {
         PersistentDataKeyType.BOOLEAN, false
     )
 
+    val id: String
+        get() = _id
+
     override fun getID(): String {
         return this._id
     }

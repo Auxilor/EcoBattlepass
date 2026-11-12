@@ -8,6 +8,9 @@ import wiki.ecohub.game.item.Items
 import wiki.ecohub.rules.counter.Counters
 
 class BattleTask(private val _id: String, val config: Config) : Registrable {
+    val id: String
+        get() = _id
+
     override fun getID(): String {
         return this._id
     }
