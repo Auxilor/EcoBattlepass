@@ -12,6 +12,7 @@ import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import wiki.ecohub.core.plugin.EcoPlugin
@@ -121,7 +122,7 @@ class BattleTierComponent(
 
     override fun getLevelItem(player: Player, menu: Menu, level: Int, levelState: LevelState): ItemStack {
         val key = resolveKey(player, level, levelState)
-        if (key == "hidden") return ItemStack.empty()
+        if (key == "hidden") return ItemStack(Material.AIR)
 
         fun item() = levelItemCache.get(Triple(player.uniqueId, level, tierType)) {
             val tier = pass.getTier(level) ?: BPTier(level, pass)
