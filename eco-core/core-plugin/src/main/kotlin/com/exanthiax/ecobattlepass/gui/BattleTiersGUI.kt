@@ -8,18 +8,18 @@ import com.exanthiax.ecobattlepass.gui.components.LayoutMode
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.core.gui.addCustomSlot
-import com.willfp.eco.core.gui.addPageChanger
-import com.willfp.eco.core.gui.component.ConfigButton
-import com.willfp.eco.core.gui.component.addComponent
-import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.menu
-import com.willfp.eco.core.gui.menu.MenuLayer
-import com.willfp.eco.core.gui.page.PageChanger
-import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.sound.PlayableSound
-import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.modules.menus.addCustomSlot
+import wiki.ecohub.modules.menus.addPageChanger
+import wiki.ecohub.modules.menus.component.ConfigButton
+import wiki.ecohub.modules.menus.component.addComponent
+import wiki.ecohub.modules.menus.component.closeButton
+import wiki.ecohub.modules.menus.menu
+import wiki.ecohub.modules.menus.menu.MenuLayer
+import wiki.ecohub.modules.menus.page.PageChanger
+import wiki.ecohub.modules.menus.setMask
+import wiki.ecohub.ui.text.formatEco
 
 object BattleTiersGUI {
     @Volatile
@@ -122,7 +122,7 @@ object BattleTiersGUI {
             .formatEco()
 
         val menu = menu(maskPattern.size) {
-            title = rawTitle
+            setTitle(rawTitle)
 
             maxPages(totalPages)
 
@@ -180,14 +180,14 @@ object BattleTiersGUI {
                     val itemStr = getString("item").withBattlePassPlaceholders()
                     val nameStr = getStringOrNull("name")
                     if (nameStr != null && !itemStr.lowercase().contains("name:")) {
-                        set("item", "$itemStr name:\"${nameStr.withBattlePassPlaceholders()}\"")
+                        this["item"] = "$itemStr name:\"${nameStr.withBattlePassPlaceholders()}\""
                     } else {
-                        set("item", itemStr)
+                        this["item"] = itemStr
                     }
-                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                    this["lore"] = getStrings("lore").map { it.withBattlePassPlaceholders() }
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                            this[click] = this.getStrings(click).map { it.withBattlePassPlaceholders() }
                         }
                     }
                 }

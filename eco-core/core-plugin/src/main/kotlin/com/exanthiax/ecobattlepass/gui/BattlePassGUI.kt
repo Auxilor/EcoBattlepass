@@ -5,15 +5,15 @@ import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.core.gui.addCustomSlot
-import com.willfp.eco.core.gui.component.ConfigButton
-import com.willfp.eco.core.gui.component.addComponent
-import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.menu
-import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.sound.PlayableSound
-import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.modules.menus.addCustomSlot
+import wiki.ecohub.modules.menus.component.ConfigButton
+import wiki.ecohub.modules.menus.component.addComponent
+import wiki.ecohub.modules.menus.component.closeButton
+import wiki.ecohub.modules.menus.menu
+import wiki.ecohub.modules.menus.setMask
+import wiki.ecohub.ui.text.formatEco
 
 object BattlePassGUI {
     fun createAndOpen(player: Player, pass: BattlePass) {
@@ -26,10 +26,12 @@ object BattlePassGUI {
         val clickSound = PlayableSound.create(plugin.configYml.getSubsection("sound.gui-click-sound"))
 
         val menu = menu(maskPattern.size) {
-            title = plugin.configYml.getString("battlepass-gui.title")
-                .withBattlePassPlaceholders()
-                .replace("%pass%", pass.name)
-                .formatEco()
+            setTitle(
+                plugin.configYml.getString("battlepass-gui.title")
+                    .withBattlePassPlaceholders()
+                    .replace("%pass%", pass.name)
+                    .formatEco()
+            )
 
             setMask(plugin.configYml, "battlepass-gui")
 
@@ -73,11 +75,11 @@ object BattlePassGUI {
                     val formattedName = nameKey?.withBattlePassPlaceholders()?.let { " name:\"$it\"" } ?: ""
                     val finalItemStr = if (!itemStr.contains("name:")) "$itemStr$formattedName" else itemStr
 
-                    set("item", finalItemStr)
-                    set("lore", getStrings("lore").map { it.withBattlePassPlaceholders() })
+                    this["item"] = finalItemStr
+                    this["lore"] = getStrings("lore").map { it.withBattlePassPlaceholders() }
                     listOf("left-click", "right-click", "shift-left-click", "shift-right-click").forEach { click ->
                         if (this.has(click)) {
-                            this.set(click, this.getStrings(click).map { it.withBattlePassPlaceholders() })
+                            this[click] = this.getStrings(click).map { it.withBattlePassPlaceholders() }
                         }
                     }
                 }

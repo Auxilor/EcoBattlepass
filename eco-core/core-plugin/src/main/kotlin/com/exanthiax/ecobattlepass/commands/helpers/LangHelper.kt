@@ -1,50 +1,14 @@
 package com.exanthiax.ecobattlepass.commands.helpers
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
-import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.util.toNiceString
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import wiki.ecohub.core.stdlib.toNiceString
 
 object Messages {
-
-    fun sendPlayerRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("player-required"))
-
-    fun sendPlayerNotFound(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("player-not-found"))
-
-    fun sendPassRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("pass-required"))
-
-    fun sendPassNotFound(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("pass-not-found"))
-
-    fun sendAmountRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("amount-required"))
-
-    fun sendInvalidAmount(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("invalid-amount"))
-
-    fun sendCategoryRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("category-required"))
-
-    fun sendQuestRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("quest-required"))
-
-    fun sendTaskRequired(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("task-required"))
-
-    fun sendInvalidCategory(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("invalid-category"))
-
-    fun sendInvalidQuest(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("invalid-quest"))
-
-    fun sendInvalidTask(sender: CommandSender) =
-        sender.sendMessage(plugin.langYml.getMessage("invalid-task"))
 
     fun sendTierNotFound(sender: CommandSender, tier: Int) =
         sender.sendMessage(

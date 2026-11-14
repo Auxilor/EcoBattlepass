@@ -3,95 +3,66 @@ package com.exanthiax.ecobattlepass.commands.dynamic
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.commands.helpers.ClaimHandler
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
+import com.exanthiax.ecobattlepass.commands.reject
+import com.exanthiax.ecobattlepass.commands.replying
 import com.exanthiax.ecobattlepass.gui.BattlePassGUI
 import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
 import com.exanthiax.ecobattlepass.gui.QuestsGUI
 import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.command.impl.PluginCommand
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandContext
+import wiki.ecohub.core.command.EcoCommand
+import wiki.ecohub.core.command.playerCommand
 
+private val actions = listOf("tiers", "quests", "claim")
+private val claimTypes = listOf("free", "premium")
+
+private const val CLAIM_TYPE_ARGS = 3
+
+/**
+ * The per-pass command: the pass GUI, `tiers`, `quests <category>` and `claim <tier|all> [type]`.
+ */
 class DynamicPassCommand(
     private val pass: BattlePass,
     cmd: String
-) : PluginCommand(
-    plugin,
-    cmd,
-    "ecobattlepass.command.$cmd",
-    true
 ) {
-    override fun onExecute(sender: Player, args: MutableList<String>) {
-        when (args.getOrNull(0)?.lowercase()) {
-            null -> {
-                BattlePassGUI.createAndOpen(sender, pass)
-            }
+    private val command: EcoCommand = plugin.playerCommand(name = cmd, permission = "ecobattlepass.command.$cmd") {
+        executes {
+            replying { run() }
+        }
 
-            "tiers" -> {
-                BattleTiersGUI.createAndOpen(sender, pass)
-            }
-
-            "quests" -> {
-                val categoryId = args.getOrNull(1) ?: run {
-                    Messages.sendCategoryRequired(sender)
-                    return
-                }
-
-                val category = pass.categories.firstOrNull {
-                    it.id.equals(categoryId, ignoreCase = true)
-                } ?: run {
-                    Messages.sendInvalidCategory(sender)
-                    return
-                }
-
-                QuestsGUI(sender, category, wasBack = false).open()
-            }
-
-            "claim" -> {
-                ClaimHandler.handleClaim(sender, pass, args)
-            }
-
-            else -> {
-                Messages.sendDynamicPassUsage(sender)
-            }
+        completes {
+            completions()
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        return when (args.size) {
-            1 -> StringUtil.copyPartialMatches(
-                args[0],
-                listOf("tiers", "quests", "claim"),
-                mutableListOf()
-            )
+    fun register() {
+        command.register()
+    }
 
-            2 -> when (args[0].lowercase()) {
-                "quests" -> StringUtil.copyPartialMatches(
-                    args[1],
-                    pass.categories.map { it.id },
-                    mutableListOf()
-                )
-
-                "claim" -> StringUtil.copyPartialMatches(
-                    args[1],
-                    pass.tiers.map { it.number.toString() } + "all",
-                    mutableListOf()
-                )
-
-                else -> emptyList()
-            }
-
-            3 -> {
-                if (args[0].equals("claim", ignoreCase = true)) {
-                    StringUtil.copyPartialMatches(
-                        args[2],
-                        listOf("free", "premium"),
-                        mutableListOf()
-                    )
-                } else emptyList()
-            }
-
-            else -> emptyList()
+    private fun CommandContext<Player>.run() {
+        when (args.getOrNull(0)?.lowercase()) {
+            null -> BattlePassGUI.createAndOpen(sender, pass)
+            "tiers" -> BattleTiersGUI.createAndOpen(sender, pass)
+            "quests" -> openQuests()
+            "claim" -> ClaimHandler.handleClaim(sender, pass, args)
+            else -> reject(Messages::sendDynamicPassUsage)
         }
+    }
+
+    private fun CommandContext<Player>.openQuests() {
+        val categoryId = argument(1, "category-required")
+        val category = pass.categories.firstOrNull { it.id.equals(categoryId, ignoreCase = true) }
+            ?: fail("invalid-category")
+
+        QuestsGUI(sender, category, wasBack = false).open()
+    }
+
+    private fun CommandContext<Player>.completions(): List<String> = when {
+        args.size == 1 -> actions
+        args.size == 2 && args[0].equals("quests", ignoreCase = true) -> pass.categories.map { it.id }
+        args.size == 2 && args[0].equals("claim", ignoreCase = true) -> pass.tiers.map { it.number.toString() } + "all"
+        args.size == CLAIM_TYPE_ARGS && args[0].equals("claim", ignoreCase = true) -> claimTypes
+        else -> emptyList()
     }
 }

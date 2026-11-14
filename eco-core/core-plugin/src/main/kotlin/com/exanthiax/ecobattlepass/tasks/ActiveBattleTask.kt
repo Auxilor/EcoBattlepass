@@ -9,18 +9,18 @@ import com.exanthiax.ecobattlepass.api.retireLegacyTaskData
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.data.Profile
-import com.willfp.eco.core.data.keys.PersistentDataKey
-import com.willfp.eco.core.data.keys.PersistentDataKeyType
-import com.willfp.eco.core.data.profile
-import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.config.Config
+import wiki.ecohub.data.PersistentDataKey
+import wiki.ecohub.data.PersistentDataKeyType
+import wiki.ecohub.data.profile.Profile
+import wiki.ecohub.game.entity.player.profile
+import wiki.ecohub.game.item.builder.ItemStackBuilder
+import wiki.ecohub.rules.counter.Accumulator
+import wiki.ecohub.ui.text.formatEco
 
 class ActiveBattleTask(val config: Config, val quest: ActiveBattleQuest) {
     val parent = BattleTasks.getByID(config.getString("id"))!!

@@ -3,7 +3,7 @@ package com.exanthiax.ecobattlepass
 import com.exanthiax.ecobattlepass.api.hasPremium
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.categories.Categories
-import com.exanthiax.ecobattlepass.commands.EcoBattlePassCommand
+import com.exanthiax.ecobattlepass.commands.ecoBattlePassCommand
 import com.exanthiax.ecobattlepass.config.CategoriesYml
 import com.exanthiax.ecobattlepass.gui.BattleTiersGUI
 import com.exanthiax.ecobattlepass.libreforge.conditions.ConditionHasBPPremium
@@ -24,30 +24,30 @@ import com.exanthiax.ecobattlepass.quests.BattleQuests
 import com.exanthiax.ecobattlepass.rewards.Rewards
 import com.exanthiax.ecobattlepass.tasks.BattleTasks
 import com.exanthiax.ecobattlepass.utils.BattlePassListener
-import com.willfp.eco.core.bstats.EcoMetricsChart
-import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.libreforge.conditions.Conditions
-import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.filters.Filters
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.ConfigCategory
-import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
+import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.command.EcoCommand
+import wiki.ecohub.core.plugin.EcoPlugin
+import wiki.ecohub.provider.metrics.EcoMetricsChart
+import wiki.ecohub.rules.condition.Conditions
+import wiki.ecohub.rules.effect.Effects
+import wiki.ecohub.rules.filter.Filters
+import wiki.ecohub.rules.trigger.Triggers
 
 internal lateinit var plugin: EcoBattlePass
     private set
 
-class EcoBattlePass : LibreforgePlugin() {
+class EcoBattlePass : EcoPlugin() {
     val categoriesYml = CategoriesYml(this)
 
     init {
         plugin = this
-        this.configHandler.addConfig(categoriesYml)
+        this.getConfigHandler().addConfig(categoriesYml)
     }
 
-    override fun loadConfigCategories(): List<ConfigCategory> {
-        return mutableListOf(
+    override fun loadConfigCategories(): List<NativeConfigCategory> {
+        return listOf(
             Rewards,
             BattleTasks,
             BattleQuests,
@@ -87,7 +87,7 @@ class EcoBattlePass : LibreforgePlugin() {
     }
 
     override fun createTasks() {
-        this.scheduler.async().runTimer(1L, 100L) {
+        this.scheduler.async().runTimer(delay = 1L, repeat = 100L) {
             Categories.values().forEach { category -> if (category.isToReset()) category.reset() }
             BattlePasses.tickUpdates()
         }
@@ -99,9 +99,9 @@ class EcoBattlePass : LibreforgePlugin() {
         )
     }
 
-    override fun loadPluginCommands(): MutableList<PluginCommand> {
-        return mutableListOf(
-            EcoBattlePassCommand
+    override fun loadPluginCommands(): List<EcoCommand> {
+        return listOf(
+            ecoBattlePassCommand()
         )
     }
 

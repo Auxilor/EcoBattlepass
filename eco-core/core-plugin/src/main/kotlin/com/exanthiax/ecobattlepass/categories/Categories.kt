@@ -1,15 +1,15 @@
 package com.exanthiax.ecobattlepass.categories
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.LegacyLocation
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.LegacyLocation
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 
 object Categories: RegistrableCategory<Category>("categories", "categories") {
     override val legacyLocation = LegacyLocation("categories.yml", "categories")
 
-    override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+    override fun acceptConfig(plugin: EcoPlugin, id: String, config: Config) {
         val battlepassId = config.getString("battlepass")
 
         if (BattlePasses.getByID(battlepassId) == null) {
@@ -22,7 +22,7 @@ object Categories: RegistrableCategory<Category>("categories", "categories") {
         )
     }
 
-    override fun clear(plugin: LibreforgePlugin) {
+    override fun clear(plugin: EcoPlugin) {
         for (category in registry) {
             for (quest in category.quests) {
                 for (task in quest.tasks) {
@@ -37,7 +37,7 @@ object Categories: RegistrableCategory<Category>("categories", "categories") {
         return this.values().sortedBy { if (it.isActive) 1 else 0 }.toSet()
     }
 
-    override fun beforeReload(plugin: LibreforgePlugin) {
+    override fun beforeReload(plugin: EcoPlugin) {
         for (category in registry) {
             for (quest in category.quests) {
                 for (task in quest.tasks) {
