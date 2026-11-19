@@ -12,15 +12,15 @@ import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.tiers.BPTier
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
-import com.willfp.eco.core.data.Profile
-import com.willfp.eco.core.data.keys.PersistentDataKey
-import com.willfp.eco.core.data.profile
-import com.willfp.eco.core.progression.LevelProgression
-import com.willfp.eco.core.progression.StopReason
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionAttachment
+import wiki.ecohub.data.PersistentDataKey
+import wiki.ecohub.data.profile.Profile
+import wiki.ecohub.game.entity.player.profile
+import wiki.ecohub.modules.progression.LevelProgression
+import wiki.ecohub.modules.progression.StopReason
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 

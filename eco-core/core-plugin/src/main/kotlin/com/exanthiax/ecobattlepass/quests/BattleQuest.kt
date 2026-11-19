@@ -3,10 +3,13 @@ package com.exanthiax.ecobattlepass.quests
 import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
 import com.exanthiax.ecobattlepass.tiers.TierType
 import com.exanthiax.ecobattlepass.tiers.Tiered
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.registry.Registrable
+import wiki.ecohub.config.Config
+import wiki.ecohub.core.registry.Registrable
 
 class BattleQuest(private val _id: String, val config: Config) : Registrable, Tiered {
+    val id: String
+        get() = _id
+
     override fun getID(): String {
         return _id
     }

@@ -2,60 +2,39 @@ package com.exanthiax.ecobattlepass.commands
 
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
-import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
 import com.exanthiax.ecobattlepass.gui.CategoriesGUI
 import com.exanthiax.ecobattlepass.gui.QuestsGUI
-import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.command.impl.PluginCommand
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandBuilder
 
-object QuestsCommand : PluginCommand(
-    plugin,
-    "quests",
-    "ecobattlepass.command.quests",
-    true  // player-only
+internal fun CommandBuilder<CommandSender>.questsCommand() = playerSubcommand(
+    name = "quests",
+    permission = "ecobattlepass.command.quests"
 ) {
-    override fun onExecute(sender: Player, args: MutableList<String>) {
-        if (args.isEmpty()) {
-            Messages.sendQuestsUsage(sender)
-            return
+    executes {
+        replying {
+            if (args.isEmpty()) {
+                reject(Messages::sendQuestsUsage)
+            }
+
+            val pass = battlePass(0)
+            val categoryId = args.getOrNull(1)
+
+            if (categoryId == null) {
+                CategoriesGUI(sender, pass).open()
+            } else {
+                val category = pass.categories.firstOrNull { it.id.equals(categoryId, ignoreCase = true) }
+                    ?: fail("invalid-category")
+
+                QuestsGUI(sender, category, wasBack = false).open()
+            }
         }
-
-        val pass = (sender as CommandSender).resolveBattlePass(args.getOrNull(0)) ?: return
-
-        val categoryId = args.getOrNull(1)
-
-        if (categoryId == null) {
-            CategoriesGUI(sender, pass).open()
-            return
-        }
-
-        val category = pass.categories.firstOrNull {
-            it.id.equals(categoryId, ignoreCase = true)
-        } ?: run {
-            Messages.sendInvalidCategory(sender)
-            return
-        }
-
-        QuestsGUI(sender, category, wasBack = false).open()
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        return when (args.size) {
-            1 -> {
-                StringUtil.copyPartialMatches(
-                    args[0],
-                    BattlePasses.values().map { it.id },
-                    mutableListOf()
-                )
-            }
-            2 -> {
-                val pass = BattlePasses.getByID(args.getOrNull(0) ?: "")
-                val categoryIds = pass?.categories?.map { it.id } ?: emptyList()
-                StringUtil.copyPartialMatches(args[1], categoryIds, mutableListOf())
-            }
+    completes {
+        when (args.size) {
+            1 -> passIds()
+            2 -> BattlePasses.getByID(args[0])?.run { categories.map { it.id } }.orEmpty()
             else -> emptyList()
         }
     }

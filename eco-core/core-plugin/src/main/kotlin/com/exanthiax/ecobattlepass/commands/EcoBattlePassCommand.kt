@@ -1,28 +1,37 @@
 package com.exanthiax.ecobattlepass.commands
 
-import com.exanthiax.ecobattlepass.commands.give.GiveCommand
-import com.exanthiax.ecobattlepass.commands.reset.ResetCommand
-import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.command.impl.PluginCommand
-import org.bukkit.command.CommandSender
+import com.exanthiax.ecobattlepass.EcoBattlePass
+import com.exanthiax.ecobattlepass.commands.give.giveTaskXPCommand
+import com.exanthiax.ecobattlepass.commands.give.giveTiersCommand
+import com.exanthiax.ecobattlepass.commands.give.giveXPCommand
+import com.exanthiax.ecobattlepass.commands.helpers.Messages
+import com.exanthiax.ecobattlepass.commands.reset.resetBattlepassCommand
+import com.exanthiax.ecobattlepass.commands.reset.resetTaskCommand
+import wiki.ecohub.core.command.command
 
-object EcoBattlePassCommand: PluginCommand(
-    plugin,
-    "ecobattlepass",
-    "ecobattlepass.command.ecobattlepass",
-    false
+internal fun EcoBattlePass.ecoBattlePassCommand() = command(
+    name = "ecobattlepass",
+    permission = "ecobattlepass.command.ecobattlepass"
 ) {
-    init {
-        this.addSubcommand(QuestsCommand)
-            .addSubcommand(ReloadCommand)
-            .addSubcommand(CompleteTaskCommand)
-            .addSubcommand(ResetCommand)
-            .addSubcommand(GiveCommand)
-            .addSubcommand(TiersCommand)
-            .addSubcommand(SetPremiumCommand)
+    questsCommand()
+    reloadCommand()
+    completeTaskCommand()
+
+    subcommand(name = "reset", permission = "ecobattlepass.command.reset") {
+        resetBattlepassCommand()
+        resetTaskCommand()
+
+        executes { Messages.sendResetUsage(sender) }
     }
 
-    override fun onExecute(sender: CommandSender, args: MutableList<String>) {
-        sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+    subcommand(name = "give", permission = "ecobattlepass.command.give") {
+        giveXPCommand()
+        giveTiersCommand()
+        giveTaskXPCommand()
+
+        executes { Messages.sendGiveUsage(sender) }
     }
+
+    tiersCommand()
+    setPremiumCommand()
 }

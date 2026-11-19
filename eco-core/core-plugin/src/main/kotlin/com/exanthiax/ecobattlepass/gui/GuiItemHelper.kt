@@ -1,9 +1,9 @@
 package com.exanthiax.ecobattlepass.gui
 
 import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.builder.ItemStackBuilder
 
 object GuiItemHelper {
 

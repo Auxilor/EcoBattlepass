@@ -7,17 +7,17 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.quests.ActiveBattleQuest
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
 import com.exanthiax.ecobattlepass.utils.msToString
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.data.PlayerProfile
-import com.willfp.eco.core.data.ServerProfile
-import com.willfp.eco.core.data.forEachSavedProfile
-import com.willfp.eco.core.data.keys.PersistentDataKey
-import com.willfp.eco.core.data.keys.PersistentDataKeyType
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.core.registry.Registrable
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.config.Config
+import wiki.ecohub.core.registry.Registrable
+import wiki.ecohub.data.PersistentDataKey
+import wiki.ecohub.data.PersistentDataKeyType
+import wiki.ecohub.data.playerbase.forEachSavedProfile
+import wiki.ecohub.data.profile.PlayerProfile
+import wiki.ecohub.data.profile.ServerProfile
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.builder.ItemStackBuilder
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -28,6 +28,9 @@ class Category(private val _id: String, val config: Config) : Registrable {
     init {
         InternalPlaceholders.CategoryPlaceholders.register(this)
     }
+
+    val id: String
+        get() = _id
 
     override fun getID(): String = _id
 
@@ -75,7 +78,7 @@ class Category(private val _id: String, val config: Config) : Registrable {
 
     fun getDisplayItem(player: Player): ItemStack {
         val resolvedItem = InternalPlaceholders.CategoryPlaceholders.replace(itemString, this, player)
-        return ItemStackBuilder(Items.lookup(resolvedItem).item.clone())
+        return ItemStackBuilder(Items.lookup(resolvedItem).getItem().clone())
             .setDisplayName(InternalPlaceholders.CategoryPlaceholders.replace(name, this, player))
             .addLoreLines(InternalPlaceholders.CategoryPlaceholders.replaceAll(unformattedLore, this, player))
             .build()

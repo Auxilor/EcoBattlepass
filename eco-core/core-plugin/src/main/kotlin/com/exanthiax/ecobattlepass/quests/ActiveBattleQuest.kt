@@ -3,15 +3,15 @@ package com.exanthiax.ecobattlepass.quests
 import com.exanthiax.ecobattlepass.categories.Category
 import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.tasks.ActiveBattleTask
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.data.Profile
-import com.willfp.eco.core.data.ServerProfile
-import com.willfp.eco.core.data.keys.PersistentDataKey
-import com.willfp.eco.core.data.keys.PersistentDataKeyType
-import com.willfp.eco.core.data.profile
-import com.willfp.eco.util.formatEco
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
+import wiki.ecohub.config.Config
+import wiki.ecohub.data.PersistentDataKey
+import wiki.ecohub.data.PersistentDataKeyType
+import wiki.ecohub.data.profile.Profile
+import wiki.ecohub.data.profile.ServerProfile
+import wiki.ecohub.game.entity.player.profile
+import wiki.ecohub.ui.text.formatEco
 
 class ActiveBattleQuest(val config: Config, val category: Category) {
     val parent = BattleQuests.getByID(config.getString("id"))!!
