@@ -9,12 +9,12 @@ import com.exanthiax.ecobattlepass.api.receiveTierPremiumOnly
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.gui.components.invalidateTierItemCache
 import com.exanthiax.ecobattlepass.utils.ReceivedTierState
-import com.willfp.eco.util.openMenu
 import org.bukkit.entity.Player
+import wiki.ecohub.modules.menus.openMenu
 
 object ClaimHandler {
 
-    fun handleClaim(player: Player, pass: BattlePass, args: MutableList<String>) {
+    fun handleClaim(player: Player, pass: BattlePass, args: List<String>) {
         val tierArg = args.getOrNull(1)?.lowercase() ?: run {
             Messages.sendDynamicPassUsage(player)
             return

@@ -3,11 +3,11 @@ package com.exanthiax.ecobattlepass.libreforge.effects
 import com.exanthiax.ecobattlepass.api.events.PlayerBPExpGainEvent
 import com.exanthiax.ecobattlepass.battlepass.BattlePass
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
-import com.willfp.libreforge.toDispatcher
 import org.bukkit.event.EventHandler
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.arguments
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.effect.MultiMultiplierEffect
 
 object EffectBPExpMultiplier : MultiMultiplierEffect<BattlePass>("battlepass_xp_multiplier") {
     override val description = "Multiplies battlepass XP earned for one or all battlepasses while the holder is active."

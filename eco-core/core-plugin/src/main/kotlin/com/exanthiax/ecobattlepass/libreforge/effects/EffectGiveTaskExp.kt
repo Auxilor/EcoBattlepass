@@ -2,14 +2,14 @@ package com.exanthiax.ecobattlepass.libreforge.effects
 
 import com.exanthiax.ecobattlepass.api.giveTaskExperience
 import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.ConfigArguments
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.effects.Effect
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigArguments
+import wiki.ecohub.config.arguments
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.effect.Effect
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object EffectGiveTaskExp: Effect<NoCompileData>("give_battlepass_task_exp") {
     override val description = "Gives the player progress towards a specific battlepass task."

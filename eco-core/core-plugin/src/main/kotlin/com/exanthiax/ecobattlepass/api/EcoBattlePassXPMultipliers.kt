@@ -1,9 +1,9 @@
 package com.exanthiax.ecobattlepass.api
 
-import com.willfp.eco.core.cache.EcoCache
 import org.bukkit.entity.Player
+import wiki.ecohub.core.platform.NumericalPermissions
+import wiki.ecohub.data.cache.EcoCache
 import java.time.Duration
-import com.willfp.eco.util.NumericalPermissions
 
 private val expMultiplierCache = EcoCache.builder<Player, Double>()
     .expireAfterWrite(Duration.ofSeconds(10)).build {

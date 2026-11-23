@@ -7,9 +7,9 @@ import com.exanthiax.ecobattlepass.plugin
 import com.exanthiax.ecobattlepass.rewards.Reward
 import com.exanthiax.ecobattlepass.rewards.Rewards
 import com.exanthiax.ecobattlepass.utils.InternalPlaceholders
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.util.formatEco
 import org.bukkit.entity.Player
+import wiki.ecohub.config.Config
+import wiki.ecohub.ui.text.formatEco
 
 class BPTier(val config: Config, val battlepass: BattlePass, val transient: Boolean = false) {
     constructor(num: Int, battlepass: BattlePass) : this(

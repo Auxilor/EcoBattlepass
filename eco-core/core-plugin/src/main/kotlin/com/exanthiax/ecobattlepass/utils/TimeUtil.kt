@@ -1,7 +1,7 @@
 package com.exanthiax.ecobattlepass.utils
 
 import com.exanthiax.ecobattlepass.plugin
-import com.willfp.eco.util.toNiceString
+import wiki.ecohub.core.stdlib.toNiceString
 
 fun msToString(ms: Long): String {
     val secondsPerMs = 0.001

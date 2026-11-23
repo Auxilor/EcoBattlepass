@@ -1,112 +1,48 @@
 package com.exanthiax.ecobattlepass.commands.give
 
 import com.exanthiax.ecobattlepass.api.giveTaskExperience
-import com.exanthiax.ecobattlepass.battlepass.BattlePasses
-import com.exanthiax.ecobattlepass.categories.Categories
-import com.exanthiax.ecobattlepass.commands.helpers.COMMON_AMOUNTS
+import com.exanthiax.ecobattlepass.commands.battlePass
+import com.exanthiax.ecobattlepass.commands.commonAmounts
 import com.exanthiax.ecobattlepass.commands.helpers.Messages
-import com.exanthiax.ecobattlepass.commands.helpers.TaskTabCompleter
 import com.exanthiax.ecobattlepass.commands.helpers.replacePlaceholders
-import com.exanthiax.ecobattlepass.commands.helpers.resolveBattlePass
-import com.exanthiax.ecobattlepass.commands.helpers.resolvePlayers
-import com.exanthiax.ecobattlepass.plugin
+import com.exanthiax.ecobattlepass.commands.players
+import com.exanthiax.ecobattlepass.commands.task
+import com.exanthiax.ecobattlepass.commands.taskCompletions
+import com.exanthiax.ecobattlepass.commands.taskIds
 import com.exanthiax.ecobattlepass.runOwned
-import com.willfp.eco.core.command.impl.Subcommand
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandBuilder
 
-object GiveTaskXPSubcommand : Subcommand(
-    plugin,
-    "taskxp",
-    "ecobattlepass.command.give.taskxp",
-    false
+private const val AMOUNT_INDEX = 5
+
+internal fun CommandBuilder<CommandSender>.giveTaskXPCommand() = subcommand(
+    name = "taskxp",
+    permission = "ecobattlepass.command.give.taskxp"
 ) {
-    override fun onExecute(sender: CommandSender, args: List<String>) {
-        val players = sender.resolvePlayers(args.getOrNull(0)) ?: return
-        val pass = sender.resolveBattlePass(args.getOrNull(1)) ?: return
-
-        val categoryString = args.getOrNull(2) ?: run {
-            Messages.sendCategoryRequired(sender)
-            return
-        }
-        val questString = args.getOrNull(3) ?: run {
-            Messages.sendQuestRequired(sender)
-            return
-        }
-        val taskString = args.getOrNull(4) ?: run {
-            Messages.sendTaskRequired(sender)
-            return
-        }
-        val amountString = args.getOrNull(5) ?: run {
-            Messages.sendAmountRequired(sender)
-            return
-        }
-
-        val category = Categories.getByID(categoryString) ?: run {
-            Messages.sendInvalidCategory(sender)
-            return
-        }
-
-        if (category.battlepass != pass) {
-            Messages.sendInvalidCategory(sender)
-            return
-        }
-
-        val activeQuest = category.quests.find { it.parent.id.equals(questString, true) } ?: run {
-            Messages.sendInvalidQuest(sender)
-            return
-        }
-
-        val activeTask = activeQuest.tasks.find { it.parent.id.equals(taskString, true) } ?: run {
-            Messages.sendInvalidTask(sender)
-            return
-        }
-
-        val amount = amountString.toDoubleOrNull() ?: run {
-            Messages.sendInvalidAmount(sender)
-            return
-        }
+    executes {
+        val players = players(0)
+        val pass = battlePass(1)
+        val ids = taskIds()
+        val amountArg = argument(AMOUNT_INDEX, "amount-required")
+        val task = task(pass, ids)
+        val amount = amountArg.toDoubleOrNull() ?: fail("invalid-amount")
 
         for (player in players) {
             player.runOwned {
-                player.giveTaskExperience(activeTask, amount)
+                player.giveTaskExperience(task, amount)
 
-                val baseGiven = Messages.getGivenTaskProgress()
-                val baseReceived = Messages.getReceivedTaskProgress()
+                val given = Messages.getGivenTaskProgress()
+                    .replacePlaceholders(player, amount, pass, task, task.parent.name)
+                val received = Messages.getReceivedTaskProgress()
+                    .replacePlaceholders(player, amount, pass, task, task.parent.name)
 
-                sender.sendMessage(
-                    baseGiven.replacePlaceholders(
-                        player = player,
-                        amount = amount,
-                        pass = pass,
-                        task = activeTask,
-                        taskName = activeTask.parent.name
-                    )
-                )
-
-                player.sendMessage(
-                    baseReceived.replacePlaceholders(
-                        player = player,
-                        amount = amount,
-                        pass = pass,
-                        task = activeTask,
-                        taskName = activeTask.parent.name
-                    )
-                )
+                sender.sendMessage(given)
+                player.sendMessage(received)
             }
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        return when (args.size) {
-            1 -> StringUtil.copyPartialMatches(args[0], Bukkit.getOnlinePlayers().map { it.name } + "all", mutableListOf())
-            2 -> StringUtil.copyPartialMatches(args[1], BattlePasses.values().map { it.id }, mutableListOf())
-            3 -> TaskTabCompleter.forCategory(args[2])
-            4 -> TaskTabCompleter.forQuest(args.getOrNull(2) ?: "", args[3])
-            5 -> TaskTabCompleter.forTask(args.getOrNull(2) ?: "", args.getOrNull(3) ?: "", args[4])
-            6 -> StringUtil.copyPartialMatches(args[5], COMMON_AMOUNTS, mutableListOf())
-            else -> emptyList()
-        }
+    completes {
+        if (args.size == AMOUNT_INDEX + 1) commonAmounts else taskCompletions()
     }
 }
